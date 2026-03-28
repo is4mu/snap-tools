@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今日の日付・和暦 | snap-tools</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f7f6; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        h1 { font-size: 1.5rem; color: #333; margin-bottom: 25px; }
+        .date-display { margin-bottom: 20px; padding: 20px; background: #e9ecef; border-radius: 8px; }
+        .large-text { display: block; font-size: 1.8rem; font-weight: bold; color: #007bff; margin-bottom: 5px; }
+        .sub-text { color: #666; font-size: 1rem; }
+        .btn-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
+        button { 
+            padding: 12px; background: #28a745; color: white; border: none; 
+            border-radius: 8px; cursor: pointer; transition: opacity 0.2s;
+        }
+        button:hover { opacity: 0.8; }
+        .back-link { margin-top: 30px; display: block; color: #666; text-decoration: none; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>今日の日付・和暦変換</h1>
+    
+    <div class="date-display">
+        <span class="sub-text">今日は</span>
+        <span id="warekiDisplay" class="large-text">読み込み中...</span>
+        <span id="seirekiDisplay" class="sub-text"></span>
+    </div>
+
+    <div class="btn-group">
+        <button onclick="copyText('wareki')">和暦形式をコピー</button>
+        <button onclick="copyText('seireki')" style="background: #6c757d;">西暦形式をコピー</button>
+    </div>
+
+    <a href="index.html" class="back-link">← メニューに戻る</a>
+</div>
+
+<script>
+    function updateDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const date = now.getDate();
+        const day = ["日","月","火","水","木","金","土"][now.getDay()];
+
+        // 簡易的な和暦計算（令和のみ対応）
+        const reiwaYear = year - 2018;
+        const warekiStr = `令和${reiwaYear === 1 ? '元' : reiwaYear}年 ${month}月${date}日 (${day})`;
+        const seirekiStr = `${year}年${month}月${date}日`;
+
+        document.getElementById('warekiDisplay').textContent = warekiStr;
+        document.getElementById('seirekiDisplay').textContent = `(西暦 ${seirekiStr})`;
+    }
+
+    function copyText(type) {
+        const text = type === 'wareki' 
+            ? document.getElementById('warekiDisplay').textContent 
+            : document.getElementById('seirekiDisplay').textContent.replace(/[()西暦 ]/g, '');
+        
+        navigator.clipboard.writeText(text).then(() => {
+            alert('コピーしました！: ' + text);
+        });
+    }
+
+    updateDate();
+</script>
+
+</body>
+</html>
