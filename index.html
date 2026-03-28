@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字数カウント | snap-tools</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f7f6; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { font-size: 1.5rem; color: #333; margin-bottom: 20px; }
+        textarea { width: 100%; height: 200px; padding: 15px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; resize: vertical; }
+        textarea:focus { border-color: #007bff; outline: none; }
+        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .result-item { background: #e9ecef; padding: 15px; border-radius: 8px; text-align: center; }
+        .count { display: block; font-size: 1.8rem; font-weight: bold; color: #007bff; }
+        .label { font-size: 0.8rem; color: #666; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>文字数カウント</h1>
+    <textarea id="inputText" placeholder="ここにテキストを入力またはペーストしてください..."></textarea>
+    
+    <div class="result-grid">
+        <div class="result-item">
+            <span class="label">全文字数</span>
+            <span id="totalChars" class="count">0</span>
+        </div>
+        <div class="result-item">
+            <span class="label">空白抜き</span>
+            <span id="noSpaceChars" class="count">0</span>
+        </div>
+        <div class="result-item">
+            <span class="label">行数</span>
+            <span id="lineCount" class="count">0</span>
+        </div>
+        <div class="result-item">
+            <span class="label">原稿用紙(枚)</span>
+            <span id="paperCount" class="count">0</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const textArea = document.getElementById('inputText');
+    const totalChars = document.getElementById('totalChars');
+    const noSpaceChars = document.getElementById('noSpaceChars');
+    const lineCount = document.getElementById('lineCount');
+    const paperCount = document.getElementById('paperCount');
+
+    textArea.addEventListener('input', () => {
+        const text = textArea.value;
+        
+        // 全文字数
+        totalChars.textContent = text.length;
+        
+        // 空白・改行抜き文字数
+        noSpaceChars.textContent = text.replace(/\s+/g, '').length;
+        
+        // 行数（空の状態は0、入力があれば改行を数える）
+        lineCount.textContent = text ? text.split(/\r\n|\r|\n/).length : 0;
+        
+        // 400字詰め原稿用紙換算
+        paperCount.textContent = Math.ceil(text.length / 400);
+    });
+</script>
+
+</body>
+</html>
