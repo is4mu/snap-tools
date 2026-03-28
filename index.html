@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>snap-tools | 便利ツール集</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background: #f4f7f6; color: #333; }
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; color: #007bff; margin-bottom: 10px; }
+        .description { color: #666; }
+        
+        /* ツールカードのレイアウト */
+        .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .tool-card { 
+            background: white; padding: 20px; border-radius: 12px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-decoration: none; color: inherit;
+            transition: transform 0.2s, box-shadow 0.2s; border: 1px solid #eee;
+        }
+        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); border-color: #007bff; }
+        .tool-card h2 { font-size: 1.2rem; margin-top: 0; color: #007bff; }
+        .tool-card p { font-size: 0.9rem; color: #666; line-height: 1.4; }
+        
+        footer { margin-top: 60px; text-align: center; font-size: 0.8rem; color: #999; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>snap-tools</h1>
+    <p class="description">パッと使える、シンプルなウェブツール集</p>
+</header>
+
+<main class="tool-grid">
+    <a href="counter.html" class="tool-card">
+        <h2>文字数カウント</h2>
+        <p>全文字数、空白抜き、行数、原稿用紙枚数をリアルタイムで計測します。</p>
+    </a>
+
+    <a href="#" class="tool-card" style="opacity: 0.6; cursor: not-allowed;">
+        <h2>パスワード生成 (予定)</h2>
+        <p>安全なランダムパスワードをワンクリックで生成します。</p>
+    </a>
+
+    <a href="#" class="tool-card" style="opacity: 0.6; cursor: not-allowed;">
+        <h2>Coming Soon...</h2>
+        <p>新しいツールを順次追加予定です。</p>
+    </a>
+</main>
+
+<footer>
+    &copy; 2026 snap-tools
+</footer>
+
+</body>
+</html>
