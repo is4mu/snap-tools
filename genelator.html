@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パスワード生成 | snap-tools</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f7f6; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { font-size: 1.5rem; color: #333; margin-bottom: 20px; }
+        .result-area { position: relative; margin-bottom: 25px; }
+        #passwordOutput { 
+            width: 100%; padding: 15px; font-family: monospace; font-size: 1.2rem; 
+            background: #e9ecef; border: none; border-radius: 8px; box-sizing: border-box; text-align: center;
+        }
+        .settings { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; }
+        input[type="number"] { width: 60px; padding: 5px; }
+        button { 
+            width: 100%; padding: 15px; background: #007bff; color: white; border: none; 
+            border-radius: 8px; font-size: 1.1rem; cursor: pointer; transition: background 0.2s;
+        }
+        button:hover { background: #0056b3; }
+        .copy-btn { margin-top: 10px; background: #28a745; font-size: 0.9rem; padding: 10px; }
+        .copy-btn:hover { background: #218838; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>パスワード生成</h1>
+    
+    <div class="result-area">
+        <input type="text" id="passwordOutput" readonly placeholder="生成されたパスワード">
+        <button class="copy-btn" onclick="copyPassword()">結果をコピーする</button>
+    </div>
+
+    <div class="settings">
+        <div class="setting-item">
+            <label>文字の長さ</label>
+            <input type="number" id="length" value="16" min="4" max="50">
+        </div>
+        <div class="setting-item">
+            <label>数字 (0-9) を含める</label>
+            <input type="checkbox" id="includeNumbers" checked>
+        </div>
+        <div class="setting-item">
+            <label>記号 (!@#$%...) を含める</label>
+            <input type="checkbox" id="includeSymbols" checked>
+        </div>
+    </div>
+
+    <button onclick="generatePassword()">パスワードを生成する</button>
+    
+    <p style="text-align: center; margin-top: 20px;">
+        <a href="index.html" style="color: #666; font-size: 0.9rem;">← メニューに戻る</a>
+    </p>
+</div>
+
+<script>
+    function generatePassword() {
+        const length = document.getElementById('length').value;
+        const includeNumbers = document.getElementById('includeNumbers').checked;
+        const includeSymbols = document.getElementById('includeSymbols').checked;
+
+        const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const lowercase = "abcdefghijklmnopqrstuvwxyz";
+        const numbers = "0123456789";
+        const symbols = "!@#$%^&*()_+~`|}{[]:;?><,./-=";
+
+        let charPool = uppercase + lowercase;
+        if (includeNumbers) charPool += numbers;
+        if (includeSymbols) charPool += symbols;
+
+        let password = "";
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charPool.length);
+            password += charPool[randomIndex];
+        }
+
+        document.getElementById('passwordOutput').value = password;
+    }
+
+    function copyPassword() {
+        const passwordField = document.getElementById('passwordOutput');
+        if (!passwordField.value) return;
+        
+        passwordField.select();
+        document.execCommand('copy');
+        alert('クリップボードにコピーしました！');
+    }
+
+    // 初回実行
+    generatePassword();
+</script>
+
+</body>
+</html>
