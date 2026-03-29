@@ -1,6 +1,6 @@
 /**
  * ツール一覧（トップ・ツールバー・お気に入りの単一ソース）。
- * 追加手順: ここに 1 エントリ追加 → TOOL_HOME_ORDER に id → 対応する *.html で data-tool-id を同じ id に。
+ * 追加手順: エントリ追加 → TOOL_HOME_ORDER に id → TOOL_CATEGORY_MAP にカテゴリ → *.html で data-tool-id を同じ id に。
  */
 (function () {
   var ICON_COUNTER =
@@ -524,4 +524,84 @@
     "unitLength",
     "fuelEconomy",
   ];
+
+  /** トップページのカテゴリ表示順 */
+  window.TOOL_CATEGORY_ORDER = [
+    "text",
+    "encode",
+    "security",
+    "datetime",
+    "calc",
+    "design",
+    "dev",
+    "random",
+  ];
+
+  window.TOOL_CATEGORY_LABELS = {
+    text: "テキスト・文章",
+    encode: "エンコード・データ形式",
+    security: "セキュリティ・ID",
+    datetime: "日付・時刻",
+    calc: "計算・単位",
+    design: "デザイン・メディア",
+    dev: "開発者向け",
+    random: "抽選・乱数",
+  };
+
+  /**
+   * 各ツールのカテゴリ（新規ツール追加時はここにも 1 行追加）。
+   * キーは TOOL_REGISTRY / TOOL_HOME_ORDER の id と一致させる。
+   */
+  window.TOOL_CATEGORY_MAP = {
+    counter: "text",
+    password: "security",
+    wareki: "datetime",
+    qr: "design",
+    base64: "encode",
+    urlCodec: "encode",
+    htmlEscape: "encode",
+    jsonFormat: "encode",
+    jsonMinify: "encode",
+    uuidGen: "security",
+    sha256: "security",
+    slugify: "text",
+    caseConvert: "text",
+    lineSort: "text",
+    textDiff: "text",
+    regexTest: "dev",
+    unixTime: "datetime",
+    ageCalc: "datetime",
+    bmi: "calc",
+    percentCalc: "calc",
+    loanSim: "calc",
+    taxJp: "calc",
+    radixConv: "calc",
+    colorConv: "design",
+    contrast: "design",
+    gradientCss: "design",
+    lorem: "text",
+    creditCard: "calc",
+    zipJp: "text",
+    zenkaku: "text",
+    kataHira: "text",
+    stopwatch: "datetime",
+    pomodoro: "datetime",
+    countdown: "datetime",
+    textSplit: "text",
+    csvView: "dev",
+    jwtDecode: "dev",
+    uaParse: "dev",
+    dpiCalc: "calc",
+    aspectRatio: "calc",
+    readingTime: "text",
+    worldClock: "datetime",
+    randomPick: "random",
+    diceRoll: "random",
+    nanoid: "security",
+    subnet: "dev",
+    htmlEntity: "encode",
+    romanNum: "calc",
+    unitLength: "calc",
+    fuelEconomy: "calc",
+  };
 })();

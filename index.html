@@ -16,12 +16,18 @@
 
 <header id="site-header" class="site-header--home" data-header-partial="home"></header>
 
+<section class="home-search-block" aria-label="ツール検索">
+    <label class="home-search-label" for="home-tool-search">ツールを検索</label>
+    <input type="search" id="home-tool-search" class="home-tool-search" placeholder="名前や説明のキーワードで絞り込み…" autocomplete="off" enterkeyhint="search" />
+    <p id="home-search-hint" class="home-search-hint" role="status" aria-live="polite" hidden></p>
+</section>
+
 <section id="favorites-block" class="favorites-block" hidden>
     <h2 class="favorites-block-title">お気に入り</h2>
     <div class="tool-grid favorites-grid" id="favorites-grid"></div>
 </section>
 
-<main class="tool-grid" id="home-tool-grid"></main>
+<main class="home-tool-main" id="home-tool-main" aria-label="ツール一覧（カテゴリ別）"></main>
 
 <footer id="site-footer" class="site-footer" data-footer-partial="default"></footer>
 <script src="js/tool-registry.js"></script>

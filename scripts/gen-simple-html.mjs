@@ -68,6 +68,8 @@ function htmlFor(id) {
     <link rel="stylesheet" href="css/site.css">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZQCPMX5Z"></script>
     <script src="js/gtag-config.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4645103012651649"
+         crossorigin="anonymous"></script>
 </head>
 <body class="page-tool tool-page">
 
