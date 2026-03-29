@@ -10,6 +10,9 @@
   /* js/logo-mesh.js が上書き（メッシュと同じ色相の HSL） */
   --snap-accent: #007bff;
   --snap-accent-bright: #58a6ff;
+  /* ツールページ幅・余白（拡張時はここを調整） */
+  --tool-page-max: 600px;
+  --tool-panel-pad: clamp(18px, 4.5vw, 30px);
 }
 
 body {
@@ -40,9 +43,14 @@ html.tool-theme-dark body.page-home {
 }
 
 body.page-tool.tool-page {
-  max-width: 600px;
+  max-width: var(--tool-page-max);
   margin: 0 auto 40px;
-  padding: 72px 20px 20px;
+  padding-top: max(72px, calc(56px + env(safe-area-inset-top, 0px)));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-bottom: max(20px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  /* Safari: U+2194 等が絵文字フォントに取られないように */
+  font-variant-emoji: text;
   --tp-bg: #f4f7f6;
   --tp-surface: #ffffff;
   --tp-text: #333333;
@@ -228,8 +236,11 @@ html.tool-theme-dark .site-footer-links a {
   left: 0;
   right: 0;
   z-index: 1000;
-  min-height: 56px;
-  padding: 0 max(20px, calc((100vw - 600px) / 2));
+  min-height: calc(56px + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-right: max(20px, env(safe-area-inset-right, 0px), calc((100vw - var(--tool-page-max)) / 2));
+  padding-bottom: 0;
+  padding-left: max(20px, env(safe-area-inset-left, 0px), calc((100vw - var(--tool-page-max)) / 2));
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -557,6 +568,18 @@ body.page-privacy {
   stroke: currentColor;
 }
 
+@media (max-width: 380px) {
+  .tool-toolbar {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .tool-toolbar-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
 .tool-lead {
   margin: 0 0 18px;
   font-size: 0.9rem;
@@ -567,7 +590,7 @@ body.page-privacy {
 /* --- ツール本体（枠あり） --- */
 .tool-page .tool-panel {
   background: var(--tp-surface);
-  padding: 30px;
+  padding: var(--tool-panel-pad);
   border-radius: 12px;
   box-shadow: 0 4px 6px var(--tp-shadow);
   border: 1px solid var(--tp-header-border);
@@ -607,6 +630,96 @@ body.page-privacy {
 .tool-page textarea:focus {
   border-color: var(--tp-accent);
   outline: none;
+}
+
+/* --- QRコード作成 --- */
+.qr-tool .convert-hint {
+  margin-bottom: 14px;
+}
+
+.qr-label {
+  display: block;
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--tp-text);
+}
+
+.qr-tool textarea.qr-textarea {
+  min-height: 7.5rem;
+  height: auto;
+  max-height: 40vh;
+  margin-bottom: 16px;
+}
+
+.qr-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.qr-option {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 140px;
+  min-width: min(100%, 8rem);
+}
+
+.qr-option-lbl {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--tp-text-muted);
+}
+
+.qr-select {
+  width: 100%;
+  min-height: var(--convert-h);
+  font-size: var(--convert-fs);
+}
+
+.qr-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 12rem;
+  margin: 0 0 18px;
+  padding: 16px;
+  box-sizing: border-box;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--tp-border);
+  border-radius: 10px;
+}
+
+.qr-canvas {
+  display: block;
+  align-self: center;
+  max-width: 100%;
+  height: auto;
+}
+
+.qr-error {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #c62828;
+  background: rgba(198, 40, 40, 0.08);
+  border: 1px solid rgba(198, 40, 40, 0.25);
+  border-radius: 8px;
+}
+
+html.tool-theme-dark .qr-error {
+  color: #f85149;
+  background: rgba(248, 81, 73, 0.1);
+  border-color: rgba(248, 81, 73, 0.3);
+}
+
+.qr-download {
+  margin-bottom: 0;
 }
 
 /* --- 文字数カウント：レポート一覧 --- */
@@ -676,6 +789,22 @@ body.page-privacy {
   margin: 0;
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 420px) {
+  .counter-report-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    align-items: start;
+  }
+
+  .counter-report-row dd {
+    text-align: left;
+  }
+
+  .counter-report-dd--genko {
+    justify-content: flex-start;
+  }
 }
 
 .counter-report-num {
@@ -1375,7 +1504,7 @@ html.tool-theme-dark .convert-pass-error {
   font-weight: 400;
 }
 
-/* --- 西暦↔︎和暦変換 --- */
+/* --- 西暦↔和暦変換 --- */
 /* 日付・今日・結果の1行目の高さを揃える。フォントは 1rem で統一し、結果は字重で強調。 */
 .convert-tool {
   text-align: left;
@@ -1430,11 +1559,17 @@ html.tool-theme-dark .convert-pass-error {
 
 .convert-row--g {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: flex-end;
   gap: 8px;
   width: 100%;
   margin-bottom: 14px;
+}
+
+@media (min-width: 420px) {
+  .convert-row--g {
+    flex-wrap: nowrap;
+  }
 }
 
 .convert-g-date-field {
@@ -1507,9 +1642,31 @@ html.tool-theme-dark .convert-pass-error {
   padding: 0 8px;
 }
 
+/* WebKit / iOS: ネイティブ select の高さが潰れるのを防ぐ（元号ドロップダウン） */
+.convert-tool .convert-select.convert-select--era {
+  height: var(--convert-h);
+  min-height: var(--convert-h);
+  align-self: stretch;
+  line-height: 1.2;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 0 28px 0 10px;
+  background-color: var(--tp-input-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+}
+
+html.tool-theme-dark .convert-tool .convert-select.convert-select--era {
+  background-color: var(--tp-input-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
 .convert-ymd-row {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: flex-end;
   gap: 8px;
   width: 100%;
@@ -1521,7 +1678,21 @@ html.tool-theme-dark .convert-pass-error {
 }
 
 .convert-ymd-row > .convert-ymd-item.convert-ymd-item--era {
-  flex: 1.15 1 0;
+  flex: 1 1 100%;
+  min-width: min(100%, 12rem);
+  max-width: 100%;
+}
+
+@media (min-width: 520px) {
+  .convert-ymd-row {
+    flex-wrap: nowrap;
+  }
+
+  .convert-ymd-row > .convert-ymd-item.convert-ymd-item--era {
+    flex: 1.15 1 0;
+    min-width: 0;
+    max-width: none;
+  }
 }
 
 .convert-ymd-item {
@@ -1705,7 +1876,10 @@ html.tool-theme-dark .copy-toast {
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: max(20px, env(safe-area-inset-top, 0px))
+    max(20px, env(safe-area-inset-right, 0px))
+    max(20px, env(safe-area-inset-bottom, 0px))
+    max(20px, env(safe-area-inset-left, 0px));
   box-sizing: border-box;
 }
 

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>西暦↔和暦変換 | snap-tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/tool-theme-init.js"></script>
+    <link rel="stylesheet" href="css/site.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZQCPMX5Z"></script>
+    <script src="js/gtag-config.js"></script>
+</head>
+
+<body class="page-tool tool-page">
+
+    <header id="site-header" class="site-header--tool" data-header-partial="tool"></header>
+
+    <div class="tool-chrome" data-tool-id="wareki">
+        <div class="tool-panel convert-tool">
+            <div class="convert-tabs" role="tablist" aria-label="変換の種類">
+                <button type="button" class="convert-tab" role="tab" id="tab-g" aria-selected="true"
+                    aria-controls="panel-g">西暦 → 和暦</button>
+                <button type="button" class="convert-tab" role="tab" id="tab-w" aria-selected="false"
+                    aria-controls="panel-w">和暦 → 西暦</button>
+            </div>
+
+            <div id="panel-g" class="convert-tabpanel" role="tabpanel" aria-labelledby="tab-g">
+                <p class="convert-hint">西暦の日付を和暦に変換します。</p>
+                <div class="convert-row convert-row--g">
+                    <div class="convert-g-date-field">
+                        <span class="convert-ymd-lbl convert-g-date-lbl" aria-hidden="true">年月日</span>
+                        <input type="date" id="gDate" class="convert-date-input" aria-label="西暦の日付（年・月・日）">
+                    </div>
+                    <button type="button" class="btn-today" id="btnToday">今日</button>
+                </div>
+                <div id="outWareki" class="convert-result convert-result--with-copy" role="status" aria-live="off">
+                </div>
+            </div>
+
+            <div id="panel-w" class="convert-tabpanel" role="tabpanel" aria-labelledby="tab-w" hidden>
+                <p class="convert-hint">和暦の日付を西暦に変換します。元年は年に 1 を入力します。</p>
+                <div class="convert-wareki-compact">
+                    <div class="convert-ymd-row">
+                        <label class="convert-ymd-item convert-ymd-item--era">
+                            <span class="convert-ymd-lbl">元号</span>
+                            <select id="wEra" class="convert-select convert-select--era" aria-label="元号"></select>
+                        </label>
+                        <label class="convert-ymd-item">
+                            <span class="convert-ymd-lbl">年</span>
+                            <input type="number" id="wYear" class="convert-num convert-num--sm" min="1" max="99"
+                                inputmode="numeric" aria-label="和暦の年">
+                        </label>
+                        <label class="convert-ymd-item">
+                            <span class="convert-ymd-lbl">月</span>
+                            <input type="number" id="wMonth" class="convert-num convert-num--sm" min="1" max="12"
+                                inputmode="numeric" aria-label="月">
+                        </label>
+                        <label class="convert-ymd-item">
+                            <span class="convert-ymd-lbl">日</span>
+                            <input type="number" id="wDay" class="convert-num convert-num--sm" min="1" max="31"
+                                inputmode="numeric" aria-label="日">
+                        </label>
+                        <button type="button" class="btn-today" id="btnWarekiToday">今日</button>
+                    </div>
+                </div>
+                <div id="outGregorian" class="convert-result convert-result--with-copy" role="status" aria-live="off">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/tool-registry.js"></script>
+    <script src="js/logo-mesh.js"></script>
+    <script src="js/partials-loader.js"></script>
+    <script src="js/tool-theme.js"></script>
+    <script src="js/copy-toast.js"></script>
+    <script src="js/tool-chrome.js"></script>
+    <script src="js/wareki.js"></script>
+    <script src="js/wareki-page.js"></script>
+</body>
+
+</html>

@@ -1,4 +1,28 @@
 (function () {
+  /** 旧ファイル名・旧 data-tool-id からの移行（お気に入りの localStorage） */
+  var LEGACY_TOOL_IDS = { date: "wareki", generator: "password" };
+
+  function migrateFavoriteIds() {
+    try {
+      var key = "snap-tools-favorites";
+      var raw = localStorage.getItem(key);
+      if (!raw) return;
+      var a = JSON.parse(raw);
+      if (!Array.isArray(a)) return;
+      var next = a.map(function (id) {
+        return LEGACY_TOOL_IDS[id] || id;
+      });
+      var changed = false;
+      for (var i = 0; i < a.length; i++) {
+        if (a[i] !== next[i]) {
+          changed = true;
+          break;
+        }
+      }
+      if (changed) localStorage.setItem(key, JSON.stringify(next));
+    } catch (e) {}
+  }
+
   function getRegistry() {
     return window.TOOL_REGISTRY || {};
   }
@@ -88,6 +112,7 @@
   }
 
   function init() {
+    migrateFavoriteIds();
     renderHomeToolCards();
     render();
   }

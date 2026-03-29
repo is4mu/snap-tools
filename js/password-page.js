@@ -294,7 +294,7 @@
   }
 
   function entropyBitsPhrase(wordCount) {
-    var wl = window.GENERATOR_PASSPHRASE_WORDS;
+    var wl = window.PASSWORD_PASSPHRASE_WORDS;
     if (!wl || !wl.length) return null;
     return wordCount * log2(wl.length);
   }
@@ -613,7 +613,7 @@
 
   function generatePasswordsPhraseFull(o) {
     setError("");
-    var wl = window.GENERATOR_PASSPHRASE_WORDS;
+    var wl = window.PASSWORD_PASSPHRASE_WORDS;
     if (!wl || wl.length === 0) {
       phraseLinesWords = null;
       setError("単語リストを読み込めていません。ページを再読み込みしてください。");

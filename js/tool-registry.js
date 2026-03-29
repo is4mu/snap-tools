@@ -1,10 +1,16 @@
+/**
+ * ツール一覧（トップ・ツールバー・お気に入りの単一ソース）。
+ * 追加手順: ここに 1 エントリ追加 → TOOL_HOME_ORDER に id → 対応する *.html で data-tool-id を同じ id に。
+ */
 (function () {
   var ICON_COUNTER =
     '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>';
-  var ICON_GENERATOR =
+  var ICON_PASSWORD =
     '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
-  var ICON_DATE =
+  var ICON_WAREKI =
     '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
+  var ICON_QR =
+    '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/></svg>';
 
   window.TOOL_REGISTRY = {
     counter: {
@@ -24,8 +30,8 @@
         "処理はすべてお使いのブラウザ内で行われ、テキストがサーバーに送られることはありません。",
       href: "counter.html",
     },
-    generator: {
-      iconSvg: ICON_GENERATOR,
+    password: {
+      iconSvg: ICON_PASSWORD,
       title: "パスワード生成",
       short:
         "ランダム文字列またはパスフレーズ（英単語）からパスワードを生成します。推定エントロピーと強度も表示します。\n" + 
@@ -36,11 +42,11 @@
         "乱数には可能な環境でブラウザの暗号用乱数（crypto.getRandomValues）を使います。エントロピー表示は簡略化した計算であり、実際の攻撃耐性を保証するものではありません。最高水準の用途にはパスワードマネージャー等の利用もご検討ください。\n\n" +
         "【プライバシー】\n" +
         "生成結果はサーバーに送信されません。",
-      href: "generator.html",
+      href: "password.html",
     },
-    date: {
-      iconSvg: ICON_DATE,
-      title: "西暦↔︎和暦変換",
+    wareki: {
+      iconSvg: ICON_WAREKI,
+      title: "西暦↔和暦変換",
       short:
         "西暦と和暦（大宝から令和まで）を相互変換。",
       long:
@@ -61,10 +67,26 @@
         "旧暦に基づく改元を西暦に当てる作業は、史料の読み方や対照表の版によって日付が文献と異なることがあります。Harumi のデータも一つの対照表にすぎず、政府の告示・公文書・契約書・学術出版などで用いる公式な基準になるものではありません。裁判・契約・研究の根拠などにそのまま用いないでください。表示は目安・参考としてご利用ください。\n\n" +
         "【プライバシー】\n" +
         "日付の計算はすべてお使いのブラウザ内で行われ、入力内容がサーバーに送られることはありません。",
-      href: "date.html",
+      href: "wareki.html",
+    },
+    qr: {
+      iconSvg: ICON_QR,
+      title: "QRコード作成",
+      short:
+        "テキストや URL から QR コードを表示し、PNG で保存できます。入力はブラウザ内だけで処理されます。",
+      long:
+        "内容を入力すると QR コードをプレビューし、PNG 画像として保存できます。\n\n" +
+        "【オプション】\n" +
+        "・サイズ: ピクセル単位の表示・保存サイズ（200〜400）\n" +
+        "・誤り訂正: 高いほど汚れに強いが、同じサイズで扱えるデータ量の上限が下がります（一般的には「中」で十分です）\n\n" +
+        "【ライブラリ】\n" +
+        "QR 生成に npm パッケージ「qrcode」（MIT）をブラウザ用にバンドルしたものを同サイトから読み込んでいます。\n\n" +
+        "【プライバシー】\n" +
+        "入力内容はサーバーに送信されません。オフラインでもページとバンドルが読めれば利用できます。",
+      href: "qr.html",
     },
   };
 
-  /** トップページのツールカード表示順（id は TOOL_REGISTRY のキー） */
-  window.TOOL_HOME_ORDER = ["counter", "generator", "date"];
+  /** トップページのツールカード表示順（id は TOOL_REGISTRY のキー＝data-tool-id） */
+  window.TOOL_HOME_ORDER = ["counter", "password", "wareki", "qr"];
 })();
