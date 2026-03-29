@@ -1,90 +1,85 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZQCPMX5Z"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-CZZQCPMX5Z');
-</script>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>今日の日付・和暦 | snap-tools</title>
-    <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f7f6; }
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
-        h1 { font-size: 1.5rem; color: #333; margin-bottom: 25px; }
-        .date-display { margin-bottom: 20px; padding: 20px; background: #e9ecef; border-radius: 8px; }
-        .large-text { display: block; font-size: 1.8rem; font-weight: bold; color: #007bff; margin-bottom: 5px; }
-        .sub-text { color: #666; font-size: 1rem; }
-        .btn-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
-        button { 
-            padding: 12px; background: #28a745; color: white; border: none; 
-            border-radius: 8px; cursor: pointer; transition: opacity 0.2s;
-        }
-        button:hover { opacity: 0.8; }
-        .back-link { margin-top: 30px; display: block; color: #666; text-decoration: none; font-size: 0.9rem; }
-    </style>
+    <title>西暦↔︎和暦変換 | snap-tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/tool-theme-init.js"></script>
+    <link rel="stylesheet" href="css/site.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZQCPMX5Z"></script>
+    <script src="js/gtag-config.js"></script>
 </head>
-<body>
-    <header style="padding: 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; background: white;">
-    <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-        <span style="font-weight: bold; color: #007bff; font-size: 1.2rem;">snap-tools</span>
-    </a>
-    <nav style="margin-left: auto;">
-        <a href="index.html" style="color: #666; text-decoration: none; font-size: 0.9rem;">ホーム</a>
-    </nav>
-</header>
 
-<div class="container">
-    <h1>今日の日付・和暦変換</h1>
-    
-    <div class="date-display">
-        <span class="sub-text">今日は</span>
-        <span id="warekiDisplay" class="large-text">読み込み中...</span>
-        <span id="seirekiDisplay" class="sub-text"></span>
+<body class="page-tool tool-page">
+
+    <header id="site-header" class="site-header--tool" data-header-partial="tool"></header>
+
+    <div class="tool-chrome" data-tool-id="date">
+        <div class="tool-panel convert-tool">
+            <div class="convert-tabs" role="tablist" aria-label="変換の種類">
+                <button type="button" class="convert-tab" role="tab" id="tab-g" aria-selected="true"
+                    aria-controls="panel-g">西暦 → 和暦</button>
+                <button type="button" class="convert-tab" role="tab" id="tab-w" aria-selected="false"
+                    aria-controls="panel-w">和暦 → 西暦</button>
+            </div>
+
+            <div id="panel-g" class="convert-tabpanel" role="tabpanel" aria-labelledby="tab-g">
+                <p class="convert-hint">西暦の日付を和暦に変換します。</p>
+                <div class="convert-row convert-row--g">
+                    <div class="convert-g-date-field">
+                        <span class="convert-ymd-lbl convert-g-date-lbl" aria-hidden="true">年月日</span>
+                        <input type="date" id="gDate" class="convert-date-input" aria-label="西暦の日付（年・月・日）">
+                    </div>
+                    <button type="button" class="btn-today" id="btnToday">今日</button>
+                </div>
+                <div id="outWareki" class="convert-result convert-result--with-copy" role="status" aria-live="off">
+                </div>
+            </div>
+
+            <div id="panel-w" class="convert-tabpanel" role="tabpanel" aria-labelledby="tab-w" hidden>
+                <p class="convert-hint">和暦の日付を西暦に変換します。元年は年に 1 を入力します。</p>
+                <div class="convert-wareki-compact">
+                    <div class="convert-ymd-row">
+                        <label class="convert-ymd-item convert-ymd-item--era">
+                            <span class="convert-ymd-lbl">元号</span>
+                            <select id="wEra" class="convert-select convert-select--era" aria-label="元号"></select>
+                        </label>
+                        <label class="convert-ymd-item">
+                            <span class="convert-ymd-lbl">年</span>
+                            <input type="number" id="wYear" class="convert-num convert-num--sm" min="1" max="99"
+                                inputmode="numeric" aria-label="和暦の年">
+                        </label>
+                        <label class="convert-ymd-item">
+                            <span class="convert-ymd-lbl">月</span>
+                            <input type="number" id="wMonth" class="convert-num convert-num--sm" min="1" max="12"
+                                inputmode="numeric" aria-label="月">
+                        </label>
+                        <label class="convert-ymd-item">
+                            <span class="convert-ymd-lbl">日</span>
+                            <input type="number" id="wDay" class="convert-num convert-num--sm" min="1" max="31"
+                                inputmode="numeric" aria-label="日">
+                        </label>
+                        <button type="button" class="btn-today" id="btnWarekiToday">今日</button>
+                    </div>
+                </div>
+                <div id="outGregorian" class="convert-result convert-result--with-copy" role="status" aria-live="off">
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="btn-group">
-        <button onclick="copyText('wareki')">和暦形式をコピー</button>
-        <button onclick="copyText('seireki')" style="background: #6c757d;">西暦形式をコピー</button>
-    </div>
-
-    <a href="index.html" class="back-link">← メニューに戻る</a>
-</div>
-
-<script>
-    function updateDate() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = now.getMonth() + 1;
-        const date = now.getDate();
-        const day = ["日","月","火","水","木","金","土"][now.getDay()];
-
-        // 簡易的な和暦計算（令和のみ対応）
-        const reiwaYear = year - 2018;
-        const warekiStr = `令和${reiwaYear === 1 ? '元' : reiwaYear}年 ${month}月${date}日 (${day})`;
-        const seirekiStr = `${year}年${month}月${date}日`;
-
-        document.getElementById('warekiDisplay').textContent = warekiStr;
-        document.getElementById('seirekiDisplay').textContent = `(西暦 ${seirekiStr})`;
-    }
-
-    function copyText(type) {
-        const text = type === 'wareki' 
-            ? document.getElementById('warekiDisplay').textContent 
-            : document.getElementById('seirekiDisplay').textContent.replace(/[()西暦 ]/g, '');
-        
-        navigator.clipboard.writeText(text).then(() => {
-            alert('コピーしました！: ' + text);
-        });
-    }
-
-    updateDate();
-</script>
-
+    <script src="js/tool-registry.js"></script>
+    <script src="js/logo-mesh.js"></script>
+    <script src="js/partials-loader.js"></script>
+    <script src="js/tool-theme.js"></script>
+    <script src="js/copy-toast.js"></script>
+    <script src="js/tool-chrome.js"></script>
+    <script src="js/wareki.js"></script>
+    <script src="js/date-page.js"></script>
 </body>
+
 </html>

@@ -1,126 +1,33 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZQCPMX5Z"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-CZZQCPMX5Z');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>snap-tools | 便利ツール集</title>
-    <style>
-        /* --- ヘッダー・ロゴのスタイル --- */
-        header { 
-            margin-bottom: 50px; 
-            border-bottom: 2px solid #e0f0ff; 
-            padding-bottom: 20px; 
-        }
-        
-        .logo-wrapper { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 15px; /* アイコンと文字の間隔 */
-        }
-        
-        .logo-icon { 
-            width: 60px;  /* ロゴの大きさ */
-            height: 60px; 
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); /* 軽い影 */
-        }
-        
-        .logo-text-group { 
-            display: flex; 
-            flex-direction: column; 
-            text-align: left; 
-        }
-
-        .logo-main-text { 
-            font-size: 2.2rem; 
-            font-weight: bold; 
-            color: #007bff; 
-            letter-spacing: -1px; /* 文字間隔を詰めてモダンに */
-            line-height: 1;
-        }
-        
-        .logo-sub-text { 
-            font-size: 0.9rem; 
-            color: #666; 
-            margin-top: 5px; 
-        }
-        
-        /* レスポンシブ対応（スマホでは縦並びに） */
-        @media (max-width: 600px) {
-            .logo-wrapper { flex-direction: column; text-align: center; }
-            .logo-text-group { text-align: center; }
-            .logo-main-text { font-size: 1.8rem; }
-        }
-        
-        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background: #f4f7f6; color: #333; }
-        header { text-align: center; margin-bottom: 40px; }
-        h1 { font-size: 2.5rem; color: #007bff; margin-bottom: 10px; }
-        .description { color: #666; }
-        
-        /* ツールカードのレイアウト */
-        .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .tool-card { 
-            background: white; padding: 20px; border-radius: 12px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-decoration: none; color: inherit;
-            transition: transform 0.2s, box-shadow 0.2s; border: 1px solid #eee;
-        }
-        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); border-color: #007bff; }
-        .tool-card h2 { font-size: 1.2rem; margin-top: 0; color: #007bff; }
-        .tool-card p { font-size: 0.9rem; color: #666; line-height: 1.4; }
-        
-        footer { margin-top: 60px; text-align: center; font-size: 0.8rem; color: #999; }
-    </style>
+    <title>Snap Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/tool-theme-init.js"></script>
+    <link rel="stylesheet" href="css/site.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZQCPMX5Z"></script>
+    <script src="js/gtag-config.js"></script>
 </head>
-<body>
+<body class="page-home">
 
-<header>
-    <div class="logo-wrapper">
-        <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="48" fill="#e0f0ff" stroke="#007bff" stroke-width="4"/>
-            <rect x="25" y="45" width="50" height="35" rx="5" fill="#007bff"/>
-            <path d="M40,25 L50,15 L60,25 L55,30 L65,40 L60,45 L50,35 L45,40 L40,35 Z" fill="#333"/>
-            <path d="M45,55 L55,55 L48,65 L58,65 L50,80" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
-        </svg>
-        <div class="logo-text-group">
-            <span class="logo-main-text">snap-tools</span>
-            <span class="logo-sub-text">パッと使える、シンプルなウェブツール集</span>
-        </div>
-    </div>
-</header>
+<header id="site-header" class="site-header--home" data-header-partial="home"></header>
 
-<main class="tool-grid">
-    <a href="counter.html" class="tool-card">
-        <h2>文字数カウント</h2>
-        <p>全文字数、空白抜き、行数、原稿用紙枚数をリアルタイムで計測します。</p>
-    </a>
+<section id="favorites-block" class="favorites-block" hidden>
+    <h2 class="favorites-block-title">お気に入り</h2>
+    <div class="tool-grid favorites-grid" id="favorites-grid"></div>
+</section>
 
-    <a href="generator.html" class="tool-card">
-        <h2>パスワード生成</h2>
-        <p>安全なランダムパスワードをワンクリックで生成します。長さや記号の有無も指定可能。</p>
-    </a>
+<main class="tool-grid" id="home-tool-grid"></main>
 
-    <a href="date.html" class="tool-card">
-        <h2>今日の日付・和暦</h2>
-        <p>今日が令和何年か、西暦何年かを即座に確認。クリックでクリップボードにコピーできます。</p>
-    </a>
-</main>
-
-<footer style="margin-top: 60px; text-align: center; padding: 20px; border-top: 1px solid #eee;">
-    <p style="color: #666; font-size: 0.9rem;">&copy; 2026 snap-tools</p>
-    <div style="margin-top: 10px;">
-        <a href="privacy.html" style="color: #999; text-decoration: none; font-size: 0.8rem; margin: 0 10px;">プライバシーポリシー</a>
-        <span style="color: #ccc;">|</span>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfzdf94mBNiVJ9UcXgALDbDsibCoi5k4d-pdpf5-tltPzGbRw/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" style="color: #999; text-decoration: none; font-size: 0.8rem; margin: 0 10px;">お問い合わせ</a>
-    </div>
-</footer>
+<footer id="site-footer" class="site-footer" data-footer-partial="default"></footer>
+<script src="js/tool-registry.js"></script>
+<script src="js/logo-mesh.js"></script>
+<script src="js/partials-loader.js"></script>
+<script src="js/tool-theme.js"></script>
+<script src="js/home-favorites.js"></script>
 </body>
 </html>

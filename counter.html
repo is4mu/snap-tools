@@ -1,87 +1,96 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZQCPMX5Z"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-CZZQCPMX5Z');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文字数カウント | snap-tools</title>
-    <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f7f6; }
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1 { font-size: 1.5rem; color: #333; margin-bottom: 20px; }
-        textarea { width: 100%; height: 200px; padding: 15px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; resize: vertical; }
-        textarea:focus { border-color: #007bff; outline: none; }
-        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .result-item { background: #e9ecef; padding: 15px; border-radius: 8px; text-align: center; }
-        .count { display: block; font-size: 1.8rem; font-weight: bold; color: #007bff; }
-        .label { font-size: 0.8rem; color: #666; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/tool-theme-init.js"></script>
+    <link rel="stylesheet" href="css/site.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZQCPMX5Z"></script>
+    <script src="js/gtag-config.js"></script>
 </head>
-<body>
-    <header style="padding: 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; background: white;">
-        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-            <span style="font-weight: bold; color: #007bff; font-size: 1.2rem;">snap-tools</span>
-        </a>
-        <nav style="margin-left: auto;">
-            <a href="index.html" style="color: #666; text-decoration: none; font-size: 0.9rem;">ホーム</a>
-        </nav>
-    </header>
-    
-    <div class="container">
-    <h1>文字数カウント</h1>
-    <textarea id="inputText" placeholder="ここにテキストを入力またはペーストしてください..."></textarea>
-    
-    <div class="result-grid">
-        <div class="result-item">
-            <span class="label">全文字数</span>
-            <span id="totalChars" class="count">0</span>
-        </div>
-        <div class="result-item">
-            <span class="label">空白抜き</span>
-            <span id="noSpaceChars" class="count">0</span>
-        </div>
-        <div class="result-item">
-            <span class="label">行数</span>
-            <span id="lineCount" class="count">0</span>
-        </div>
-        <div class="result-item">
-            <span class="label">原稿用紙(枚)</span>
-            <span id="paperCount" class="count">0</span>
+<body class="page-tool tool-page">
+
+<header id="site-header" class="site-header--tool" data-header-partial="tool"></header>
+
+<div class="tool-chrome" data-tool-id="counter">
+    <div class="tool-panel counter-tool">
+        <textarea id="inputText" placeholder="ここにテキストを入力またはペーストしてください…" aria-label="カウントするテキスト"></textarea>
+
+        <div class="counter-report" id="counterReport" aria-live="polite">
+            <section class="counter-report-section">
+                <h2 class="counter-report-heading">文字数</h2>
+                <dl class="counter-report-dl">
+                    <div class="counter-report-row">
+                        <dt>空白を含む</dt>
+                        <dd><span class="counter-report-num" id="counterCharsInc">0</span></dd>
+                    </div>
+                    <div class="counter-report-row">
+                        <dt>空白を除く</dt>
+                        <dd><span class="counter-report-num" id="counterCharsExc">0</span></dd>
+                    </div>
+                </dl>
+            </section>
+            <section class="counter-report-section">
+                <h2 class="counter-report-heading">行数</h2>
+                <dl class="counter-report-dl">
+                    <div class="counter-report-row">
+                        <dt>空行を含む</dt>
+                        <dd><span class="counter-report-num" id="counterLineInc">0</span></dd>
+                    </div>
+                    <div class="counter-report-row">
+                        <dt>空行を除く</dt>
+                        <dd><span class="counter-report-num" id="counterLineExc">0</span></dd>
+                    </div>
+                </dl>
+            </section>
+            <section class="counter-report-section">
+                <h2 class="counter-report-heading">原稿用紙</h2>
+                <dl class="counter-report-dl">
+                    <div class="counter-report-row counter-report-row--single">
+                        <dt>換算枚数（20 行＝1 枚）</dt>
+                        <dd class="counter-report-dd--genko">
+                            <span class="counter-report-num" id="counterGenko">0</span><span class="counter-report-unit">枚</span><span class="counter-report-genko-rows" aria-label="換算行数">（<span id="counterGenkoRows">0</span>行）</span>
+                        </dd>
+                    </div>
+                </dl>
+                <p class="counter-report-note counter-report-note--genko">20文字×20行を原稿用紙一枚としてカウントします。段落下げ・句読点・鉤括弧の調整はしていません。文字はUnicodeのコードポイント単位です。</p>
+            </section>
+            <section class="counter-report-section">
+                <h2 class="counter-report-heading">ポスト（X）</h2>
+                <dl class="counter-report-dl">
+                    <div class="counter-report-row counter-report-row--x" id="counterXRow">
+                        <dt>半角換算</dt>
+                        <dd class="counter-report-x-dd">
+                            <span class="counter-report-num" id="counterXWeight">0</span><span class="counter-report-slash">／</span><span id="counterXLimit">280</span>
+                            <span class="counter-report-meta" id="counterXRemain">残り 280（半角換算）</span>
+                        </dd>
+                    </div>
+                </dl>
+                <p class="counter-report-note">実際の X では絵文字・リンク等でカウントが変わることがあります。長文は下の「投稿に分割」からコピーできます（半角換算だけで区切り、改行位置では分割しません）。</p>
+                <div id="counterXSplitWrap" class="counter-x-split-wrap" hidden>
+                    <h3 class="counter-x-split-title">投稿に分割（コピー用）</h3>
+                    <p class="counter-x-split-lead" id="counterXSplitLead"></p>
+                    <ul class="counter-x-split-list" id="counterXSplitList"></ul>
+                    <div class="counter-x-split-actions">
+                        <button type="button" class="counter-x-split-btn-all" id="counterXCopyAll">区切り付きでまとめてコピー</button>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 </div>
 
-<script>
-    const textArea = document.getElementById('inputText');
-    const totalChars = document.getElementById('totalChars');
-    const noSpaceChars = document.getElementById('noSpaceChars');
-    const lineCount = document.getElementById('lineCount');
-    const paperCount = document.getElementById('paperCount');
-
-    textArea.addEventListener('input', () => {
-        const text = textArea.value;
-        
-        // 全文字数
-        totalChars.textContent = text.length;
-        
-        // 空白・改行抜き文字数
-        noSpaceChars.textContent = text.replace(/\s+/g, '').length;
-        
-        // 行数（空の状態は0、入力があれば改行を数える）
-        lineCount.textContent = text ? text.split(/\r\n|\r|\n/).length : 0;
-        
-        // 400字詰め原稿用紙換算
-        paperCount.textContent = Math.ceil(text.length / 400);
-    });
-</script>
+<script src="js/tool-registry.js"></script>
+<script src="js/logo-mesh.js"></script>
+<script src="js/partials-loader.js"></script>
+<script src="js/tool-theme.js"></script>
+<script src="js/copy-toast.js"></script>
+<script src="js/tool-chrome.js"></script>
+<script src="js/counter-page.js"></script>
 
 </body>
 </html>
