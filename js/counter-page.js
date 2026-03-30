@@ -189,6 +189,13 @@
     }
   }
 
+  /** 空白・改行で区切ったトークン数（英語向けの目安。日本語はスペースが少ないと 1 語に近づきやすい） */
+  function countWords(text) {
+    var t = text.trim();
+    if (!t) return 0;
+    return t.split(/\s+/).length;
+  }
+
   function computeStats(text) {
     var noNl = removeNewlines(text);
     var noWsNoNl = stripAllWhitespace(noNl);
@@ -201,6 +208,7 @@
     return {
       charsInc: graphemeCount(noNl),
       charsExc: graphemeCount(noWsNoNl),
+      words: countWords(text),
       lineWithEmpty: lines.withEmpty,
       lineWithoutEmpty: lines.withoutEmpty,
       genko: genko,
@@ -304,6 +312,7 @@
 
     setText("counterCharsInc", String(st.charsInc));
     setText("counterCharsExc", String(st.charsExc));
+    setText("counterWords", String(st.words));
     setText("counterLineInc", String(st.lineWithEmpty));
     setText("counterLineExc", String(st.lineWithoutEmpty));
     setText("counterGenko", String(st.genko));

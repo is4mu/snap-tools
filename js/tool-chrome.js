@@ -152,16 +152,29 @@
     if (!panel) return;
 
     var toolbar = buildToolbar(meta);
-    var lead = document.createElement("p");
-    lead.className = "tool-lead";
-    lead.textContent = meta.medium || meta.short;
+    var lead = null;
+    if (!meta.suppressLead) {
+      lead = document.createElement("p");
+      lead.className = "tool-lead";
+      lead.textContent = meta.medium || meta.short;
+    }
 
     chrome.insertBefore(toolbar, panel);
-    chrome.insertBefore(lead, panel);
+    if (meta.subcopy) {
+      var sub = document.createElement("p");
+      sub.className = "tool-subcopy";
+      sub.textContent = meta.subcopy;
+      chrome.insertBefore(sub, panel);
+    }
+    if (lead) chrome.insertBefore(lead, panel);
 
     var titleEl = toolbar.querySelector(".tool-toolbar-title");
     titleEl.textContent = meta.title;
-    document.title = meta.title + " | snap-tools";
+    if (meta.documentTitle) {
+      document.title = meta.documentTitle;
+    } else {
+      document.title = meta.title + " | snap-tools";
+    }
 
     var favBtn = toolbar.querySelector('[data-action="favorite"]');
     if (getFavorites().indexOf(id) >= 0) {
