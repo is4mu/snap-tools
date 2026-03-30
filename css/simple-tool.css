@@ -508,6 +508,170 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* --- カラーコード変換 --- */
+.color-conv-tool {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.color-conv-preview-wrap {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.color-conv-hex-field {
+  margin: 0;
+}
+
+.color-conv-hex-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 右側は「色スウォッチ＝カラーピッカー起動」のみ（ネイティブUIは非表示） */
+.color-conv-picker-only {
+  position: relative;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--tp-border);
+  border-radius: 10px;
+  background: var(--tp-input-bg);
+  overflow: hidden;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.color-conv-picker-native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  opacity: 0;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.color-conv-picker-only:focus-within {
+  outline: 2px solid var(--tp-accent);
+  outline-offset: 2px;
+}
+
+.color-conv-tabs-wrap {
+  min-width: 0;
+}
+
+.color-conv-tabs.convert-tabs {
+  flex-wrap: wrap;
+}
+
+.color-conv-tabpanel {
+  padding-top: 4px;
+}
+
+.color-conv-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.color-conv-slider-name {
+  flex: 0 0 3.2rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--tp-text-muted);
+}
+
+.color-conv-range {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 1.5rem;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  accent-color: var(--tp-accent);
+  box-sizing: border-box;
+}
+
+.color-conv-num.simple-tool-input {
+  flex: 0 0 auto;
+  width: 5.25rem;
+  min-height: var(--convert-h);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding-right: 10px;
+}
+
+/* --- CSS グラデーション生成 --- */
+.gradient-css-preview {
+  height: 88px;
+  border-radius: 10px;
+  border: 1px solid var(--tp-border);
+  margin-bottom: 12px;
+}
+
+.gradient-css-code-wrap {
+  margin-bottom: 12px;
+}
+
+.gradient-css-code.case-convert-output {
+  min-height: 0;
+}
+
+.gradient-css-controls {
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.gradient-css-controls .gradient-css-field {
+  min-width: 0;
+}
+
+.gradient-css-picker.color-conv-picker-only {
+  width: 100%;
+  height: var(--convert-h);
+  border-radius: 8px;
+}
+
+.gradient-css-color-input.color-conv-picker-native {
+  opacity: 0;
+}
+
+.gradient-css-random-wrap {
+  flex: 0 0 auto;
+  align-self: flex-end;
+  padding-bottom: 0;
+}
+
+/* メッシュ風：色が多いので折り返し優先 */
+.mesh-gradient-controls {
+  flex-wrap: wrap;
+}
+
+.mesh-gradient-controls .gradient-css-field {
+  flex: 1 1 5.5rem;
+  min-width: 5rem;
+  max-width: 100%;
+}
+
+.gradient-css-random-btn.simple-tool-icon-btn {
+  flex: 0 0 auto;
+  border: 1px solid var(--tp-border);
+  background: var(--tp-input-bg);
+}
+
 /* --- 丸数字 --- */
 .maru-suuji-tool .maru-suuji-filter.simple-tool-field {
   flex: 1 1 12rem;
@@ -880,5 +1044,9 @@ label.simple-tool-icon-btn {
     width: 100%;
     flex: 0 1 auto;
     min-height: var(--convert-h);
+  }
+
+  .gradient-css-controls {
+    flex-wrap: wrap;
   }
 }

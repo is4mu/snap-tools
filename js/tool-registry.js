@@ -37,6 +37,14 @@
     "</svg>";
   var ICON_COLOR =
     '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14 14 0 0 0 0 20"/></svg>';
+  var ICON_COLOR_CONV =
+    '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M12 3a9 9 0 1 0 0 18c2.5 0 2.5-2 1.6-2.9-.6-.6-.9-1.2-.9-1.9 0-1.6 1.3-2.9 2.9-2.9H17a4 4 0 0 0 0-8h-1"/>' +
+    '<circle cx="8.2" cy="10" r="1"/>' +
+    '<circle cx="10.6" cy="7.4" r="1"/>' +
+    '<circle cx="14" cy="7.2" r="1"/>' +
+    '<circle cx="7.2" cy="13.4" r="1"/>' +
+    "</svg>";
   var ICON_HASH =
     '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>';
   var ICON_LIST =
@@ -392,14 +400,24 @@
       href: "calc/radix-conv/",
     },
     colorConv: {
-      iconSvg: ICON_COLOR,
+      iconSvg: ICON_COLOR_CONV,
       title: "カラーコード変換",
-      searchExtra: "からー hex rgb hsl 色 変換",
-      short: "HEX から RGB・HSL を表示。",
+      searchExtra: "からー hex rgb hsl cmyk lab 色 変換 すらいだー",
+      documentTitle: "カラーコード変換 無料ツール｜HEX・RGB・HSL・CMYK・Lab 相互変換",
+      short: "HEX・RGB・HSL・CMYK・Lab をタブで相互変換。",
       medium:
-        "#RRGGBB 形式の色から RGB と HSL の値を求めます。処理はブラウザ内のみです。",
+        "HEX・RGB・HSL・CMYK・Lab を相互変換します。タブごとのスライダーとカラーピッカーで色を調整でき、値はすべて連動して更新されます。処理はブラウザ内のみです。",
       long:
-        "#RRGGBB 形式の色から RGB と HSL の値を求めます。\n\n【プライバシー】\n処理はブラウザ内のみです。",
+        "HEX・RGB・HSL・CMYK・Lab を相互変換します。\n\n" +
+        "【使い方】\n" +
+        "1) HEX 入力欄にカラーコードを入力、または右側のカラーピッカーで色を選択\n" +
+        "2) 下部タブ（RGB / HSL / CMYK / Lab）を切り替え\n" +
+        "3) 各タブのスライダーを動かして色を調整\n" +
+        "4) すべての形式の値が自動で同期更新されます\n\n" +
+        "【補足】\n" +
+        "・HEX は #RGB / #RRGGBB に対応します。\n" +
+        "・Lab は D65 基準で計算しています。\n\n" +
+        "【プライバシー】\n処理はブラウザ内のみです。",
       href: "design/color-conv/",
     },
     contrast: {
@@ -414,15 +432,26 @@
       href: "design/contrast/",
     },
     gradientCss: {
-      iconSvg: ICON_COLOR,
+      iconSvg: ICON_COLOR_CONV,
       title: "CSS グラデーション生成",
-      searchExtra: "ぐらで linear-gradient 線形グラデ background",
-      short: "線形グラデーションの CSS を生成・コピー。",
+      searchExtra: "ぐらで linear-gradient リアルタイム カラーピッカー 線形グラデ background",
+      short: "線形グラデーションの CSS をリアルタイム生成。コピーはコード右上のアイコンから。",
       medium:
-        "角度と 2 色から linear-gradient の CSS を生成します。処理はブラウザ内のみです。",
+        "色2色と角度から linear-gradient の CSS をリアルタイムで表示します。カラーピッカーと一括ランダムで試しやすく、処理はブラウザ内のみです。",
       long:
-        "角度と 2 色から linear-gradient の CSS を生成します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
+        "色2色と角度から linear-gradient の CSS をリアルタイムで表示します。カラーピッカーで色を選び、CSS コードは右上のアイコンからコピーできます。ランダムアイコンで色と角度を一括で試せます。\n\n【プライバシー】\n処理はブラウザ内のみです。",
       href: "design/gradient-css/",
+    },
+    meshGradientCss: {
+      iconSvg: ICON_COLOR_CONV,
+      title: "CSS メッシュグラデーション生成",
+      searchExtra: "めっしゅ mesh radial-gradient 重ね 背景 background カラーピッカー",
+      short: "複数の radial-gradient を重ねたメッシュ風背景の CSS をリアルタイム生成。コピーはコード右上のアイコンから。",
+      medium:
+        "下地色と4色の放射グラデーションを重ねた background（メッシュ風）をリアルタイムで表示します。カラーピッカーと一括ランダムで試しやすく、処理はブラウザ内のみです。",
+      long:
+        "下地色（background-color）に、4枚の radial-gradient を重ねたメッシュグラデーション風の背景用 CSS をリアルタイムで生成します。各色はカラーピッカーで選び、コードは右上のアイコンからコピーできます。位置はあらかじめバランスよく配置した固定パターンです（必要に応じてコードを手編集してください）。\n\n【プライバシー】\n処理はブラウザ内のみです。",
+      href: "design/mesh-gradient-css/",
     },
     lorem: {
       iconSvg: ICON_TEXT,
@@ -786,6 +815,7 @@
     "colorConv",
     "contrast",
     "gradientCss",
+    "meshGradientCss",
     "lorem",
     "stopwatch",
     "pomodoro",
@@ -858,6 +888,7 @@
     colorConv: "design",
     contrast: "design",
     gradientCss: "design",
+    meshGradientCss: "design",
     lorem: "text",
     zenkaku: "text",
     kataHira: "text",

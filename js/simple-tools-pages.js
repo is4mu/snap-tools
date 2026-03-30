@@ -1295,55 +1295,459 @@
 
   T.colorConv = function (root) {
     root.innerHTML =
-      '<p class="convert-hint">#RRGGBB 形式から RGB と HSL を表示します。</p>' +
-      '<label class="simple-tool-field"><span class="simple-tool-label">HEX</span>' +
-      '<input type="text" class="simple-tool-input" id="cin" placeholder="#3b82f6"/></label>' +
-      '<div class="simple-tool-actions"><button type="button" class="convert-submit-btn" id="cgo">変換</button></div>' +
-      '<pre class="simple-tool-output" id="cout"></pre>' +
-      '<div id="csw" style="height:48px;border-radius:8px;border:1px solid var(--tp-border);margin-top:8px"></div>';
-    function hexToRgb(h) {
-      var m = h.replace(/^#/, "").match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
-      if (!m) return null;
-      return [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)];
+      '<div class="color-conv-tool">' +
+      '<div class="color-conv-preview-wrap">' +
+      '<div class="simple-tool-field color-conv-hex-field">' +
+      '<label class="simple-tool-label" for="ccHex">カラーコード（HEX）</label>' +
+      '<div class="color-conv-hex-row">' +
+      '<input type="text" class="simple-tool-input" id="ccHex" placeholder="#6c4b4b" inputmode="text"/>' +
+      '<label class="color-conv-picker-only" id="ccPickerWrap" title="カラーピッカーで色を選択">' +
+      '<input type="color" class="color-conv-picker-native" id="ccPicker" aria-label="カラーピッカーで色を選択"/>' +
+      "</label>" +
+      "</div></div></div>" +
+      '<div class="color-conv-tabs-wrap">' +
+      '<div class="convert-tabs color-conv-tabs" role="tablist">' +
+      '<button type="button" class="convert-tab" data-tab="rgb" aria-selected="true">RGB</button>' +
+      '<button type="button" class="convert-tab" data-tab="hsl" aria-selected="false">HSL</button>' +
+      '<button type="button" class="convert-tab" data-tab="cmyk" aria-selected="false">CMYK</button>' +
+      '<button type="button" class="convert-tab" data-tab="lab" aria-selected="false">Lab</button>' +
+      "</div>" +
+      '<div data-tabpanel="rgb" class="convert-tabpanel simple-tool-stack color-conv-tabpanel">' +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">R</span>' +
+      '<input type="range" class="color-conv-range" id="ccR" min="0" max="255" step="1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccRN" min="0" max="255" step="1" inputmode="numeric"/>' +
+      "</div>" +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">G</span>' +
+      '<input type="range" class="color-conv-range" id="ccG" min="0" max="255" step="1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccGN" min="0" max="255" step="1" inputmode="numeric"/>' +
+      "</div>" +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">B</span>' +
+      '<input type="range" class="color-conv-range" id="ccB" min="0" max="255" step="1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccBN" min="0" max="255" step="1" inputmode="numeric"/>' +
+      "</div></div>" +
+      '<div data-tabpanel="hsl" class="convert-tabpanel simple-tool-stack color-conv-tabpanel" hidden>' +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">H (°)</span>' +
+      '<input type="range" class="color-conv-range" id="ccH" min="0" max="360" step="1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccHN" min="0" max="360" step="1" inputmode="numeric"/>' +
+      "</div>" +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">S (%)</span>' +
+      '<input type="range" class="color-conv-range" id="ccS" min="0" max="100" step="1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccSN" min="0" max="100" step="1" inputmode="numeric"/>' +
+      "</div>" +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">L (%)</span>' +
+      '<input type="range" class="color-conv-range" id="ccL" min="0" max="100" step="1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccLN" min="0" max="100" step="1" inputmode="numeric"/>' +
+      "</div></div>" +
+      '<div data-tabpanel="cmyk" class="convert-tabpanel simple-tool-stack color-conv-tabpanel" hidden>' +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">C (%)</span>' +
+      '<input type="range" class="color-conv-range" id="ccC" min="0" max="100" step="1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccCN" min="0" max="100" step="1" inputmode="numeric"/>' +
+      "</div>" +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">M (%)</span>' +
+      '<input type="range" class="color-conv-range" id="ccM" min="0" max="100" step="1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccMN" min="0" max="100" step="1" inputmode="numeric"/>' +
+      "</div>" +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">Y (%)</span>' +
+      '<input type="range" class="color-conv-range" id="ccY" min="0" max="100" step="1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccYN" min="0" max="100" step="1" inputmode="numeric"/>' +
+      "</div>" +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">K (%)</span>' +
+      '<input type="range" class="color-conv-range" id="ccK" min="0" max="100" step="1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccKN" min="0" max="100" step="1" inputmode="numeric"/>' +
+      "</div></div>" +
+      '<div data-tabpanel="lab" class="convert-tabpanel simple-tool-stack color-conv-tabpanel" hidden>' +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">L*</span>' +
+      '<input type="range" class="color-conv-range" id="ccLabL" min="0" max="100" step="0.1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccLabLN" min="0" max="100" step="0.1" inputmode="decimal"/>' +
+      "</div>" +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">a*</span>' +
+      '<input type="range" class="color-conv-range" id="ccLabA" min="-128" max="127" step="0.1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccLabAN" min="-128" max="127" step="0.1" inputmode="decimal"/>' +
+      "</div>" +
+      '<div class="color-conv-slider-row">' +
+      '<span class="color-conv-slider-name">b*</span>' +
+      '<input type="range" class="color-conv-range" id="ccLabB" min="-128" max="127" step="0.1"/>' +
+      '<input type="number" class="simple-tool-input color-conv-num" id="ccLabBN" min="-128" max="127" step="0.1" inputmode="decimal"/>' +
+      "</div></div>" +
+      "</div>" +
+      '<p class="simple-tool-note" id="ccError" aria-live="polite"></p>' +
+      "</div>";
+
+    var $ = function (sel) {
+      return root.querySelector(sel);
+    };
+    var els = {
+      hex: $("#ccHex"),
+      pickerWrap: $("#ccPickerWrap"),
+      picker: $("#ccPicker"),
+      r: $("#ccR"),
+      g: $("#ccG"),
+      b: $("#ccB"),
+      h: $("#ccH"),
+      s: $("#ccS"),
+      l: $("#ccL"),
+      c: $("#ccC"),
+      m: $("#ccM"),
+      y: $("#ccY"),
+      k: $("#ccK"),
+      labL: $("#ccLabL"),
+      labA: $("#ccLabA"),
+      labB: $("#ccLabB"),
+      rN: $("#ccRN"),
+      gN: $("#ccGN"),
+      bN: $("#ccBN"),
+      hN: $("#ccHN"),
+      sN: $("#ccSN"),
+      lN: $("#ccLN"),
+      cN: $("#ccCN"),
+      mN: $("#ccMN"),
+      yN: $("#ccYN"),
+      kN: $("#ccKN"),
+      labLN: $("#ccLabLN"),
+      labAN: $("#ccLabAN"),
+      labBN: $("#ccLabBN"),
+      error: $("#ccError"),
+    };
+    var syncing = false;
+
+    function clamp(n, min, max) {
+      return Math.min(max, Math.max(min, n));
     }
-    function rgbToHsl(r, g, b) {
-      r /= 255;
-      g /= 255;
-      b /= 255;
+    function round(n, d) {
+      var p = Math.pow(10, d || 0);
+      return Math.round(n * p) / p;
+    }
+    function mod360(n) {
+      var x = n % 360;
+      return x < 0 ? x + 360 : x;
+    }
+    function readNumber(el) {
+      var v = parseFloat(el.value);
+      return isNaN(v) ? null : v;
+    }
+    function parseHex(hex) {
+      var s = String(hex || "").trim().replace(/^#/, "");
+      if (/^[0-9a-f]{3}$/i.test(s)) {
+        s = s
+          .split("")
+          .map(function (ch) {
+            return ch + ch;
+          })
+          .join("");
+      }
+      if (!/^[0-9a-f]{6}$/i.test(s)) return null;
+      return {
+        r: parseInt(s.slice(0, 2), 16),
+        g: parseInt(s.slice(2, 4), 16),
+        b: parseInt(s.slice(4, 6), 16),
+      };
+    }
+    function rgbToHex(rgb) {
+      function h(v) {
+        return clamp(Math.round(v), 0, 255).toString(16).padStart(2, "0");
+      }
+      return "#" + h(rgb.r) + h(rgb.g) + h(rgb.b);
+    }
+    function rgbToHsl(rgb) {
+      var r = rgb.r / 255;
+      var g = rgb.g / 255;
+      var b = rgb.b / 255;
       var max = Math.max(r, g, b);
       var min = Math.min(r, g, b);
-      var h;
-      var s;
+      var h = 0;
+      var s = 0;
       var l = (max + min) / 2;
-      if (max === min) h = s = 0;
-      else {
+      if (max !== min) {
         var d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch (max) {
-          case r:
-            h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-            break;
-          case g:
-            h = ((b - r) / d + 2) / 6;
-            break;
-          default:
-            h = ((r - g) / d + 4) / 6;
-        }
+        if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
+        else if (max === g) h = ((b - r) / d + 2) * 60;
+        else h = ((r - g) / d + 4) * 60;
       }
-      return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+      return { h: mod360(h), s: s * 100, l: l * 100 };
     }
-    root.querySelector("#cgo").addEventListener("click", function () {
-      var rgb = hexToRgb(root.querySelector("#cin").value.trim());
+    function hslToRgb(hsl) {
+      var h = mod360(hsl.h) / 360;
+      var s = clamp(hsl.s, 0, 100) / 100;
+      var l = clamp(hsl.l, 0, 100) / 100;
+      var r;
+      var g;
+      var b;
+      if (s === 0) {
+        r = g = b = l;
+      } else {
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        function hue2rgb(t) {
+          if (t < 0) t += 1;
+          if (t > 1) t -= 1;
+          if (t < 1 / 6) return p + (q - p) * 6 * t;
+          if (t < 1 / 2) return q;
+          if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+          return p;
+        }
+        r = hue2rgb(h + 1 / 3);
+        g = hue2rgb(h);
+        b = hue2rgb(h - 1 / 3);
+      }
+      return { r: round(r * 255), g: round(g * 255), b: round(b * 255) };
+    }
+    function rgbToCmyk(rgb) {
+      var r = clamp(rgb.r, 0, 255) / 255;
+      var g = clamp(rgb.g, 0, 255) / 255;
+      var b = clamp(rgb.b, 0, 255) / 255;
+      var k = 1 - Math.max(r, g, b);
+      if (k >= 1) return { c: 0, m: 0, y: 0, k: 100 };
+      return {
+        c: ((1 - r - k) / (1 - k)) * 100,
+        m: ((1 - g - k) / (1 - k)) * 100,
+        y: ((1 - b - k) / (1 - k)) * 100,
+        k: k * 100,
+      };
+    }
+    function cmykToRgb(cmyk) {
+      var c = clamp(cmyk.c, 0, 100) / 100;
+      var m = clamp(cmyk.m, 0, 100) / 100;
+      var y = clamp(cmyk.y, 0, 100) / 100;
+      var k = clamp(cmyk.k, 0, 100) / 100;
+      return {
+        r: round(255 * (1 - c) * (1 - k)),
+        g: round(255 * (1 - m) * (1 - k)),
+        b: round(255 * (1 - y) * (1 - k)),
+      };
+    }
+    function rgbToXyz(rgb) {
+      function pivot(v) {
+        v /= 255;
+        return v > 0.04045 ? Math.pow((v + 0.055) / 1.055, 2.4) : v / 12.92;
+      }
+      var r = pivot(rgb.r);
+      var g = pivot(rgb.g);
+      var b = pivot(rgb.b);
+      return {
+        x: r * 0.4124564 + g * 0.3575761 + b * 0.1804375,
+        y: r * 0.2126729 + g * 0.7151522 + b * 0.072175,
+        z: r * 0.0193339 + g * 0.119192 + b * 0.9503041,
+      };
+    }
+    function xyzToLab(xyz) {
+      var xr = xyz.x / 0.95047;
+      var yr = xyz.y / 1.0;
+      var zr = xyz.z / 1.08883;
+      function f(t) {
+        return t > 0.008856 ? Math.pow(t, 1 / 3) : 7.787 * t + 16 / 116;
+      }
+      var fx = f(xr);
+      var fy = f(yr);
+      var fz = f(zr);
+      return {
+        l: 116 * fy - 16,
+        a: 500 * (fx - fy),
+        b: 200 * (fy - fz),
+      };
+    }
+    function labToXyz(lab) {
+      var fy = (lab.l + 16) / 116;
+      var fx = fy + lab.a / 500;
+      var fz = fy - lab.b / 200;
+      function invF(t) {
+        var t3 = t * t * t;
+        return t3 > 0.008856 ? t3 : (t - 16 / 116) / 7.787;
+      }
+      return {
+        x: 0.95047 * invF(fx),
+        y: 1.0 * invF(fy),
+        z: 1.08883 * invF(fz),
+      };
+    }
+    function xyzToRgb(xyz) {
+      var r = xyz.x * 3.2404542 + xyz.y * -1.5371385 + xyz.z * -0.4985314;
+      var g = xyz.x * -0.969266 + xyz.y * 1.8760108 + xyz.z * 0.041556;
+      var b = xyz.x * 0.0556434 + xyz.y * -0.2040259 + xyz.z * 1.0572252;
+      function gamma(v) {
+        return v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055;
+      }
+      return {
+        r: round(clamp(gamma(r), 0, 1) * 255),
+        g: round(clamp(gamma(g), 0, 1) * 255),
+        b: round(clamp(gamma(b), 0, 1) * 255),
+      };
+    }
+    function rgbToLab(rgb) {
+      return xyzToLab(rgbToXyz(rgb));
+    }
+    function labToRgb(lab) {
+      return xyzToRgb(labToXyz(lab));
+    }
+    function setError(msg) {
+      els.error.textContent = msg || "";
+    }
+    function renderFromRgb(rgb) {
+      syncing = true;
+      try {
+        var rgbSafe = {
+          r: clamp(Math.round(rgb.r), 0, 255),
+          g: clamp(Math.round(rgb.g), 0, 255),
+          b: clamp(Math.round(rgb.b), 0, 255),
+        };
+        var hex = rgbToHex(rgbSafe);
+        var hsl = rgbToHsl(rgbSafe);
+        var cmyk = rgbToCmyk(rgbSafe);
+        var lab = rgbToLab(rgbSafe);
+
+        els.r.value = String(rgbSafe.r);
+        els.g.value = String(rgbSafe.g);
+        els.b.value = String(rgbSafe.b);
+        els.rN.value = String(rgbSafe.r);
+        els.gN.value = String(rgbSafe.g);
+        els.bN.value = String(rgbSafe.b);
+        els.hex.value = hex;
+        els.picker.value = hex;
+        els.pickerWrap.style.backgroundColor = hex;
+        els.h.value = String(Math.round(hsl.h));
+        els.s.value = String(Math.round(hsl.s));
+        els.l.value = String(Math.round(hsl.l));
+        els.hN.value = String(Math.round(hsl.h));
+        els.sN.value = String(Math.round(hsl.s));
+        els.lN.value = String(Math.round(hsl.l));
+        els.c.value = String(Math.round(cmyk.c));
+        els.m.value = String(Math.round(cmyk.m));
+        els.y.value = String(Math.round(cmyk.y));
+        els.k.value = String(Math.round(cmyk.k));
+        els.cN.value = String(Math.round(cmyk.c));
+        els.mN.value = String(Math.round(cmyk.m));
+        els.yN.value = String(Math.round(cmyk.y));
+        els.kN.value = String(Math.round(cmyk.k));
+        var labL = clamp(round(lab.l, 1), 0, 100);
+        var labA = clamp(round(lab.a, 1), -128, 127);
+        var labB = clamp(round(lab.b, 1), -128, 127);
+        els.labL.value = String(labL);
+        els.labA.value = String(labA);
+        els.labB.value = String(labB);
+        els.labLN.value = String(labL);
+        els.labAN.value = String(labA);
+        els.labBN.value = String(labB);
+        setError("");
+      } finally {
+        syncing = false;
+      }
+    }
+    function updateFromHex() {
+      if (syncing) return;
+      var rgb = parseHex(els.hex.value);
       if (!rgb) {
-        root.querySelector("#cout").textContent = "有効な #RRGGBB を入力してください";
+        setError("有効なHEX形式を入力してください（例: #6c4b4b / #abc）");
         return;
       }
-      var hsl = rgbToHsl(rgb[0], rgb[1], rgb[2]);
-      root.querySelector("#cout").textContent =
-        "rgb(" + rgb.join(", ") + ")\nhsl(" + hsl[0] + ", " + hsl[1] + "%, " + hsl[2] + "%)";
-      root.querySelector("#csw").style.background =
-        "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
+      renderFromRgb(rgb);
+    }
+    function updateFromRgb() {
+      if (syncing) return;
+      var r = readNumber(els.r);
+      var g = readNumber(els.g);
+      var b = readNumber(els.b);
+      if (r == null || g == null || b == null) {
+        setError("RGBは数値で入力してください。");
+        return;
+      }
+      renderFromRgb({ r: r, g: g, b: b });
+    }
+    function updateFromHsl() {
+      if (syncing) return;
+      var h = readNumber(els.h);
+      var s = readNumber(els.s);
+      var l = readNumber(els.l);
+      if (h == null || s == null || l == null) {
+        setError("HSLは数値で入力してください。");
+        return;
+      }
+      renderFromRgb(hslToRgb({ h: h, s: s, l: l }));
+    }
+    function updateFromCmyk() {
+      if (syncing) return;
+      var c = readNumber(els.c);
+      var m = readNumber(els.m);
+      var y = readNumber(els.y);
+      var k = readNumber(els.k);
+      if (c == null || m == null || y == null || k == null) {
+        setError("CMYKは数値で入力してください。");
+        return;
+      }
+      renderFromRgb(cmykToRgb({ c: c, m: m, y: y, k: k }));
+    }
+    function updateFromLab() {
+      if (syncing) return;
+      var l = readNumber(els.labL);
+      var a = readNumber(els.labA);
+      var b = readNumber(els.labB);
+      if (l == null || a == null || b == null) {
+        setError("Labは数値で入力してください。");
+        return;
+      }
+      renderFromRgb(
+        labToRgb({
+          l: clamp(l, 0, 100),
+          a: clamp(a, -128, 127),
+          b: clamp(b, -128, 127),
+        })
+      );
+    }
+
+    [els.hex].forEach(function (el) {
+      el.addEventListener("change", updateFromHex);
+      el.addEventListener("blur", updateFromHex);
     });
+    function bindRange(el, fn) {
+      el.addEventListener("input", fn);
+      el.addEventListener("change", fn);
+    }
+    function bindRangeAndNumber(rangeEl, numEl, fn) {
+      bindRange(rangeEl, function () {
+        if (!syncing) numEl.value = rangeEl.value;
+        fn();
+      });
+      numEl.addEventListener("input", function () {
+        if (!syncing) rangeEl.value = numEl.value;
+        fn();
+      });
+      numEl.addEventListener("change", function () {
+        if (!syncing) rangeEl.value = numEl.value;
+        fn();
+      });
+    }
+    bindRangeAndNumber(els.r, els.rN, updateFromRgb);
+    bindRangeAndNumber(els.g, els.gN, updateFromRgb);
+    bindRangeAndNumber(els.b, els.bN, updateFromRgb);
+    bindRangeAndNumber(els.h, els.hN, updateFromHsl);
+    bindRangeAndNumber(els.s, els.sN, updateFromHsl);
+    bindRangeAndNumber(els.l, els.lN, updateFromHsl);
+    bindRangeAndNumber(els.c, els.cN, updateFromCmyk);
+    bindRangeAndNumber(els.m, els.mN, updateFromCmyk);
+    bindRangeAndNumber(els.y, els.yN, updateFromCmyk);
+    bindRangeAndNumber(els.k, els.kN, updateFromCmyk);
+    bindRangeAndNumber(els.labL, els.labLN, updateFromLab);
+    bindRangeAndNumber(els.labA, els.labAN, updateFromLab);
+    bindRangeAndNumber(els.labB, els.labBN, updateFromLab);
+    bindTabs(root, ".convert-tab");
+    els.picker.addEventListener("input", function () {
+      if (syncing) return;
+      var rgb = parseHex(els.picker.value);
+      if (rgb) renderFromRgb(rgb);
+    });
+
+    renderFromRgb({ r: 108, g: 75, b: 75 });
   };
 
   T.contrast = function (root) {
@@ -1390,30 +1794,166 @@
 
   T.gradientCss = function (root) {
     root.innerHTML =
-      '<p class="convert-hint">線形グラデーションの CSS を生成します。</p>' +
-      '<div class="simple-tool-grid2">' +
-      '<label class="simple-tool-field"><span class="simple-tool-label">角度 (deg)</span>' +
-      '<input type="number" class="simple-tool-input" id="gd" value="135"/></label>' +
-      '<label class="simple-tool-field"><span class="simple-tool-label">色1</span>' +
-      '<input type="text" class="simple-tool-input" id="g1" value="#6366f1"/></label>' +
-      '<label class="simple-tool-field"><span class="simple-tool-label">色2</span>' +
-      '<input type="text" class="simple-tool-input" id="g2" value="#ec4899"/></label></div>' +
-      '<div class="simple-tool-actions">' +
-      '<button type="button" class="convert-submit-btn" id="ggo">生成</button>' +
-      '<button type="button" class="convert-submit-btn convert-submit-btn--secondary" id="gcp">コピー</button></div>' +
-      '<pre class="simple-tool-output" id="gout"></pre>' +
-      '<div id="gprev" style="height:72px;border-radius:10px;border:1px solid var(--tp-border)"></div>';
+      '<div id="gprev" class="gradient-css-preview" aria-label="グラデーション結果"></div>' +
+      '<div class="case-convert-result gradient-css-code-wrap">' +
+      '<div class="case-convert-result-toolbar">' +
+      '<button type="button" class="simple-tool-icon-btn case-convert-copy" id="gcp" aria-label="CSSコードをコピー" title="コピー">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>' +
+      '<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div>' +
+      '<pre class="simple-tool-output case-convert-output gradient-css-code" id="gout"></pre></div>' +
+      '<div class="simple-tool-row gradient-css-controls">' +
+      '<div class="simple-tool-field gradient-css-field"><span class="simple-tool-label">色1</span>' +
+      '<label class="color-conv-picker-only gradient-css-picker" id="g1w" title="色1を選択">' +
+      '<input type="color" class="color-conv-picker-native gradient-css-color-input" id="g1" value="#6366f1" aria-label="色1"></label></div>' +
+      '<div class="simple-tool-field gradient-css-field"><span class="simple-tool-label">色2</span>' +
+      '<label class="color-conv-picker-only gradient-css-picker" id="g2w" title="色2を選択">' +
+      '<input type="color" class="color-conv-picker-native gradient-css-color-input" id="g2" value="#ec4899" aria-label="色2"></label></div>' +
+      '<label class="simple-tool-field gradient-css-field"><span class="simple-tool-label">角度 (deg)</span>' +
+      '<input type="number" class="simple-tool-input" id="gd" value="135" min="0" max="360" step="1" aria-label="角度"></label>' +
+      '<div class="gradient-css-random-wrap">' +
+      '<button type="button" class="simple-tool-icon-btn gradient-css-random-btn" id="grand" aria-label="色と角度を一括ランダム" title="ランダム">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M21 2v6h-6"/><path d="M3 11a8 8 0 0 1 13.66-5.66L21 9"/><path d="M3 22v-6h6"/><path d="M21 13a8 8 0 0 1-13.66 5.66L3 15"/></svg></button>' +
+      "</div></div>";
+    function randomHex() {
+      var n = Math.floor(Math.random() * 16777216);
+      return "#" + n.toString(16).padStart(6, "0");
+    }
+    function randomizeAll() {
+      root.querySelector("#g1").value = randomHex();
+      root.querySelector("#g2").value = randomHex();
+      root.querySelector("#gd").value = String(Math.floor(Math.random() * 361));
+      upd();
+    }
     function upd() {
-      var deg = root.querySelector("#gd").value || "90";
+      var degNum = parseInt(root.querySelector("#gd").value, 10);
+      if (!Number.isFinite(degNum)) degNum = 90;
+      degNum = ((degNum % 360) + 360) % 360;
+      root.querySelector("#gd").value = String(degNum);
       var a = root.querySelector("#g1").value;
       var b = root.querySelector("#g2").value;
-      var css = "linear-gradient(" + deg + "deg, " + a + ", " + b + ")";
+      var css = "linear-gradient(" + degNum + "deg, " + a + ", " + b + ")";
+      root.querySelector("#g1w").style.backgroundColor = a;
+      root.querySelector("#g2w").style.backgroundColor = b;
       root.querySelector("#gout").textContent = "background: " + css + ";";
       root.querySelector("#gprev").style.background = css;
     }
-    root.querySelector("#ggo").addEventListener("click", upd);
+    root.querySelector("#g1").addEventListener("input", upd);
+    root.querySelector("#g2").addEventListener("input", upd);
+    root.querySelector("#gd").addEventListener("input", upd);
+    root.querySelector("#grand").addEventListener("click", randomizeAll);
     root.querySelector("#gcp").addEventListener("click", function () {
       copyText(root.querySelector("#gout").textContent);
+    });
+    upd();
+  };
+
+  T.meshGradientCss = function (root) {
+    var BLOBS = [
+      { at: "22% 28%", op: 0.55, fade: "52%" },
+      { at: "78% 24%", op: 0.52, fade: "50%" },
+      { at: "72% 76%", op: 0.5, fade: "50%" },
+      { at: "18% 78%", op: 0.48, fade: "46%" },
+    ];
+    root.innerHTML =
+      '<div id="mgprev" class="gradient-css-preview" aria-label="メッシュ風グラデーション結果"></div>' +
+      '<div class="case-convert-result gradient-css-code-wrap">' +
+      '<div class="case-convert-result-toolbar">' +
+      '<button type="button" class="simple-tool-icon-btn case-convert-copy" id="mgcp" aria-label="CSSコードをコピー" title="コピー">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>' +
+      '<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div>' +
+      '<pre class="simple-tool-output case-convert-output gradient-css-code" id="mgout"></pre></div>' +
+      '<div class="simple-tool-row gradient-css-controls mesh-gradient-controls">' +
+      '<div class="simple-tool-field gradient-css-field"><span class="simple-tool-label">下地</span>' +
+      '<label class="color-conv-picker-only gradient-css-picker" id="mgbw" title="下地色">' +
+      '<input type="color" class="color-conv-picker-native gradient-css-color-input" id="mgb" value="#0f172a" aria-label="下地色"></label></div>' +
+      '<div class="simple-tool-field gradient-css-field"><span class="simple-tool-label">色1</span>' +
+      '<label class="color-conv-picker-only gradient-css-picker" id="mg1w" title="色1">' +
+      '<input type="color" class="color-conv-picker-native gradient-css-color-input" id="mg1" value="#6366f1" aria-label="色1"></label></div>' +
+      '<div class="simple-tool-field gradient-css-field"><span class="simple-tool-label">色2</span>' +
+      '<label class="color-conv-picker-only gradient-css-picker" id="mg2w" title="色2">' +
+      '<input type="color" class="color-conv-picker-native gradient-css-color-input" id="mg2" value="#ec4899" aria-label="色2"></label></div>' +
+      '<div class="simple-tool-field gradient-css-field"><span class="simple-tool-label">色3</span>' +
+      '<label class="color-conv-picker-only gradient-css-picker" id="mg3w" title="色3">' +
+      '<input type="color" class="color-conv-picker-native gradient-css-color-input" id="mg3" value="#22d3ee" aria-label="色3"></label></div>' +
+      '<div class="simple-tool-field gradient-css-field"><span class="simple-tool-label">色4</span>' +
+      '<label class="color-conv-picker-only gradient-css-picker" id="mg4w" title="色4">' +
+      '<input type="color" class="color-conv-picker-native gradient-css-color-input" id="mg4" value="#fbbf24" aria-label="色4"></label></div>' +
+      '<div class="gradient-css-random-wrap">' +
+      '<button type="button" class="simple-tool-icon-btn gradient-css-random-btn" id="mgrnd" aria-label="色を一括ランダム" title="ランダム">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M21 2v6h-6"/><path d="M3 11a8 8 0 0 1 13.66-5.66L21 9"/><path d="M3 22v-6h6"/><path d="M21 13a8 8 0 0 1-13.66 5.66L3 15"/></svg></button>' +
+      "</div></div>";
+    function hexToRgb(hex) {
+      var m = String(hex)
+        .replace(/^#/, "")
+        .match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+      if (!m) return { r: 0, g: 0, b: 0 };
+      return { r: parseInt(m[1], 16), g: parseInt(m[2], 16), b: parseInt(m[3], 16) };
+    }
+    function rgbaFromHex(hex, a) {
+      var o = hexToRgb(hex);
+      return "rgba(" + o.r + ", " + o.g + ", " + o.b + ", " + a + ")";
+    }
+    function randomHex() {
+      var n = Math.floor(Math.random() * 16777216);
+      return "#" + n.toString(16).padStart(6, "0");
+    }
+    function randomizeAll() {
+      root.querySelector("#mgb").value = randomHex();
+      root.querySelector("#mg1").value = randomHex();
+      root.querySelector("#mg2").value = randomHex();
+      root.querySelector("#mg3").value = randomHex();
+      root.querySelector("#mg4").value = randomHex();
+      upd();
+    }
+    function upd() {
+      var base = root.querySelector("#mgb").value;
+      var cols = [
+        root.querySelector("#mg1").value,
+        root.querySelector("#mg2").value,
+        root.querySelector("#mg3").value,
+        root.querySelector("#mg4").value,
+      ];
+      var layers = [];
+      var lines = [];
+      for (var i = 0; i < BLOBS.length; i++) {
+        var b = BLOBS[i];
+        var inner = rgbaFromHex(cols[i], b.op);
+        var layer =
+          "radial-gradient(circle at " + b.at + ", " + inner + " 0%, transparent " + b.fade + ")";
+        layers.push(layer);
+        lines.push("  " + layer + (i < BLOBS.length - 1 ? "," : ""));
+      }
+      var cssBlock =
+        "background-color: " +
+        base +
+        ";\n" +
+        "background-image:\n" +
+        lines.join("\n") +
+        ";\n" +
+        "background-repeat: no-repeat;\n" +
+        "background-size: cover;";
+      root.querySelector("#mgout").textContent = cssBlock;
+      var prev = root.querySelector("#mgprev");
+      prev.style.backgroundColor = base;
+      prev.style.backgroundImage = layers.join(", ");
+      prev.style.backgroundRepeat = "no-repeat";
+      prev.style.backgroundSize = "cover";
+      root.querySelector("#mgbw").style.backgroundColor = base;
+      root.querySelector("#mg1w").style.backgroundColor = cols[0];
+      root.querySelector("#mg2w").style.backgroundColor = cols[1];
+      root.querySelector("#mg3w").style.backgroundColor = cols[2];
+      root.querySelector("#mg4w").style.backgroundColor = cols[3];
+    }
+    ["#mgb", "#mg1", "#mg2", "#mg3", "#mg4"].forEach(function (sel) {
+      root.querySelector(sel).addEventListener("input", upd);
+    });
+    root.querySelector("#mgrnd").addEventListener("click", randomizeAll);
+    root.querySelector("#mgcp").addEventListener("click", function () {
+      copyText(root.querySelector("#mgout").textContent);
     });
     upd();
   };

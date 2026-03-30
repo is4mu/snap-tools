@@ -26,6 +26,7 @@ const pages = [
   ["color-conv.html", "colorConv"],
   ["contrast.html", "contrast"],
   ["gradient-css.html", "gradientCss"],
+  ["mesh-gradient-css.html", "meshGradientCss"],
   ["lorem.html", "lorem"],
   ["zenkaku.html", "zenkaku"],
   ["kata-hira.html", "kataHira"],
