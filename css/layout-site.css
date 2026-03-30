@@ -118,11 +118,12 @@ html.tool-theme-dark .site-footer-links a {
   font-weight: bold;
   letter-spacing: -1px;
   line-height: 1;
+  margin: 0;
 }
 
 .logo-sub-text {
   font-size: 0.9rem;
-  margin-top: 5px;
+  margin: 5px 0 0;
 }
 
 @media (max-width: 600px) {
@@ -134,47 +135,6 @@ html.tool-theme-dark .site-footer-links a {
     text-align: center;
   }
   .logo-main-text {
-    font-size: 1.8rem;
-  }
-}
-
-/* --- トップ: ヒーロー（静的 h1。文言は partials/header-home のロゴと揃える） --- */
-body.page-home:has(.home-hero) .site-header--home .logo-text-group {
-  display: none;
-}
-
-.home-hero {
-  text-align: center;
-  padding: 0 16px 8px;
-  max-width: 720px;
-  margin: 0 auto 12px;
-}
-
-.home-hero-title {
-  font-size: 2.2rem;
-  font-weight: bold;
-  letter-spacing: -1px;
-  line-height: 1;
-  margin: 0 0 8px;
-  color: #1a1a1a;
-}
-
-.home-hero-tagline {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #5c6370;
-}
-
-html.tool-theme-dark .home-hero-title {
-  color: rgba(255, 255, 255, 0.94);
-}
-
-html.tool-theme-dark .home-hero-tagline {
-  color: rgba(255, 255, 255, 0.62);
-}
-
-@media (max-width: 600px) {
-  .home-hero-title {
     font-size: 1.8rem;
   }
 }
@@ -279,14 +239,35 @@ html.tool-theme-dark .theme-toggle-icon--light {
   text-align: center;
 }
 
+.home-search-field-wrap {
+  position: relative;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.home-search-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  color: var(--tp-text-muted);
+}
+
+.home-search-icon svg {
+  display: block;
+  flex-shrink: 0;
+}
+
 .home-tool-search {
   display: block;
   width: 100%;
-  max-width: 420px;
-  margin: 0 auto;
   box-sizing: border-box;
   min-height: 46px;
-  padding: 0 16px;
+  padding: 0 44px 0 16px;
   font-size: 1rem;
   font-family: inherit;
   line-height: 1.35;
@@ -296,6 +277,15 @@ html.tool-theme-dark .theme-toggle-icon--light {
   color: var(--tp-text);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* 右側の装飾アイコンと重ならないよう WebKit のクリアボタンを抑止 */
+.home-tool-search::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
 }
 
 .home-tool-search::placeholder {
@@ -333,6 +323,48 @@ html.tool-theme-dark .home-tool-search:focus {
   font-size: 0.85rem;
   color: var(--tp-text-muted);
   min-height: 1.35em;
+}
+
+/* スマホ: 検索を画面下部に固定し、一覧をキーボード付近まで見やすく */
+@media (max-width: 600px) {
+  body.page-home {
+    padding-bottom: calc(118px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .home-search-block {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    margin: 0;
+    padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: #f4f7f6;
+    border-top: 1px solid #e8eaed;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.07);
+  }
+
+  html.tool-theme-dark body.page-home .home-search-block {
+    background: #0d1117;
+    border-top-color: #30363d;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  .home-search-label {
+    text-align: left;
+    margin-bottom: 6px;
+    font-size: 0.75rem;
+  }
+
+  .home-search-field-wrap {
+    max-width: none;
+  }
+
+  .home-search-hint {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    text-align: left;
+  }
 }
 
 .home-tool-main {

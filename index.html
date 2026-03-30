@@ -38,14 +38,14 @@
 
 <header id="site-header" class="site-header--home" data-header-partial="home"></header>
 
-<section class="home-hero" aria-labelledby="home-hero-title">
-    <h1 id="home-hero-title" class="home-hero-title">Snap Tools</h1>
-    <p class="home-hero-tagline">パッと使える、シンプルなウェブツール集</p>
-</section>
-
 <section class="home-search-block" aria-label="ツール検索">
     <label class="home-search-label" for="home-tool-search">ツールを検索</label>
-    <input type="search" id="home-tool-search" class="home-tool-search" placeholder="名前や説明のキーワードで絞り込み…" autocomplete="off" enterkeyhint="search" />
+    <div class="home-search-field-wrap">
+        <input type="search" id="home-tool-search" class="home-tool-search" placeholder="名前や説明のキーワードで絞り込み…" autocomplete="off" enterkeyhint="search" />
+        <span class="home-search-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </span>
+    </div>
     <p id="home-search-hint" class="home-search-hint" role="status" aria-live="polite" hidden></p>
 </section>
 
