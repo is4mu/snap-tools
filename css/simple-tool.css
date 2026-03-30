@@ -91,6 +91,102 @@
   display: none !important;
 }
 
+/* --- テキスト差分（行 / Unified） --- */
+.text-diff-options {
+  align-items: center;
+}
+
+.simple-tool-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  font-size: 0.9rem;
+  color: var(--tp-text);
+}
+
+.simple-tool-check input[type="checkbox"] {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--tp-accent);
+}
+
+.text-diff-ctx {
+  flex: 0 1 10rem;
+  min-width: 9rem;
+}
+
+.text-diff-actions {
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.text-diff-summary {
+  margin-top: 10px;
+}
+
+.text-diff-out {
+  padding: 8px 0;
+  white-space: normal;
+}
+
+.text-diff-line {
+  display: flex;
+  gap: 10px;
+  padding: 2px 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.text-diff-prefix {
+  flex: 0 0 1.2em;
+  width: 1.2em;
+  text-align: center;
+  opacity: 0.9;
+  user-select: none;
+}
+
+.text-diff-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.text-diff-line--eq {
+  background: transparent;
+}
+
+.text-diff-line--del {
+  background: color-mix(in srgb, var(--tp-danger, #e11d48) 10%, transparent);
+}
+
+.text-diff-line--ins {
+  background: color-mix(in srgb, var(--tp-accent) 10%, transparent);
+}
+
+.text-diff-fold {
+  width: calc(100% - 20px);
+  margin: 6px 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px dashed var(--tp-border);
+  background: transparent;
+  color: var(--tp-text-muted);
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.text-diff-fold:hover {
+  border-color: var(--tp-accent);
+  color: var(--tp-text);
+}
+
+.text-diff-empty {
+  padding: 10px 14px;
+  color: var(--tp-text-muted);
+}
+
 .bingo-stats {
   margin: 0 0 10px;
   font-size: 0.85rem;
@@ -409,6 +505,72 @@
 }
 
 .simple-tool-live {
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- 丸数字 --- */
+.maru-suuji-tool .maru-suuji-filter.simple-tool-field {
+  flex: 1 1 12rem;
+  min-width: 14rem;
+}
+
+.maru-suuji-section {
+  margin-top: 14px;
+}
+
+.maru-suuji-title {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--tp-text);
+}
+
+.maru-suuji-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: 10px;
+}
+
+.maru-suuji-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--tp-border);
+  background: var(--tp-muted-bg);
+  color: var(--tp-text);
+  cursor: pointer;
+  font: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.15s, background 0.15s, transform 0.05s;
+}
+
+.maru-suuji-item:hover {
+  border-color: var(--tp-accent);
+  background: var(--tp-surface);
+}
+
+.maru-suuji-item:active {
+  transform: translateY(1px);
+}
+
+.maru-suuji-item:focus-visible {
+  outline: 2px solid var(--tp-accent);
+  outline-offset: 2px;
+}
+
+.maru-suuji-char {
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.maru-suuji-meta {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--tp-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
