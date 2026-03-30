@@ -45,6 +45,7 @@ const pages = [
   ["reading-time.html", "readingTime"],
   ["world-clock.html", "worldClock"],
   ["random-pick.html", "randomPick"],
+  ["bingo.html", "bingo"],
   ["dice-roll.html", "diceRoll"],
   ["nanoid.html", "nanoid"],
   ["subnet.html", "subnet"],

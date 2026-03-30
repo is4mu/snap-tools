@@ -131,7 +131,9 @@
         a.className = "tool-card";
         a.setAttribute(
           "data-search",
-          normalizeSearch(meta.title + " " + meta.short)
+          normalizeSearch(
+            meta.title + " " + meta.short + " " + (meta.medium || "")
+          )
         );
         appendToolCardBody(a, meta);
         grid.appendChild(a);
@@ -150,7 +152,9 @@
       a.className = "tool-card";
       a.setAttribute(
         "data-search",
-        normalizeSearch(meta.title + " " + meta.short)
+        normalizeSearch(
+          meta.title + " " + meta.short + " " + (meta.medium || "")
+        )
       );
       appendToolCardBody(a, meta);
       grid.appendChild(a);

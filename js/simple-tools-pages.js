@@ -1265,26 +1265,513 @@
   };
 
   T.randomPick = function (root) {
+    function parseCSVLine(line) {
+      var result = [];
+      var cur = "";
+      var inQuotes = false;
+      for (var i = 0; i < line.length; i++) {
+        var c = line[i];
+        if (inQuotes) {
+          if (c === '"') {
+            if (line[i + 1] === '"') {
+              cur += '"';
+              i++;
+            } else {
+              inQuotes = false;
+            }
+          } else {
+            cur += c;
+          }
+        } else {
+          if (c === '"') {
+            inQuotes = true;
+          } else if (c === ",") {
+            result.push(cur.trim());
+            cur = "";
+          } else {
+            cur += c;
+          }
+        }
+      }
+      result.push(cur.trim());
+      return result;
+    }
+    function flattenCsvText(s) {
+      var parts = [];
+      var lines = s.split(/\r?\n/);
+      for (var li = 0; li < lines.length; li++) {
+        var line = lines[li];
+        if (!line.trim()) continue;
+        var cells = parseCSVLine(line);
+        for (var ci = 0; ci < cells.length; ci++) {
+          if (cells[ci]) parts.push(cells[ci]);
+        }
+      }
+      return parts;
+    }
+    var defaultList = "大吉,中吉,小吉,吉,凶,大凶";
+    var pickHistory = [];
+    var MAX_PICK_HISTORY = 50;
+    var uploadIconSvg =
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>' +
+      '<polyline points="17 8 12 3 7 8"/>' +
+      '<line x1="12" y1="3" x2="12" y2="15"/>' +
+      "</svg>";
     root.innerHTML =
-      '<p class="convert-hint">改行区切りの候補から 1 つをランダムに選びます。</p>' +
-      '<textarea class="simple-tool-textarea" id="rpin" placeholder="候補を1行ずつ"></textarea>' +
+      '<pre class="simple-tool-output random-pick-output" id="rpout">結果はここに表示されます</pre>' +
       '<div class="simple-tool-actions"><button type="button" class="convert-submit-btn" id="rpgo">抽選</button></div>' +
-      '<pre class="simple-tool-output" id="rpout"></pre>';
-    root.querySelector("#rpgo").addEventListener("click", function () {
-      var lines = root
-        .querySelector("#rpin")
-        .value.split(/\r?\n/)
-        .map(function (l) {
-          return l.trim();
-        })
-        .filter(Boolean);
-      if (!lines.length) {
-        root.querySelector("#rpout").textContent = "候補を入力してください";
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.75rem;margin-bottom:0.5rem">' +
+      '<p class="convert-hint" style="flex:1;margin:0">カンマ区切りの候補から 1 つをランダムに選びます。CSV からも読み込めます。</p>' +
+      '<label id="rpCsvBtn" class="simple-tool-icon-btn" title="CSV を読み込む" aria-label="CSV を読み込む">' +
+      '<input type="file" id="rpcsv" accept=".csv,text/csv,text/plain" style="display:none" />' +
+      uploadIconSvg +
+      "</label></div>" +
+      '<textarea class="simple-tool-textarea" id="rpin" placeholder="例: 大吉,中吉,小吉">' +
+      defaultList +
+      "</textarea>" +
+      '<div class="dice-roll-history">' +
+      '<div class="dice-roll-history-head">' +
+      '<span class="simple-tool-label">履歴</span>' +
+      '<button type="button" class="simple-tool-icon-btn" id="rpHistReset" aria-label="履歴をリセット" title="履歴をリセット">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      "<path d=\"M3 6h18\"/><path d=\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"/><path d=\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"/><line x1=\"10\" y1=\"11\" x2=\"10\" y2=\"17\"/><line x1=\"14\" y1=\"11\" x2=\"14\" y2=\"17\"/></svg>" +
+      "</button></div>" +
+      '<p class="dice-roll-history-empty" id="rpHistEmpty">まだありません</p>' +
+      '<ul class="dice-roll-history-list" id="rpHistList" hidden></ul></div>';
+    var ta = root.querySelector("#rpin");
+    var out = root.querySelector("#rpout");
+    function renderPickHistory() {
+      var listEl = root.querySelector("#rpHistList");
+      var emptyEl = root.querySelector("#rpHistEmpty");
+      if (!listEl || !emptyEl) return;
+      if (!pickHistory.length) {
+        listEl.innerHTML = "";
+        listEl.hidden = true;
+        emptyEl.hidden = false;
         return;
       }
-      var i = Math.floor(Math.random() * lines.length);
-      root.querySelector("#rpout").textContent = "結果: " + lines[i];
+      emptyEl.hidden = true;
+      listEl.hidden = false;
+      listEl.innerHTML = "";
+      pickHistory.forEach(function (entry) {
+        var li = document.createElement("li");
+        li.className = "dice-roll-history-item";
+        li.textContent = entry.text;
+        listEl.appendChild(li);
+      });
+    }
+    function pushPickHistory(text) {
+      pickHistory.unshift({ text: text });
+      if (pickHistory.length > MAX_PICK_HISTORY) {
+        pickHistory.length = MAX_PICK_HISTORY;
+      }
+      renderPickHistory();
+    }
+    var SPIN_MS = 600;
+    var SPIN_TICK_MS = 48;
+    var spinIntervalId = null;
+    var spinTimeoutId = null;
+    var isPicking = false;
+    function stopPickSpin() {
+      if (spinIntervalId !== null) {
+        clearInterval(spinIntervalId);
+        spinIntervalId = null;
+      }
+      if (spinTimeoutId !== null) {
+        clearTimeout(spinTimeoutId);
+        spinTimeoutId = null;
+      }
+    }
+    function setPickingUi(picking) {
+      isPicking = picking;
+      root.querySelector("#rpgo").disabled = picking;
+      root.querySelector("#rpHistReset").disabled = picking;
+      ta.disabled = picking;
+      var csvLab = root.querySelector("#rpCsvBtn");
+      if (csvLab) {
+        csvLab.classList.toggle("simple-tool-icon-btn--disabled", picking);
+      }
+      out.classList.toggle("random-pick-output--spinning", picking);
+    }
+    function pickRandomTick(lines) {
+      var j = Math.floor(Math.random() * lines.length);
+      out.textContent = lines[j];
+    }
+    function runPick() {
+      if (isPicking) return;
+      var lines = flattenCsvText(ta.value);
+      if (!lines.length) {
+        out.textContent = "候補を入力してください";
+        return;
+      }
+      var finalIdx = Math.floor(Math.random() * lines.length);
+      var picked = lines[finalIdx];
+      stopPickSpin();
+      setPickingUi(true);
+      spinIntervalId = setInterval(function () {
+        pickRandomTick(lines);
+      }, SPIN_TICK_MS);
+      spinTimeoutId = setTimeout(function () {
+        stopPickSpin();
+        out.textContent = picked;
+        pushPickHistory(picked);
+        setPickingUi(false);
+      }, SPIN_MS);
+    }
+    root.querySelector("#rpgo").addEventListener("click", runPick);
+    root.querySelector("#rpHistReset").addEventListener("click", function () {
+      if (isPicking) return;
+      pickHistory = [];
+      renderPickHistory();
     });
+    root.querySelector("#rpcsv").addEventListener("change", function (ev) {
+      var f = ev.target.files && ev.target.files[0];
+      if (!f) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        var text = String(reader.result || "");
+        ta.value = flattenCsvText(text).join(",");
+        ev.target.value = "";
+      };
+      reader.onerror = function () {
+        out.textContent = "ファイルの読み込みに失敗しました";
+        ev.target.value = "";
+      };
+      reader.readAsText(f);
+    });
+
+    var useSpaceToPick =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(pointer: fine)").matches;
+    function randomPickSpaceFocusOk(el) {
+      if (!el) return false;
+      if (el === document.body || el === document.documentElement) return true;
+      return root.contains(el);
+    }
+    function randomPickSpaceInputOk(el) {
+      if (!el || el.isContentEditable) return false;
+      var tag = el.tagName;
+      if (tag === "TEXTAREA" || tag === "SELECT") return false;
+      if (tag === "INPUT") {
+        var t = el.type;
+        return t === "range";
+      }
+      return true;
+    }
+    function onRandomPickKeydown(e) {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (!useSpaceToPick) return;
+      if (!randomPickSpaceFocusOk(e.target)) return;
+      if (!randomPickSpaceInputOk(e.target)) return;
+      if (isPicking) {
+        e.preventDefault();
+        return;
+      }
+      e.preventDefault();
+      runPick();
+    }
+    if (useSpaceToPick) {
+      window.addEventListener("keydown", onRandomPickKeydown, { passive: false });
+    }
+  };
+
+  T.bingo = function (root) {
+    function parseCSVLine(line) {
+      var result = [];
+      var cur = "";
+      var inQuotes = false;
+      for (var i = 0; i < line.length; i++) {
+        var c = line[i];
+        if (inQuotes) {
+          if (c === '"') {
+            if (line[i + 1] === '"') {
+              cur += '"';
+              i++;
+            } else {
+              inQuotes = false;
+            }
+          } else {
+            cur += c;
+          }
+        } else {
+          if (c === '"') {
+            inQuotes = true;
+          } else if (c === ",") {
+            result.push(cur.trim());
+            cur = "";
+          } else {
+            cur += c;
+          }
+        }
+      }
+      result.push(cur.trim());
+      return result;
+    }
+    function flattenCsvText(s) {
+      var parts = [];
+      var lines = s.split(/\r?\n/);
+      for (var li = 0; li < lines.length; li++) {
+        var line = lines[li];
+        if (!line.trim()) continue;
+        var cells = parseCSVLine(line);
+        for (var ci = 0; ci < cells.length; ci++) {
+          if (cells[ci]) parts.push(cells[ci]);
+        }
+      }
+      return parts;
+    }
+    var RANGE_MAX = 5000;
+    var defaultList = (function () {
+      var a = [];
+      for (var di = 1; di <= 99; di++) {
+        a.push(String(di));
+      }
+      return a.join(",");
+    })();
+    var remainingPool = [];
+    var pickHistory = [];
+    var MAX_PICK_HISTORY = 50;
+    var uploadIconSvg =
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>' +
+      '<polyline points="17 8 12 3 7 8"/>' +
+      '<line x1="12" y1="3" x2="12" y2="15"/>' +
+      "</svg>";
+    root.innerHTML =
+      '<pre class="simple-tool-output random-pick-output" id="bgout">結果はここに表示されます</pre>' +
+      '<p class="bingo-stats" id="bgStats" aria-live="polite"></p>' +
+      '<div class="simple-tool-actions"><button type="button" class="convert-submit-btn" id="bggo">抽選</button></div>' +
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.75rem;margin-bottom:0.5rem">' +
+      '<p class="convert-hint" style="flex:1;margin:0">カンマ区切りの候補から、出たものと重複しないように 1 つずつ選びます。CSV からも読み込めます。</p>' +
+      '<label id="bgCsvBtn" class="simple-tool-icon-btn" title="CSV を読み込む" aria-label="CSV を読み込む">' +
+      '<input type="file" id="bgcsv" accept=".csv,text/csv,text/plain" style="display:none" />' +
+      uploadIconSvg +
+      "</label></div>" +
+      '<textarea class="simple-tool-textarea" id="bgin" placeholder="例: 1,2,3...">' +
+      defaultList +
+      "</textarea>" +
+      '<fieldset class="convert-pass-fieldset bingo-range-fieldset" id="bgRangeOpt">' +
+      '<legend class="convert-pass-fieldset-legend">オプション</legend>' +
+      '<p class="convert-pass-field-hint bingo-range-hint">範囲の整数をまとめて候補に流し込みます。</p>' +
+      '<div class="convert-pass-conditions-row bingo-range-line">' +
+      '<input type="number" class="simple-tool-input bingo-range-num" id="bgfrom" inputmode="numeric" placeholder="開始" />' +
+      '<span class="bingo-range-sep">〜</span>' +
+      '<input type="number" class="simple-tool-input bingo-range-num" id="bgto" inputmode="numeric" placeholder="終了" />' +
+      '<button type="button" class="convert-submit-btn convert-submit-btn--secondary bingo-range-load" id="bgload">読み込み</button>' +
+      "</div></fieldset>" +
+      '<div class="dice-roll-history">' +
+      '<div class="dice-roll-history-head">' +
+      '<span class="simple-tool-label">履歴</span>' +
+      '<button type="button" class="simple-tool-icon-btn" id="bgHistReset" aria-label="履歴をリセット" title="履歴をリセット">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      "<path d=\"M3 6h18\"/><path d=\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"/><path d=\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"/><line x1=\"10\" y1=\"11\" x2=\"10\" y2=\"17\"/><line x1=\"14\" y1=\"11\" x2=\"14\" y2=\"17\"/></svg>" +
+      "</button></div>" +
+      '<p class="dice-roll-history-empty" id="bgHistEmpty">まだありません</p>' +
+      '<ul class="dice-roll-history-list" id="bgHistList" hidden></ul></div>';
+    var ta = root.querySelector("#bgin");
+    var out = root.querySelector("#bgout");
+    var fromIn = root.querySelector("#bgfrom");
+    var toIn = root.querySelector("#bgto");
+    var loadBtn = root.querySelector("#bgload");
+    var csvLab = root.querySelector("#bgCsvBtn");
+    function renderStats() {
+      var st = root.querySelector("#bgStats");
+      if (!st) return;
+      var picked = pickHistory.length;
+      var rem = remainingPool.length;
+      var total = picked + rem;
+      st.textContent =
+        "抽選済み " +
+        picked +
+        " 件 · 残り " +
+        rem +
+        " 件" +
+        (total > 0 ? "（全 " + total + " 件）" : "");
+    }
+    function refillPoolFromTextarea() {
+      remainingPool = flattenCsvText(ta.value).slice();
+      renderStats();
+    }
+    function renderPickHistory() {
+      var listEl = root.querySelector("#bgHistList");
+      var emptyEl = root.querySelector("#bgHistEmpty");
+      if (!listEl || !emptyEl) return;
+      if (!pickHistory.length) {
+        listEl.innerHTML = "";
+        listEl.hidden = true;
+        emptyEl.hidden = false;
+        return;
+      }
+      emptyEl.hidden = true;
+      listEl.hidden = false;
+      listEl.innerHTML = "";
+      pickHistory.forEach(function (entry) {
+        var li = document.createElement("li");
+        li.className = "dice-roll-history-item";
+        li.textContent = entry.text;
+        listEl.appendChild(li);
+      });
+    }
+    function pushPickHistory(text) {
+      pickHistory.unshift({ text: text });
+      if (pickHistory.length > MAX_PICK_HISTORY) {
+        pickHistory.length = MAX_PICK_HISTORY;
+      }
+      renderPickHistory();
+      syncCandidateControls();
+      renderStats();
+    }
+    var SPIN_MS = 600;
+    var SPIN_TICK_MS = 48;
+    var spinIntervalId = null;
+    var spinTimeoutId = null;
+    var isPicking = false;
+    function stopPickSpin() {
+      if (spinIntervalId !== null) {
+        clearInterval(spinIntervalId);
+        spinIntervalId = null;
+      }
+      if (spinTimeoutId !== null) {
+        clearTimeout(spinTimeoutId);
+        spinTimeoutId = null;
+      }
+    }
+    function syncCandidateControls() {
+      var locked = pickHistory.length > 0;
+      ta.disabled = locked || isPicking;
+      fromIn.disabled = locked || isPicking;
+      toIn.disabled = locked || isPicking;
+      loadBtn.disabled = locked || isPicking;
+      var rangeFs = root.querySelector("#bgRangeOpt");
+      if (rangeFs) {
+        rangeFs.hidden = locked;
+      }
+      if (csvLab) {
+        csvLab.classList.toggle("simple-tool-icon-btn--disabled", locked || isPicking);
+      }
+    }
+    function setPickingUi(picking) {
+      isPicking = picking;
+      root.querySelector("#bggo").disabled = picking;
+      root.querySelector("#bgHistReset").disabled = picking;
+      syncCandidateControls();
+      out.classList.toggle("random-pick-output--spinning", picking);
+    }
+    function pickRandomTick(pool) {
+      if (!pool.length) return;
+      var j = Math.floor(Math.random() * pool.length);
+      out.textContent = pool[j];
+    }
+    function runPick() {
+      if (isPicking) return;
+      if (pickHistory.length === 0) {
+        refillPoolFromTextarea();
+      }
+      if (!remainingPool.length) {
+        out.textContent = "候補がありません";
+        return;
+      }
+      var idx = Math.floor(Math.random() * remainingPool.length);
+      var picked = remainingPool[idx];
+      stopPickSpin();
+      setPickingUi(true);
+      spinIntervalId = setInterval(function () {
+        pickRandomTick(remainingPool);
+      }, SPIN_TICK_MS);
+      spinTimeoutId = setTimeout(function () {
+        stopPickSpin();
+        remainingPool.splice(idx, 1);
+        out.textContent = picked;
+        pushPickHistory(picked);
+        setPickingUi(false);
+      }, SPIN_MS);
+    }
+    root.querySelector("#bggo").addEventListener("click", runPick);
+    root.querySelector("#bgHistReset").addEventListener("click", function () {
+      if (isPicking) return;
+      pickHistory = [];
+      renderPickHistory();
+      refillPoolFromTextarea();
+      syncCandidateControls();
+    });
+    root.querySelector("#bgload").addEventListener("click", function () {
+      if (pickHistory.length > 0) return;
+      var a = parseInt(String(fromIn.value).trim(), 10);
+      var b = parseInt(String(toIn.value).trim(), 10);
+      if (isNaN(a) || isNaN(b)) {
+        out.textContent = "範囲は整数で入力してください";
+        return;
+      }
+      var lo = Math.min(a, b);
+      var hi = Math.max(a, b);
+      if (hi - lo + 1 > RANGE_MAX) {
+        out.textContent = "一度に読み込めるのは " + RANGE_MAX + " 件までです";
+        return;
+      }
+      var parts = [];
+      for (var n = lo; n <= hi; n++) {
+        parts.push(String(n));
+      }
+      ta.value = parts.join(",");
+      refillPoolFromTextarea();
+    });
+    ta.addEventListener("input", function () {
+      if (pickHistory.length > 0) return;
+      refillPoolFromTextarea();
+    });
+    root.querySelector("#bgcsv").addEventListener("change", function (ev) {
+      var f = ev.target.files && ev.target.files[0];
+      if (!f) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        var text = String(reader.result || "");
+        ta.value = flattenCsvText(text).join(",");
+        refillPoolFromTextarea();
+        ev.target.value = "";
+      };
+      reader.onerror = function () {
+        out.textContent = "ファイルの読み込みに失敗しました";
+        ev.target.value = "";
+      };
+      reader.readAsText(f);
+    });
+    refillPoolFromTextarea();
+    syncCandidateControls();
+
+    var useSpaceToPick =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(pointer: fine)").matches;
+    function bingoSpaceFocusOk(el) {
+      if (!el) return false;
+      if (el === document.body || el === document.documentElement) return true;
+      return root.contains(el);
+    }
+    function bingoSpaceInputOk(el) {
+      if (!el || el.isContentEditable) return false;
+      var tag = el.tagName;
+      if (tag === "TEXTAREA" || tag === "SELECT") return false;
+      if (tag === "INPUT") {
+        var t = el.type;
+        return t === "range";
+      }
+      return true;
+    }
+    function onBingoKeydown(e) {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (!useSpaceToPick) return;
+      if (!bingoSpaceFocusOk(e.target)) return;
+      if (!bingoSpaceInputOk(e.target)) return;
+      if (isPicking) {
+        e.preventDefault();
+        return;
+      }
+      e.preventDefault();
+      runPick();
+    }
+    if (useSpaceToPick) {
+      window.addEventListener("keydown", onBingoKeydown, { passive: false });
+    }
   };
 
   T.diceRoll = function (root) {
@@ -1469,8 +1956,8 @@
       '<div class="dice-roll-history">' +
       '<div class="dice-roll-history-head">' +
       '<span class="simple-tool-label">履歴</span>' +
-      '<button type="button" class="convert-submit-btn convert-submit-btn--secondary dice-roll-history-reset" id="diceHistReset" aria-label="履歴をリセット" title="履歴をリセット">' +
-      '<svg class="dice-roll-history-reset-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<button type="button" class="simple-tool-icon-btn" id="diceHistReset" aria-label="履歴をリセット" title="履歴をリセット">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
       "<path d=\"M3 6h18\"/><path d=\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"/><path d=\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"/><line x1=\"10\" y1=\"11\" x2=\"10\" y2=\"17\"/><line x1=\"14\" y1=\"11\" x2=\"14\" y2=\"17\"/></svg>" +
       "</button>" +
       "</div>" +

@@ -154,7 +154,7 @@
     var toolbar = buildToolbar(meta);
     var lead = document.createElement("p");
     lead.className = "tool-lead";
-    lead.textContent = meta.short;
+    lead.textContent = meta.medium || meta.short;
 
     chrome.insertBefore(toolbar, panel);
     chrome.insertBefore(lead, panel);

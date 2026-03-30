@@ -224,7 +224,7 @@ function main() {
       continue;
     }
     const pageTitle = `${meta.title} | snap-tools`;
-    const description = truncateDescription(meta.short);
+    const description = truncateDescription(meta.medium || meta.short);
     const canonical = canonicalUrl(hrefPath);
     writeHtmlFile(
       relHtml,
