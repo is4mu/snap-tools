@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="snap-root" content="">
+    <!-- snap-tools seo -->
+    <meta name="description" content="テキストや URL から QR コードを表示し、PNG で保存できます。入力はブラウザ内だけで処理されます。">
+    <link rel="canonical" href="https://www.snap-tools.jp/design/qr/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="QRコード作成 | snap-tools">
+    <meta property="og:description" content="テキストや URL から QR コードを表示し、PNG で保存できます。入力はブラウザ内だけで処理されます。">
+    <meta property="og:url" content="https://www.snap-tools.jp/design/qr/">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:site_name" content="snap-tools">
+    <meta property="og:image" content="https://www.snap-tools.jp/img/og-default.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="QRコード作成 | snap-tools">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="QRコード作成 | snap-tools">
+    <meta name="twitter:description" content="テキストや URL から QR コードを表示し、PNG で保存できます。入力はブラウザ内だけで処理されます。">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"QRコード作成 | snap-tools","description":"テキストや URL から QR コードを表示し、PNG で保存できます。入力はブラウザ内だけで処理されます。","url":"https://www.snap-tools.jp/design/qr/","inLanguage":"ja","isPartOf":{"@type":"WebSite","name":"Snap Tools","url":"https://www.snap-tools.jp/"}}</script>
+    <!-- /snap-tools seo -->
+    <title>QRコード作成 | snap-tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="../../js/tool-theme-init.js"></script>
+    <link rel="stylesheet" href="../../css/site.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZQCPMX5Z"></script>
+    <script src="../../js/gtag-config.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4645103012651649"
+         crossorigin="anonymous"></script>
+</head>
+<body class="page-tool tool-page">
+
+<header id="site-header" class="site-header--tool" data-header-partial="tool"></header>
+
+<div class="tool-chrome" data-tool-id="qr">
+    <div class="tool-panel qr-tool">
+        <p class="convert-hint">URL・本文・連絡先などを入力すると QR コードを表示します。入力は自動で反映されます。</p>
+
+        <div class="qr-preview" id="qrPreview">
+            <canvas id="qrCanvas" class="qr-canvas" width="256" height="256" hidden></canvas>
+        </div>
+
+        <label class="qr-label" for="qrInput">内容</label>
+        <textarea id="qrInput" class="qr-textarea" rows="5" placeholder="https:// やテキストを入力…" aria-label="QRコードにする内容">https://www.snap-tools.jp/</textarea>
+
+        <div class="qr-options">
+            <label class="qr-option">
+                <span class="qr-option-lbl">サイズ（ピクセル）</span>
+                <select id="qrSize" class="convert-select qr-select" aria-label="QRコードの表示サイズ">
+                    <option value="200">200</option>
+                    <option value="256" selected>256</option>
+                    <option value="320">320</option>
+                    <option value="400">400</option>
+                </select>
+            </label>
+            <label class="qr-option">
+                <span class="qr-option-lbl">誤り訂正</span>
+                <select id="qrEc" class="convert-select qr-select" aria-label="誤り訂正レベル" title="高いほど汚れに強いがデータ量の上限が下がります">
+                    <option value="L">低（約7%）</option>
+                    <option value="M" selected>中（約15%）</option>
+                    <option value="Q">高（約25%）</option>
+                    <option value="H">最高（約30%）</option>
+                </select>
+            </label>
+        </div>
+
+        <p class="qr-error" id="qrError" hidden role="alert"></p>
+
+        <button type="button" class="convert-submit-btn qr-download" id="qrDownload" disabled>PNGを保存</button>
+    </div>
+</div>
+
+<script src="../../js/tool-registry.js"></script>
+<script src="../../js/logo-mesh.js"></script>
+<script src="../../js/partials-loader.js"></script>
+<script src="../../js/tool-theme.js"></script>
+<script src="../../js/copy-toast.js"></script>
+<script src="../../js/tool-chrome.js"></script>
+<script src="../../js/vendor/qrcode.browser.js"></script>
+<script src="../../js/qr-page.js"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+/* --- ツール: クローム（ツールバー・説明・本体パネル） --- */
+.tool-chrome {
+  display: flex;
+  flex-direction: column;
+  gap: var(--snap-gap-chrome);
+}
+
+.tool-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--snap-gap-inline);
+  padding: var(--snap-space-3) 0 var(--snap-space-2);
+  border: none;
+  background: transparent;
+}
+
+.tool-toolbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tool-toolbar-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--tp-accent);
+}
+
+.tool-toolbar-icon:empty {
+  display: none;
+}
+
+.tool-toolbar-icon svg {
+  display: block;
+}
+
+.tool-toolbar-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--tp-text);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+}
+
+.tool-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.tool-icon-btn {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--tp-text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tool-icon-btn:hover {
+  background: var(--tp-muted-bg);
+  color: var(--tp-text);
+}
+
+.tool-icon-btn:focus-visible {
+  outline: 2px solid var(--tp-accent);
+  outline-offset: 2px;
+}
+
+.tool-icon-btn--favorite.is-favorited {
+  color: #e31b23;
+}
+
+.tool-icon-btn--favorite.is-favorited .tool-icon-heart-path {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+@media (max-width: 380px) {
+  .tool-toolbar {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .tool-toolbar-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+.tool-lead {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--tp-text-muted);
+}
+
+/* --- ツール本体（枠あり） --- */
+.tool-page .tool-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--snap-gap-panel);
+  min-height: 0;
+  background: var(--tp-surface);
+  padding: var(--tool-panel-pad);
+  border-radius: var(--snap-radius-lg);
+  box-shadow: 0 4px 6px var(--tp-shadow);
+  border: 1px solid var(--tp-header-border);
+}
+
+.tool-page .tool-panel--centered {
+  text-align: center;
+}
+
+.tool-back-link {
+  margin-top: 0;
+  text-align: center;
+  display: block;
+  color: var(--tp-text-muted);
+  font-size: 0.9rem;
+}
+
+.tool-back-link a {
+  color: inherit;
+  text-decoration: none;
+}

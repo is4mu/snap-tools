@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="snap-root" content="">
+    <!-- snap-tools seo -->
+    <meta name="description" content="文字数・行数・原稿用紙・X 用の半角換算（全角＝2）を一覧表示。長文は投稿単位に分割してコピーできます。">
+    <link rel="canonical" href="https://www.snap-tools.jp/text/counter/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="文字数カウント | snap-tools">
+    <meta property="og:description" content="文字数・行数・原稿用紙・X 用の半角換算（全角＝2）を一覧表示。長文は投稿単位に分割してコピーできます。">
+    <meta property="og:url" content="https://www.snap-tools.jp/text/counter/">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:site_name" content="snap-tools">
+    <meta property="og:image" content="https://www.snap-tools.jp/img/og-default.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="文字数カウント | snap-tools">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="文字数カウント | snap-tools">
+    <meta name="twitter:description" content="文字数・行数・原稿用紙・X 用の半角換算（全角＝2）を一覧表示。長文は投稿単位に分割してコピーできます。">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"文字数カウント | snap-tools","description":"文字数・行数・原稿用紙・X 用の半角換算（全角＝2）を一覧表示。長文は投稿単位に分割してコピーできます。","url":"https://www.snap-tools.jp/text/counter/","inLanguage":"ja","isPartOf":{"@type":"WebSite","name":"Snap Tools","url":"https://www.snap-tools.jp/"}}</script>
+    <!-- /snap-tools seo -->
+    <title>文字数カウント | snap-tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="../../js/tool-theme-init.js"></script>
+    <link rel="stylesheet" href="../../css/site.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZQCPMX5Z"></script>
+    <script src="../../js/gtag-config.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4645103012651649"
+         crossorigin="anonymous"></script>
+</head>
+<body class="page-tool tool-page">
+
+<header id="site-header" class="site-header--tool" data-header-partial="tool"></header>
+
+<div class="tool-chrome" data-tool-id="counter">
+    <div class="tool-panel counter-tool">
+        <textarea id="inputText" placeholder="ここにテキストを入力またはペーストしてください…" aria-label="カウントするテキスト"></textarea>
+
+        <div class="counter-report" id="counterReport" aria-live="polite">
+            <section class="counter-report-section">
+                <h2 class="counter-report-heading">文字数</h2>
+                <dl class="counter-report-dl">
+                    <div class="counter-report-row">
+                        <dt>空白を含む</dt>
+                        <dd><span class="counter-report-num" id="counterCharsInc">0</span></dd>
+                    </div>
+                    <div class="counter-report-row">
+                        <dt>空白を除く</dt>
+                        <dd><span class="counter-report-num" id="counterCharsExc">0</span></dd>
+                    </div>
+                </dl>
+            </section>
+            <section class="counter-report-section">
+                <h2 class="counter-report-heading">行数</h2>
+                <dl class="counter-report-dl">
+                    <div class="counter-report-row">
+                        <dt>空行を含む</dt>
+                        <dd><span class="counter-report-num" id="counterLineInc">0</span></dd>
+                    </div>
+                    <div class="counter-report-row">
+                        <dt>空行を除く</dt>
+                        <dd><span class="counter-report-num" id="counterLineExc">0</span></dd>
+                    </div>
+                </dl>
+            </section>
+            <section class="counter-report-section">
+                <h2 class="counter-report-heading">原稿用紙</h2>
+                <dl class="counter-report-dl">
+                    <div class="counter-report-row counter-report-row--single">
+                        <dt>換算枚数（20 行＝1 枚）</dt>
+                        <dd class="counter-report-dd--genko">
+                            <span class="counter-report-num" id="counterGenko">0</span><span class="counter-report-unit">枚</span><span class="counter-report-genko-rows" aria-label="換算行数">（<span id="counterGenkoRows">0</span>行）</span>
+                        </dd>
+                    </div>
+                </dl>
+                <p class="counter-report-note counter-report-note--genko">20文字×20行を原稿用紙一枚としてカウントします。段落下げ・句読点・鉤括弧の調整はしていません。文字はUnicodeのコードポイント単位です。</p>
+            </section>
+            <section class="counter-report-section">
+                <h2 class="counter-report-heading">ポスト（X）</h2>
+                <dl class="counter-report-dl">
+                    <div class="counter-report-row counter-report-row--x" id="counterXRow">
+                        <dt>半角換算</dt>
+                        <dd class="counter-report-x-dd">
+                            <span class="counter-report-num" id="counterXWeight">0</span><span class="counter-report-slash">／</span><span id="counterXLimit">280</span>
+                            <span class="counter-report-meta" id="counterXRemain">残り 280（半角換算）</span>
+                        </dd>
+                    </div>
+                </dl>
+                <p class="counter-report-note">実際の X では絵文字・リンク等でカウントが変わることがあります。長文は下の「投稿に分割」からコピーできます（半角換算だけで区切り、改行位置では分割しません）。</p>
+                <div id="counterXSplitWrap" class="counter-x-split-wrap" hidden>
+                    <h3 class="counter-x-split-title">投稿に分割（コピー用）</h3>
+                    <p class="counter-x-split-lead" id="counterXSplitLead"></p>
+                    <ul class="counter-x-split-list" id="counterXSplitList"></ul>
+                    <div class="counter-x-split-actions">
+                        <button type="button" class="counter-x-split-btn-all" id="counterXCopyAll">区切り付きでまとめてコピー</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script src="../../js/tool-registry.js"></script>
+<script src="../../js/logo-mesh.js"></script>
+<script src="../../js/partials-loader.js"></script>
+<script src="../../js/tool-theme.js"></script>
+<script src="../../js/copy-toast.js"></script>
+<script src="../../js/tool-chrome.js"></script>
+<script src="../../js/counter-page.js"></script>
+
+</body>
+</html>

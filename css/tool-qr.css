@@ -1,0 +1,89 @@
+/* --- QRコード作成 --- */
+.qr-label {
+  display: block;
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--tp-text);
+}
+
+.qr-tool textarea.qr-textarea {
+  min-height: 7.5rem;
+  height: auto;
+  max-height: 40vh;
+  margin-bottom: 0;
+}
+
+.qr-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--snap-gap-inline) var(--snap-space-4);
+  margin-bottom: 0;
+}
+
+.qr-option {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 140px;
+  min-width: min(100%, 8rem);
+}
+
+.qr-option-lbl {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--tp-text-muted);
+}
+
+.qr-select {
+  width: 100%;
+  min-height: var(--convert-h);
+  font-size: var(--convert-fs);
+}
+
+.qr-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 12rem;
+  margin: 0;
+  padding: var(--snap-space-4);
+  box-sizing: border-box;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--tp-border);
+  border-radius: var(--snap-radius-md);
+}
+
+html.tool-theme-dark .qr-preview {
+  background: var(--tp-input-bg);
+}
+
+.qr-canvas {
+  display: block;
+  align-self: center;
+  max-width: 100%;
+  height: auto;
+}
+
+.qr-error {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #c62828;
+  background: rgba(198, 40, 40, 0.08);
+  border: 1px solid rgba(198, 40, 40, 0.25);
+  border-radius: 8px;
+}
+
+html.tool-theme-dark .qr-error {
+  color: #f85149;
+  background: rgba(248, 81, 73, 0.1);
+  border-color: rgba(248, 81, 73, 0.3);
+}
+
+.qr-download {
+  margin-bottom: 0;
+}

@@ -1,0 +1,388 @@
+/* --- 西暦↔和暦変換 --- */
+/* 日付・今日・結果の1行目の高さを揃える。フォントは 1rem で統一し、結果は字重で強調。 */
+.convert-tool {
+  text-align: left;
+  --convert-today-w: 4.75rem;
+}
+
+.convert-tabs {
+  display: flex;
+  gap: 0;
+  margin: 0;
+  border-bottom: 1px solid var(--tp-border);
+}
+
+.convert-tab {
+  flex: 1;
+  padding: 12px 10px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  background: transparent;
+  color: var(--tp-text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.convert-tab[aria-selected="true"] {
+  color: var(--tp-accent);
+  border-bottom-color: var(--tp-accent);
+}
+
+.convert-tab:hover {
+  color: var(--tp-text);
+}
+
+.convert-tab:focus-visible {
+  outline: 2px solid var(--tp-accent);
+  outline-offset: 2px;
+}
+
+.convert-tabpanel[hidden] {
+  display: none !important;
+}
+
+/* 和暦など: タブ内がフラットなブロック列のときの縦リズム（.simple-tool-stack は自前の gap があるので除外） */
+.convert-tabpanel:not([hidden]):not(.simple-tool-stack) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--snap-gap-stack);
+}
+
+.convert-tabpanel:not([hidden]):not(.simple-tool-stack) > .convert-hint {
+  margin-bottom: 0;
+}
+
+.convert-tabpanel:not([hidden]):not(.simple-tool-stack) > .convert-row,
+.convert-tabpanel:not([hidden]):not(.simple-tool-stack) > .convert-row--g {
+  margin-bottom: 0;
+}
+
+.convert-tabpanel:not([hidden]):not(.simple-tool-stack) > .convert-result {
+  margin-top: 0;
+}
+
+.convert-hint {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--tp-text-muted);
+}
+
+.convert-row--g {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+@media (min-width: 420px) {
+  .convert-row--g {
+    flex-wrap: nowrap;
+  }
+}
+
+.convert-g-date-field {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.convert-g-date-field .convert-g-date-lbl {
+  display: block;
+  text-align: left;
+}
+
+.convert-date-input {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: var(--convert-h);
+  padding: 0 12px;
+  font-size: var(--convert-fs);
+  line-height: 1.3;
+  border: 1px solid var(--tp-border);
+  border-radius: 8px;
+  background: var(--tp-input-bg);
+  color: var(--tp-text);
+  box-sizing: border-box;
+}
+
+.convert-tool .btn-today {
+  flex: 0 0 var(--convert-today-w);
+  width: var(--convert-today-w);
+  min-width: var(--convert-today-w);
+  max-width: var(--convert-today-w);
+  min-height: var(--convert-h);
+  padding: 0;
+  font-size: var(--convert-fs);
+  line-height: 1.3;
+  border: 1px solid var(--tp-border);
+  border-radius: 8px;
+  background: var(--tp-muted-bg);
+  color: var(--tp-text);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.convert-tool .btn-today:hover {
+  opacity: 0.9;
+}
+
+.convert-wareki-compact {
+  margin-bottom: 14px;
+}
+
+.convert-select {
+  min-height: var(--convert-h);
+  padding: 0 12px;
+  font-size: var(--convert-fs);
+  line-height: 1.3;
+  border: 1px solid var(--tp-border);
+  border-radius: 8px;
+  background: var(--tp-input-bg);
+  color: var(--tp-text);
+  box-sizing: border-box;
+}
+
+.convert-select--era {
+  width: 100%;
+  padding: 0 8px;
+}
+
+/* WebKit / iOS: ネイティブ select の高さが潰れるのを防ぐ（元号ドロップダウン） */
+.convert-tool .convert-select.convert-select--era {
+  height: var(--convert-h);
+  min-height: var(--convert-h);
+  align-self: stretch;
+  line-height: 1.2;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 0 28px 0 10px;
+  background-color: var(--tp-input-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+}
+
+html.tool-theme-dark .convert-tool .convert-select.convert-select--era {
+  background-color: var(--tp-input-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
+.convert-ymd-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+  width: 100%;
+}
+
+.convert-ymd-row > .convert-ymd-item {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.convert-ymd-row > .convert-ymd-item.convert-ymd-item--era {
+  flex: 1 1 100%;
+  min-width: min(100%, 12rem);
+  max-width: 100%;
+}
+
+@media (min-width: 520px) {
+  .convert-ymd-row {
+    flex-wrap: nowrap;
+  }
+
+  .convert-ymd-row > .convert-ymd-item.convert-ymd-item--era {
+    flex: 1.15 1 0;
+    min-width: 0;
+    max-width: none;
+  }
+}
+
+.convert-ymd-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.convert-ymd-lbl {
+  font-size: 0.7rem;
+  line-height: 1;
+  color: var(--tp-text-muted);
+}
+
+.convert-num {
+  width: 100%;
+  max-width: 8rem;
+  min-height: var(--convert-h);
+  padding: 0 12px;
+  font-size: var(--convert-fs);
+  line-height: 1.3;
+  border: 1px solid var(--tp-border);
+  border-radius: 8px;
+  background: var(--tp-input-bg);
+  color: var(--tp-text);
+  box-sizing: border-box;
+}
+
+.tool-page .convert-tool input[type="number"].convert-num--sm {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: 0 8px;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+/* --sm の width:100% より後に置き、パスワード生成の数値欄だけ二桁固定幅 */
+.tool-page .convert-tool input[type="number"].convert-num--sm.convert-num--pass {
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  width: calc(2ch + 1.75rem);
+  min-width: calc(2ch + 1.75rem);
+  max-width: calc(2ch + 1.75rem);
+  padding: 0 0.5625rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.tool-page .convert-tool input[type="number"].convert-num--sm::-webkit-outer-spin-button,
+.tool-page .convert-tool input[type="number"].convert-num--sm::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.convert-result {
+  display: flex;
+  align-items: center;
+  min-height: var(--convert-h);
+  margin-top: 4px;
+  padding: 0 12px;
+  background: var(--tp-muted-bg);
+  border-radius: 8px;
+  border: 1px solid var(--tp-border);
+  font-size: var(--convert-fs);
+  line-height: 1.45;
+  box-sizing: border-box;
+}
+
+.convert-result-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-height: var(--convert-h);
+}
+
+.convert-result--with-copy .convert-result-main {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.convert-result.convert-result--error {
+  padding: 10px 12px;
+  min-height: auto;
+  align-items: flex-start;
+}
+
+.convert-result--error {
+  color: #c62828;
+  border-color: rgba(198, 40, 40, 0.35);
+}
+
+html.tool-theme-dark .convert-result--error {
+  color: #f85149;
+  border-color: rgba(248, 81, 73, 0.35);
+}
+
+.convert-result-main {
+  font-size: var(--convert-fs);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--tp-text);
+}
+
+.convert-copy-btn {
+  flex-shrink: 0;
+  padding: 0;
+  width: var(--convert-h);
+  height: var(--convert-h);
+  color: var(--tp-text-muted);
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.convert-copy-btn:hover {
+  background: var(--tp-surface);
+  color: var(--tp-accent);
+}
+
+.convert-copy-btn:focus-visible {
+  outline: 2px solid var(--tp-accent);
+  outline-offset: 2px;
+}
+
+.convert-copy-btn svg {
+  display: block;
+}
+
+/* --- コピー完了トースト（画面左下・YouTube 共有風） --- */
+.copy-toast {
+  position: fixed;
+  left: max(16px, env(safe-area-inset-left, 0px));
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 3000;
+  box-sizing: border-box;
+  min-width: 200px;
+  max-width: min(calc(100vw - 32px), 360px);
+  padding: 14px 18px;
+  font-family: var(--font-sans, sans-serif);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--tp-text, #242424);
+  background: var(--tp-surface, #ffffff);
+  border: 1px solid var(--tp-border, #dadce0);
+  border-radius: 8px;
+  box-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.12),
+    0 0 1px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.copy-toast.copy-toast--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+html.tool-theme-dark .copy-toast {
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.45),
+    0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+/* .tool-panel の flex+gap と二重にならないよう、直下のみマージンを打ち消す */
+.tool-page .tool-panel > .convert-hint {
+  margin-bottom: 0;
+}

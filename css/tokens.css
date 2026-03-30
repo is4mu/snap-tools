@@ -1,0 +1,48 @@
+/* --- デザイントークン（色・タイポ・間隔・半径）
+ * 本文フォント: Noto Sans JP（head で preconnect + display=swap、未取得時はシステムフォントへフォールバック）
+ * 新規コンポーネントはまずここに変数を足し、個別のマジックナンバーを避ける
+ */
+:root {
+  --font-sans: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", YuGothic,
+    Meiryo, sans-serif;
+  /* js/logo-mesh.js が上書き（メッシュと同じ色相の HSL） */
+  --snap-accent: #007bff;
+  --snap-accent-bright: #58a6ff;
+
+  --tool-page-max: 600px;
+  --tool-panel-pad: clamp(18px, 4.5vw, 30px);
+
+  /* 間隔スケール（4px 基準） */
+  --snap-space-1: 4px;
+  --snap-space-2: 8px;
+  --snap-space-3: 12px;
+  --snap-space-4: 16px;
+  --snap-space-5: 20px;
+  --snap-space-6: 24px;
+
+  /* レイアウト意味付き（拡張時はここを調整すると全体に効く） */
+  --snap-gap-chrome: var(--snap-space-5);
+  --snap-gap-panel: var(--snap-space-4);
+  --snap-gap-stack: 14px;
+  --snap-gap-inline: var(--snap-space-3);
+
+  --snap-radius-sm: 8px;
+  --snap-radius-md: 10px;
+  --snap-radius-lg: 12px;
+
+  /* convert-tool 系のコントロール高さ（早期に参照されるため :root にも定義） */
+  --convert-h: 44px;
+  --convert-fs: 1rem;
+}
+
+/* 汎用: 縦積みブロック（HTML から任意のラッパーに付与可能） */
+.snap-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--snap-gap-panel);
+}
+
+.snap-stack--tight {
+  gap: var(--snap-gap-stack);
+}

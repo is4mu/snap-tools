@@ -1,0 +1,9 @@
+{
+  "name": "snap-tools",
+  "private": true,
+  "description": "Static web utilities (GitHub Pages)",
+  "scripts": {
+    "seo:apply": "node scripts/apply-seo.mjs",
+    "og:image": "python3 scripts/generate-og-image.py"
+  }
+}

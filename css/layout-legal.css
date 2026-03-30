@@ -1,0 +1,45 @@
+/* --- プライバシー --- */
+.legal-container {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.legal-container h1 {
+  border-bottom: 2px solid var(--snap-accent);
+  padding-bottom: 10px;
+  color: var(--snap-accent);
+}
+
+.legal-container h2 {
+  font-size: 1.2rem;
+  margin-top: 30px;
+  border-left: 4px solid var(--snap-accent);
+  padding-left: 10px;
+}
+
+.legal-container p,
+.legal-container li {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.legal-back-link {
+  margin-top: 40px;
+  display: block;
+  text-align: center;
+  color: #666;
+  text-decoration: none;
+}
+
+.legal-meta {
+  margin-top: 40px;
+  font-size: 0.8rem;
+  color: #999;
+}
+
+body.page-privacy {
+  line-height: 1.6;
+}

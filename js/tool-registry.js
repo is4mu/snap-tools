@@ -1,6 +1,6 @@
 /**
  * ツール一覧（トップ・ツールバー・お気に入りの単一ソース）。
- * 追加手順: エントリ追加 → TOOL_HOME_ORDER に id → TOOL_CATEGORY_MAP にカテゴリ → *.html で data-tool-id を同じ id に。
+ * 追加手順: エントリ追加 → TOOL_HOME_ORDER に id → TOOL_CATEGORY_MAP にカテゴリ → カテゴリ名/ツール名/index.html で data-tool-id を同じ id に。
  */
 (function () {
   var ICON_COUNTER =
@@ -44,7 +44,7 @@
         "半角換算が 280 を超えると「投稿に分割」が現れ、各投稿を個別コピーするか、区切り付きでまとめてコピーできます。分割は半角換算のみで行い、改行は区切りにしません。\n\n" +
         "【プライバシー】\n" +
         "処理はすべてお使いのブラウザ内で行われ、テキストがサーバーに送られることはありません。",
-      href: "counter.html",
+      href: "text/counter/",
     },
     password: {
       iconSvg: ICON_PASSWORD,
@@ -58,7 +58,7 @@
         "乱数には可能な環境でブラウザの暗号用乱数（crypto.getRandomValues）を使います。エントロピー表示は簡略化した計算であり、実際の攻撃耐性を保証するものではありません。最高水準の用途にはパスワードマネージャー等の利用もご検討ください。\n\n" +
         "【プライバシー】\n" +
         "生成結果はサーバーに送信されません。",
-      href: "password.html",
+      href: "security/password/",
     },
     wareki: {
       iconSvg: ICON_WAREKI,
@@ -83,7 +83,7 @@
         "旧暦に基づく改元を西暦に当てる作業は、史料の読み方や対照表の版によって日付が文献と異なることがあります。Harumi のデータも一つの対照表にすぎず、政府の告示・公文書・契約書・学術出版などで用いる公式な基準になるものではありません。裁判・契約・研究の根拠などにそのまま用いないでください。表示は目安・参考としてご利用ください。\n\n" +
         "【プライバシー】\n" +
         "日付の計算はすべてお使いのブラウザ内で行われ、入力内容がサーバーに送られることはありません。",
-      href: "wareki.html",
+      href: "datetime/wareki/",
     },
     qr: {
       iconSvg: ICON_QR,
@@ -99,7 +99,7 @@
         "QR 生成に npm パッケージ「qrcode」（MIT）をブラウザ用にバンドルしたものを同サイトから読み込んでいます。\n\n" +
         "【プライバシー】\n" +
         "入力内容はサーバーに送信されません。オフラインでもページとバンドルが読めれば利用できます。",
-      href: "qr.html",
+      href: "design/qr/",
     },
     base64: {
       iconSvg: ICON_CODE,
@@ -107,7 +107,7 @@
       short: "テキストと Base64 を相互変換（Unicode 対応）。広告・サーバー送信なし。",
       long:
         "入力したテキストを Base64 にエンコードしたり、Base64 文字列をテキストに戻します。\n\n【プライバシー】\n処理はすべてブラウザ内で行われ、内容がサーバーに送られることはありません。",
-      href: "base64.html",
+      href: "encode/base64/",
     },
     urlCodec: {
       iconSvg: ICON_CODE,
@@ -115,7 +115,7 @@
       short: "encodeURIComponent／decodeURIComponent 相当。クエリやパス用のエスケープに。",
       long:
         "テキストを URL 用にエンコードしたり、エンコード済み文字列を元に戻します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "url-codec.html",
+      href: "encode/url-codec/",
     },
     htmlEscape: {
       iconSvg: ICON_CODE,
@@ -123,7 +123,7 @@
       short: "HTML 特殊文字のエスケープと簡易的な解除。",
       long:
         "テキストを HTML に安全に埋め込むためのエスケープ、およびエスケープされた文字列の復元を行います。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "html-escape.html",
+      href: "encode/html-escape/",
     },
     jsonFormat: {
       iconSvg: ICON_CODE,
@@ -131,7 +131,7 @@
       short: "JSON を検証し、インデント付きで整形表示。",
       long:
         "JSON 文字列をパースし、読みやすい形式で表示します。不正な JSON の場合はエラーメッセージを表示します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "json-format.html",
+      href: "encode/json-format/",
     },
     jsonMinify: {
       iconSvg: ICON_CODE,
@@ -139,7 +139,7 @@
       short: "JSON を空白のない 1 行に圧縮。",
       long:
         "JSON をパースしてから改めて文字列化し、不要な空白を除いた形式にします。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "json-minify.html",
+      href: "encode/json-minify/",
     },
     uuidGen: {
       iconSvg: ICON_HASH,
@@ -147,7 +147,7 @@
       short: "UUID v4 を複数件まとめて生成。",
       long:
         "ランダムな UUID（v4）を指定件数生成します。crypto.randomUUID または同等の乱数で生成します。\n\n【プライバシー】\n生成はブラウザ内のみです。",
-      href: "uuid-gen.html",
+      href: "security/uuid-gen/",
     },
     sha256: {
       iconSvg: ICON_HASH,
@@ -155,7 +155,7 @@
       short: "文字列の SHA-256（16 進）を表示。",
       long:
         "入力テキストの SHA-256 ハッシュを Web Crypto API で計算します。\n\n【プライバシー】\n計算はブラウザ内のみです。",
-      href: "sha256.html",
+      href: "security/sha256/",
     },
     slugify: {
       iconSvg: ICON_TEXT,
@@ -163,7 +163,7 @@
       short: "英数字ベースの URL 用スラッグに正規化。",
       long:
         "テキストを小文字化し、記号をハイフンに置き換えてスラッグ形式にします。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "slugify.html",
+      href: "text/slugify/",
     },
     caseConvert: {
       iconSvg: ICON_TEXT,
@@ -171,7 +171,7 @@
       short: "英字の大文字・小文字・タイトルケースなどに変換。",
       long:
         "選択したモードに応じて英字の大文字・小文字を一括変換します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "case-convert.html",
+      href: "text/case-convert/",
     },
     lineSort: {
       iconSvg: ICON_LIST,
@@ -179,7 +179,7 @@
       short: "行単位でソート、重複除去、空白トリム。",
       long:
         "改行区切りのテキストを行ごとに並べ替えたり、重複を除いたりします。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "line-sort.html",
+      href: "text/line-sort/",
     },
     textDiff: {
       iconSvg: ICON_LIST,
@@ -187,7 +187,7 @@
       short: "2 つのテキストを行単位で簡易比較。",
       long:
         "2 つのテキストを行ごとに比較し、簡易的な差分表示を行います。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "text-diff.html",
+      href: "text/text-diff/",
     },
     regexTest: {
       iconSvg: ICON_DEV,
@@ -195,7 +195,7 @@
       short: "JavaScript の RegExp でマッチ位置を確認。",
       long:
         "正規表現パターンとフラグを指定し、テキスト内の一致を確認します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "regex-test.html",
+      href: "dev/regex-test/",
     },
     unixTime: {
       iconSvg: ICON_CLOCK,
@@ -203,7 +203,7 @@
       short: "UNIX 秒と日時（ローカル）を相互変換。",
       long:
         "UNIX 時刻（秒）と日時表示を相互に変換します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "unix-time.html",
+      href: "datetime/unix-time/",
     },
     ageCalc: {
       iconSvg: ICON_CALC,
@@ -211,7 +211,7 @@
       short: "誕生日から満年齢と次の誕生日までの日数。",
       long:
         "誕生日を入力すると満年齢と、次の誕生日までのおおよその日数を表示します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "age-calc.html",
+      href: "datetime/age-calc/",
     },
     bmi: {
       iconSvg: ICON_CALC,
@@ -219,7 +219,7 @@
       short: "身長・体重から BMI と簡易区分。",
       long:
         "身長（cm）と体重（kg）から BMI を計算します。表示は目安であり医療判断には使えません。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "bmi.html",
+      href: "calc/bmi/",
     },
     percentCalc: {
       iconSvg: ICON_CALC,
@@ -227,7 +227,7 @@
       short: "割合・割合逆算・増減の素早い計算。",
       long:
         "元の値とパーセントから一部の値を求めたり、2 値の比率を求めたりします。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "percent-calc.html",
+      href: "calc/percent-calc/",
     },
     loanSim: {
       iconSvg: ICON_CALC,
@@ -235,7 +235,7 @@
       short: "元利均等返済の月額・総額の目安。",
       long:
         "借入額・年利・年数から月々の返済額の目安を計算します。実際の契約とは異なる場合があります。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "loan-sim.html",
+      href: "calc/loan-sim/",
     },
     taxJp: {
       iconSvg: ICON_CALC,
@@ -243,7 +243,7 @@
       short: "税込・税抜の相互計算（標準・軽減）。",
       long:
         "消費税率 10% または 8%（軽減）を選び、税込・税抜金額を計算します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "tax-jp.html",
+      href: "calc/tax-jp/",
     },
     radixConv: {
       iconSvg: ICON_CODE,
@@ -251,7 +251,7 @@
       short: "整数を任意の基数同士で変換。",
       long:
         "2〜36 進数の整数表記を相互に変換します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "radix-conv.html",
+      href: "calc/radix-conv/",
     },
     colorConv: {
       iconSvg: ICON_COLOR,
@@ -259,7 +259,7 @@
       short: "HEX から RGB・HSL を表示。",
       long:
         "#RRGGBB 形式の色から RGB と HSL の値を求めます。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "color-conv.html",
+      href: "design/color-conv/",
     },
     contrast: {
       iconSvg: ICON_COLOR,
@@ -267,7 +267,7 @@
       short: "2 色の相対コントラスト比を計算。",
       long:
         "前景色と背景色から WCAG 2.1 のコントラスト比の目安を表示します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "contrast.html",
+      href: "design/contrast/",
     },
     gradientCss: {
       iconSvg: ICON_COLOR,
@@ -275,7 +275,7 @@
       short: "線形グラデーションの CSS を生成・コピー。",
       long:
         "角度と 2 色から linear-gradient の CSS を生成します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "gradient-css.html",
+      href: "design/gradient-css/",
     },
     lorem: {
       iconSvg: ICON_TEXT,
@@ -283,7 +283,7 @@
       short: "段落数を指定してダミーテキストを生成。",
       long:
         "プレースホルダー用のダミー英文を段落単位で生成します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "lorem.html",
+      href: "text/lorem/",
     },
     creditCard: {
       iconSvg: ICON_CALC,
@@ -291,7 +291,7 @@
       short: "チェックディジットの検証のみ（決済・実在確認は不可）。",
       long:
         "カード番号の Luhn アルゴリズムによる形式チェックを行います。有効期限や実在は検証しません。\n\n【プライバシー】\n入力はブラウザ内のみでサーバーに送信されません。",
-      href: "credit-card.html",
+      href: "calc/credit-card/",
     },
     zipJp: {
       iconSvg: ICON_TEXT,
@@ -299,7 +299,7 @@
       short: "7 桁を 123-4567 形式に整形。",
       long:
         "数字 7 桁の郵便番号をハイフン付き表記に整形します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "zip-jp.html",
+      href: "text/zip-jp/",
     },
     zenkaku: {
       iconSvg: ICON_TEXT,
@@ -307,7 +307,7 @@
       short: "英数字記号の全角・半角を相互変換。",
       long:
         "半角英数字・記号を全角に、または全角英数字を半角に変換します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "zenkaku.html",
+      href: "text/zenkaku/",
     },
     kataHira: {
       iconSvg: ICON_TEXT,
@@ -315,7 +315,7 @@
       short: "カナとひらがなを相互に変換（簡易）。",
       long:
         "カタカナとひらがなを 1 文字単位で相互変換します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "kata-hira.html",
+      href: "text/kata-hira/",
     },
     stopwatch: {
       iconSvg: ICON_CLOCK,
@@ -323,7 +323,7 @@
       short: "シンプルな経過時間計測。",
       long:
         "開始・停止・リセットで経過時間を計測します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "stopwatch.html",
+      href: "datetime/stopwatch/",
     },
     pomodoro: {
       iconSvg: ICON_CLOCK,
@@ -331,7 +331,7 @@
       short: "集中用のカウントダウン（分を指定可能）。",
       long:
         "指定した分数のカウントダウンタイマーです。終了時にトーストでお知らせします。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "pomodoro.html",
+      href: "datetime/pomodoro/",
     },
     countdown: {
       iconSvg: ICON_CLOCK,
@@ -339,7 +339,7 @@
       short: "目標日時までの残りをリアルタイム表示。",
       long:
         "指定した日時までの残り日・時間・分・秒を表示します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "countdown.html",
+      href: "datetime/countdown/",
     },
     textSplit: {
       iconSvg: ICON_TEXT,
@@ -347,7 +347,7 @@
       short: "長文を指定文字数ごとに改行で分割。",
       long:
         "Unicode のコードポイント単位で、指定文字数ごとに改行を入れて分割します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "text-split.html",
+      href: "text/text-split/",
     },
     csvView: {
       iconSvg: ICON_LIST,
@@ -355,7 +355,7 @@
       short: "カンマ区切りを表形式でプレビュー。",
       long:
         "シンプルなカンマ区切りテキストを表として表示します。引用符付き CSV の複雑な仕様は未対応です。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "csv-view.html",
+      href: "dev/csv-view/",
     },
     jwtDecode: {
       iconSvg: ICON_DEV,
@@ -363,7 +363,7 @@
       short: "ヘッダーとペイロードを表示（署名は検証しません）。",
       long:
         "JWT をピリオドで分割し、ヘッダーとペイロードを Base64URL デコードして表示します。署名の検証は行いません。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "jwt-decode.html",
+      href: "dev/jwt-decode/",
     },
     uaParse: {
       iconSvg: ICON_DEV,
@@ -371,7 +371,7 @@
       short: "ブラウザの UA を表示・貼り付けた文字列を確認。",
       long:
         "現在の User-Agent を表示するほか、任意の文字列を貼り付けて確認できます。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "ua-parse.html",
+      href: "dev/ua-parse/",
     },
     dpiCalc: {
       iconSvg: ICON_CALC,
@@ -379,7 +379,7 @@
       short: "解像度と対角インチからおおよその DPI。",
       long:
         "横・縦ピクセルと対角インチからディスプレイの DPI の目安を計算します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "dpi-calc.html",
+      href: "calc/dpi-calc/",
     },
     aspectRatio: {
       iconSvg: ICON_CALC,
@@ -387,7 +387,7 @@
       short: "幅と高さの比を最大公約数で約分。",
       long:
         "整数の幅・高さからアスペクト比を整数比で表します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "aspect-ratio.html",
+      href: "calc/aspect-ratio/",
     },
     readingTime: {
       iconSvg: ICON_TEXT,
@@ -395,7 +395,7 @@
       short: "文字数から読了分数のざっくり目安。",
       long:
         "空白を除いた文字数と 1 分あたりの文字数から読了時間の目安を出します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "reading-time.html",
+      href: "text/reading-time/",
     },
     worldClock: {
       iconSvg: ICON_CLOCK,
@@ -403,7 +403,7 @@
       short: "東京・NY・ロンドン・UTC の現在時刻。",
       long:
         "主要タイムゾーンの現在時刻を 1 秒ごとに更新します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "world-clock.html",
+      href: "datetime/world-clock/",
     },
     randomPick: {
       iconSvg: ICON_LIST,
@@ -411,7 +411,7 @@
       short: "改行区切りの候補から 1 つを選ぶ。",
       long:
         "候補を 1 行に 1 つずつ入力し、ランダムに 1 つを選びます。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "random-pick.html",
+      href: "random/random-pick/",
     },
     diceRoll: {
       iconSvg: ICON_CALC,
@@ -419,7 +419,7 @@
       short: "任意の面数・個数で乱数を振る。",
       long:
         "サイコロの面数と個数を指定して乱数を生成します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "dice-roll.html",
+      href: "random/dice-roll/",
     },
     nanoid: {
       iconSvg: ICON_HASH,
@@ -427,7 +427,7 @@
       short: "URL セーフなランダム文字列を生成。",
       long:
         "英数字と一部記号からなるランダムな ID を生成します。\n\n【プライバシー】\n生成はブラウザ内のみです。",
-      href: "nanoid.html",
+      href: "security/nanoid/",
     },
     subnet: {
       iconSvg: ICON_DEV,
@@ -435,7 +435,7 @@
       short: "CIDR からネットワーク・ブロードキャスト等。",
       long:
         "IPv4 アドレスとプレフィックス長からネットワークアドレスとブロードキャスト、ホスト数の目安を計算します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "subnet.html",
+      href: "dev/subnet/",
     },
     htmlEntity: {
       iconSvg: ICON_CODE,
@@ -443,7 +443,7 @@
       short: "&amp; 形式の文字列をテキストに戻す。",
       long:
         "HTML エンティティが含まれた文字列をデコードして表示します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "html-entity.html",
+      href: "encode/html-entity/",
     },
     romanNum: {
       iconSvg: ICON_TEXT,
@@ -451,7 +451,7 @@
       short: "1〜3999 の整数をローマ数字に。",
       long:
         "指定した整数をローマ数字表記に変換します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "roman-num.html",
+      href: "calc/roman-num/",
     },
     unitLength: {
       iconSvg: ICON_CALC,
@@ -459,7 +459,7 @@
       short: "m・cm・mm・km・inch・ft を相互換算。",
       long:
         "メートル法・ヤードポンド法の長さを相互に換算します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "unit-length.html",
+      href: "calc/unit-length/",
     },
     fuelEconomy: {
       iconSvg: ICON_CALC,
@@ -467,7 +467,7 @@
       short: "日本式燃費と欧州式を相互変換。",
       long:
         "km/L と L/100km を相互に変換します。\n\n【プライバシー】\n処理はブラウザ内のみです。",
-      href: "fuel-economy.html",
+      href: "calc/fuel-economy/",
     },
   };
 

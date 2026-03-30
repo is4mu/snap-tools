@@ -1,0 +1,35 @@
+/* --- トップ: お気に入り（既定: ライト） --- */
+.favorites-block {
+  margin-bottom: 36px;
+  background: #ffffff;
+  border: 1px solid #e8eaed;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+html.tool-theme-dark body.page-home .favorites-block {
+  background: #161b22;
+  border-color: #30363d;
+  box-shadow: none;
+}
+
+.favorites-block[hidden] {
+  display: none !important;
+}
+
+.favorites-block-title {
+  margin: 0 0 16px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: -0.02em;
+}
+
+html.tool-theme-dark body.page-home .favorites-block-title {
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.favorites-grid {
+  margin-bottom: 0;
+}
