@@ -166,6 +166,195 @@
   opacity: 0.92;
 }
 
+/* --- ストップウォッチ --- */
+.stopwatch-tool .stopwatch-display {
+  box-sizing: border-box;
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.75rem, 6vw, 2.75rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  padding: 16px 12px;
+  border-radius: 12px;
+  background: var(--tp-muted-bg);
+  color: var(--tp-text);
+  min-height: calc(1.15em + 32px);
+}
+
+.stopwatch-tool .stopwatch-actions-primary .convert-submit-btn {
+  flex: 1 1 100%;
+  width: 100%;
+  min-width: 0;
+}
+
+.stopwatch-tool .stopwatch-actions-secondary .convert-submit-btn {
+  flex: 1 1 8rem;
+  min-width: 0;
+}
+
+.stopwatch-tool .stopwatch-laps {
+  max-height: 12rem;
+  overflow: auto;
+  margin-top: 0;
+}
+
+/* --- 日時カウントダウン（目標日まで・秒単位） --- */
+.stopwatch-tool .countdown-date-remaining {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.stopwatch-tool .countdown-date-remaining__table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.stopwatch-tool .countdown-date-remaining__td {
+  padding: 0 0.06em;
+  text-align: center;
+  vertical-align: baseline;
+  line-height: 1.15;
+}
+
+.stopwatch-tool .countdown-date-remaining__td--sep {
+  padding-left: 0.02em;
+  padding-right: 0.02em;
+  opacity: 0.8;
+  font-weight: 700;
+}
+
+.stopwatch-tool .countdown-date-remaining__td--unit {
+  padding-top: 0.35em;
+  font-size: clamp(0.65rem, 2.2vw, 0.82rem);
+  font-weight: 500;
+  color: var(--tp-text-muted);
+  vertical-align: top;
+}
+
+.stopwatch-tool .countdown-date-remaining__td--unit.countdown-date-remaining__td--day {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 480px) {
+  .stopwatch-tool .stopwatch-actions-secondary {
+    flex-direction: row;
+  }
+
+  .stopwatch-tool .stopwatch-actions-secondary .convert-submit-btn {
+    width: auto;
+  }
+}
+
+/* --- カウントダウンタイマー（表示内で分・秒を編集） --- */
+.countdown-timer-actions-reset .convert-submit-btn {
+  flex: 1 1 100%;
+  width: 100%;
+  min-width: 0;
+}
+
+.countdown-timer-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.countdown-timer-edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.06em;
+  letter-spacing: 0.02em;
+}
+
+/* [hidden] は UA 既定より .countdown-timer-edit の display:flex が勝つため明示 */
+.countdown-timer-edit[hidden],
+.countdown-timer-run[hidden] {
+  display: none !important;
+}
+
+.countdown-timer-sep {
+  font-weight: 700;
+  user-select: none;
+}
+
+.countdown-timer-digit-input {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: inherit;
+}
+
+.countdown-timer-digit-input--mm,
+.countdown-timer-digit-input--ss {
+  width: 3ch;
+  min-width: 3ch;
+}
+
+.countdown-timer-digit-input:focus {
+  outline: 2px solid var(--tp-accent, var(--tp-border));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.countdown-timer-run-digits {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.countdown-timer-run-digits--mm,
+.countdown-timer-run-digits--ss {
+  display: inline-block;
+  min-width: 3ch;
+}
+
+.countdown-timer-display.countdown-timer-display--stopped {
+  border: none;
+  outline: 2px solid var(--tp-border);
+  outline-offset: -2px;
+  animation: none;
+}
+
+@keyframes countdown-timer-border-pulse {
+  0%,
+  100% {
+    outline-color: var(--tp-border);
+  }
+
+  50% {
+    outline-color: var(--tp-accent, var(--tp-border));
+  }
+}
+
+.countdown-timer-display.countdown-timer-display--running {
+  border: none;
+  outline: 2px solid var(--tp-accent, var(--tp-border));
+  outline-offset: -2px;
+  animation: countdown-timer-border-pulse 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .countdown-timer-display.countdown-timer-display--running {
+    animation: none;
+    outline-color: var(--tp-accent, var(--tp-border));
+  }
+}
+
 .simple-tool-actions {
   display: flex;
   flex-wrap: wrap;
@@ -221,6 +410,18 @@
 
 .simple-tool-live {
   font-variant-numeric: tabular-nums;
+}
+
+/* --- 年齢計算：満年齢を「○歳 ○ヶ月」で右寄せ一行に近づける --- */
+.age-calc-tool .counter-report-dd--age {
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .age-calc-tool .counter-report-dd--age {
+    white-space: normal;
+    text-align: left;
+  }
 }
 
 /* --- サイコロ --- */
@@ -409,6 +610,47 @@ label.simple-tool-icon-btn {
   pointer-events: none;
 }
 
+/* 大文字／小文字：コピーは右上に重ね、本文は枠の上端から（ツールバー行で押し下げない） */
+.case-convert-result {
+  position: relative;
+  margin-bottom: 14px;
+  border: 1px solid var(--tp-border);
+  border-radius: 8px;
+  background: var(--tp-muted-bg);
+  overflow: hidden;
+}
+
+.case-convert-result-toolbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 4px 4px 0;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.case-convert-result .case-convert-output {
+  min-height: 8rem;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  padding-right: 52px;
+}
+
+.case-convert-copy {
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+
+.case-convert-opt-fieldset {
+  margin-top: 14px;
+}
+
 .dice-roll-history-empty {
   margin: 0;
   padding: 12px 14px;
@@ -471,7 +713,10 @@ label.simple-tool-icon-btn {
     flex-direction: column;
   }
 
+  /* column では主軸が縦になり、flex-basis の 8rem が「高さ」に効いてボタンが巨大化するのを防ぐ */
   .simple-tool-actions .convert-submit-btn {
     width: 100%;
+    flex: 0 1 auto;
+    min-height: var(--convert-h);
   }
 }

@@ -97,19 +97,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.snap-tools.jp/datetime/unix-time/</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://www.snap-tools.jp/datetime/wareki/</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.snap-tools.jp/datetime/world-clock/</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -289,12 +277,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.snap-tools.jp/text/slugify/</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://www.snap-tools.jp/text/text-diff/</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
@@ -308,12 +290,6 @@
   </url>
   <url>
     <loc>https://www.snap-tools.jp/text/zenkaku/</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.snap-tools.jp/text/zip-jp/</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

@@ -5,21 +5,31 @@
 (function () {
   function copyText(s) {
     if (s == null || s === "") return;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(String(s)).then(function () {
-        if (typeof window.showCopyToast === "function") window.showCopyToast();
-      });
-    } else {
+    function done() {
+      if (typeof window.showCopyToast === "function") window.showCopyToast();
+    }
+    function fallbackCopy() {
       var ta = document.createElement("textarea");
       ta.value = String(s);
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.left = "0";
+      ta.style.top = "0";
+      ta.style.opacity = "0";
+      ta.style.pointerEvents = "none";
       document.body.appendChild(ta);
+      ta.focus();
       ta.select();
+      ta.setSelectionRange(0, ta.value.length);
       try {
-        if (document.execCommand("copy") && typeof window.showCopyToast === "function") {
-          window.showCopyToast();
-        }
+        if (document.execCommand("copy")) done();
       } catch (e) {}
       document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(String(s)).then(done).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
     }
   }
 
@@ -295,41 +305,34 @@
     });
   };
 
-  T.slugify = function (root) {
-    root.innerHTML =
-      '<p class="convert-hint">URL 用スラッグ（英小文字・ハイフン）に変換します。</p>' +
-      '<textarea class="simple-tool-textarea" id="slin" placeholder="タイトルや日本語"></textarea>' +
-      '<div class="simple-tool-actions">' +
-      '<button type="button" class="convert-submit-btn" id="slgo">変換</button>' +
-      '<button type="button" class="convert-submit-btn convert-submit-btn--secondary" id="slcp">コピー</button></div>' +
-      '<pre class="simple-tool-output" id="slout"></pre>';
-    root.querySelector("#slgo").addEventListener("click", function () {
-      var s = root.querySelector("#slin").value;
-      s = s.normalize("NFKC").toLowerCase().trim();
-      s = s.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-      if (!s) s = "slug";
-      root.querySelector("#slout").textContent = s;
-    });
-    root.querySelector("#slcp").addEventListener("click", function () {
-      copyText(root.querySelector("#slout").textContent);
-    });
-  };
-
   T.caseConvert = function (root) {
     root.innerHTML =
-      '<p class="convert-hint">大文字・小文字・先頭のみ大文字などに一括変換します。</p>' +
-      '<textarea class="simple-tool-textarea" id="ccin"></textarea>' +
-      '<div class="simple-tool-row">' +
-      '<label class="simple-tool-field"><span class="simple-tool-label">モード</span>' +
-      '<select class="simple-tool-select" id="ccmode">' +
-      '<option value="u">大文字 (UPPER)</option>' +
-      '<option value="l">小文字 (lower)</option>' +
-      '<option value="t">先頭だけ大文字 (Title)</option>' +
-      '<option value="s">文ごと先頭 (Sentence)</option></select></label></div>' +
-      '<div class="simple-tool-actions">' +
-      '<button type="button" class="convert-submit-btn" id="ccgo">変換</button>' +
-      '<button type="button" class="convert-submit-btn convert-submit-btn--secondary" id="cccp">コピー</button></div>' +
-      '<pre class="simple-tool-output" id="ccout"></pre>';
+      '<div class="case-convert-result">' +
+      '<div class="case-convert-result-toolbar">' +
+      '<button type="button" class="simple-tool-icon-btn case-convert-copy" id="cccp" aria-label="結果をコピー" title="コピー">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>' +
+      '<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div>' +
+      '<pre class="simple-tool-output case-convert-output" id="ccout"></pre></div>' +
+      '<textarea class="simple-tool-textarea" id="ccin" placeholder="ここにテキストを入力"></textarea>' +
+      '<fieldset class="convert-pass-fieldset convert-pass-fieldset--phrase-options case-convert-opt-fieldset">' +
+      '<legend class="convert-pass-fieldset-legend">オプション</legend>' +
+      '<div class="convert-pass-phrase-case">' +
+      '<span class="convert-ymd-lbl" id="ccModeHeading">表記</span>' +
+      '<div class="convert-pass-phrase-case-row case-convert-mode-row" role="radiogroup" aria-labelledby="ccModeHeading">' +
+      '<label class="convert-pass-option convert-pass-option--cond">' +
+      '<input type="radio" name="ccmode" value="u" checked id="ccmodeU" aria-label="ABC（すべて大文字）">' +
+      '<span class="convert-pass-opt-short" aria-hidden="true">ABC</span></label>' +
+      '<label class="convert-pass-option convert-pass-option--cond">' +
+      '<input type="radio" name="ccmode" value="l" id="ccmodeL" aria-label="abc（すべて小文字）">' +
+      '<span class="convert-pass-opt-short" aria-hidden="true">abc</span></label>' +
+      '<label class="convert-pass-option convert-pass-option--cond">' +
+      '<input type="radio" name="ccmode" value="t" id="ccmodeT" aria-label="Abc（単語の先頭のみ大文字）">' +
+      '<span class="convert-pass-opt-short" aria-hidden="true">Abc</span></label>' +
+      '<label class="convert-pass-option convert-pass-option--cond">' +
+      '<input type="radio" name="ccmode" value="s" id="ccmodeS" aria-label="Abc def.（文の先頭のみ大文字）">' +
+      '<span class="convert-pass-opt-short convert-pass-opt-short--sentence" aria-hidden="true">Abc def.</span></label>' +
+      "</div></div></fieldset>";
     function titleCase(s) {
       return s.replace(/\w\S*/g, function (t) {
         return t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
@@ -340,19 +343,28 @@
         return m.toUpperCase();
       });
     }
-    root.querySelector("#ccgo").addEventListener("click", function () {
+    function refresh() {
       var v = root.querySelector("#ccin").value;
-      var m = root.querySelector("#ccmode").value;
+      var checked = root.querySelector('input[name="ccmode"]:checked');
+      var m = checked ? checked.value : "u";
       var o = v;
       if (m === "u") o = v.toUpperCase();
       else if (m === "l") o = v.toLowerCase();
       else if (m === "t") o = titleCase(v);
       else if (m === "s") o = sentenceCase(v.toLowerCase());
       root.querySelector("#ccout").textContent = o;
-    });
+    }
+    root.querySelector("#ccin").addEventListener("input", refresh);
+    root.querySelector(".case-convert-mode-row").addEventListener("change", refresh);
     root.querySelector("#cccp").addEventListener("click", function () {
-      copyText(root.querySelector("#ccout").textContent);
+      var t = root.querySelector("#ccout").textContent;
+      if (t === "") {
+        if (typeof window.showCopyToast === "function") window.showCopyToast("コピーする内容がありません");
+        return;
+      }
+      copyText(t);
     });
+    refresh();
   };
 
   T.lineSort = function (root) {
@@ -474,66 +486,189 @@
     });
   };
 
-  T.unixTime = function (root) {
-    root.innerHTML =
-      '<p class="convert-hint">UNIX 時刻（秒）と日時を相互変換します（ローカル時刻で表示）。</p>' +
-      '<div class="convert-tabs" role="tablist">' +
-      '<button type="button" class="convert-tab" data-tab="u" aria-selected="true">秒 → 日時</button>' +
-      '<button type="button" class="convert-tab" data-tab="d" aria-selected="false">日時 → 秒</button></div>' +
-      '<div data-tabpanel="u" class="convert-tabpanel simple-tool-stack">' +
-      '<label class="simple-tool-field"><span class="simple-tool-label">UNIX 秒</span>' +
-      '<input type="text" class="simple-tool-input" id="utx" inputmode="numeric" placeholder="1700000000"/></label>' +
-      '<div class="simple-tool-actions"><button type="button" class="convert-submit-btn" id="utgo">変換</button></div>' +
-      '<pre class="simple-tool-output" id="utout"></pre></div>' +
-      '<div data-tabpanel="d" class="convert-tabpanel simple-tool-stack" hidden>' +
-      '<label class="simple-tool-field"><span class="simple-tool-label">日時（ローカル）</span>' +
-      '<input type="datetime-local" class="simple-tool-input" id="utdt"/></label>' +
-      '<div class="simple-tool-actions"><button type="button" class="convert-submit-btn" id="utgo2">変換</button></div>' +
-      '<pre class="simple-tool-output" id="utout2"></pre></div>';
-    bindTabs(root, ".convert-tab");
-    root.querySelector("#utgo").addEventListener("click", function () {
-      var s = parseFloat(root.querySelector("#utx").value);
-      if (isNaN(s)) {
-        root.querySelector("#utout").textContent = "数値を入力してください";
-        return;
-      }
-      var d = new Date(s * 1000);
-      root.querySelector("#utout").textContent =
-        d.toLocaleString("ja-JP") + "\nISO: " + d.toISOString();
-    });
-    root.querySelector("#utgo2").addEventListener("click", function () {
-      var v = root.querySelector("#utdt").value;
-      if (!v) {
-        root.querySelector("#utout2").textContent = "日時を選んでください";
-        return;
-      }
-      var ms = new Date(v).getTime();
-      root.querySelector("#utout2").textContent = "UNIX 秒: " + Math.floor(ms / 1000);
-    });
-  };
-
   T.ageCalc = function (root) {
+    var wk = ["日", "月", "火", "水", "木", "金", "土"];
+    var kanshi = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
+    var juuni = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+
+    function parseYmd(s) {
+      var p = (s || "").split("-");
+      if (p.length !== 3) return null;
+      var y = parseInt(p[0], 10);
+      var mo = parseInt(p[1], 10) - 1;
+      var d = parseInt(p[2], 10);
+      if (isNaN(y) || isNaN(mo) || isNaN(d)) return null;
+      return new Date(y, mo, d);
+    }
+
+    function dateOnlyMs(d) {
+      return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    }
+
+    /** 西暦年の年干支（元旦基準の簡易。立春基準とは異なる場合あり） */
+    function yearKanshi(y) {
+      var k = (y - 4 + 1200000) % 60;
+      return kanshi[k % 10] + juuni[k % 12];
+    }
+
+    /** 一般的な黄道十二星座（日付区分。時刻・境界の細部は未考慮） */
+    function westernZodiac(month0, day) {
+      if ((month0 === 11 && day >= 22) || (month0 === 0 && day <= 19)) return "山羊座";
+      if ((month0 === 0 && day >= 20) || (month0 === 1 && day <= 18)) return "水瓶座";
+      if ((month0 === 1 && day >= 19) || (month0 === 2 && day <= 20)) return "魚座";
+      if ((month0 === 2 && day >= 21) || (month0 === 3 && day <= 19)) return "牡羊座";
+      if ((month0 === 3 && day >= 20) || (month0 === 4 && day <= 20)) return "牡牛座";
+      if ((month0 === 4 && day >= 21) || (month0 === 5 && day <= 21)) return "双子座";
+      if ((month0 === 5 && day >= 22) || (month0 === 6 && day <= 22)) return "蟹座";
+      if ((month0 === 6 && day >= 23) || (month0 === 7 && day <= 22)) return "獅子座";
+      if ((month0 === 7 && day >= 23) || (month0 === 8 && day <= 22)) return "乙女座";
+      if ((month0 === 8 && day >= 23) || (month0 === 9 && day <= 22)) return "天秤座";
+      if ((month0 === 9 && day >= 23) || (month0 === 10 && day <= 22)) return "蠍座";
+      if ((month0 === 10 && day >= 23) || (month0 === 11 && day <= 21)) return "射手座";
+      return "—";
+    }
+
+    function monthsSinceDateOnly(dFrom, dTo) {
+      var months =
+        (dTo.getFullYear() - dFrom.getFullYear()) * 12 + (dTo.getMonth() - dFrom.getMonth());
+      if (dTo.getDate() < dFrom.getDate()) months--;
+      return months;
+    }
+
     root.innerHTML =
-      '<p class="convert-hint">誕生日から満年齢と次の誕生日までの日数を計算します。</p>' +
+      '<div class="simple-tool-stack age-calc-tool">' +
+      '<div class="simple-tool-grid2">' +
       '<label class="simple-tool-field"><span class="simple-tool-label">誕生日</span>' +
-      '<input type="date" class="simple-tool-input" id="agd"/></label>' +
-      '<div class="simple-tool-actions"><button type="button" class="convert-submit-btn" id="aggo">計算</button></div>' +
-      '<pre class="simple-tool-output" id="agout"></pre>';
-    root.querySelector("#aggo").addEventListener("click", function () {
-      var v = root.querySelector("#agd").value;
-      if (!v) return;
-      var b = new Date(v + "T00:00:00");
-      var now = new Date();
-      var y = now.getFullYear() - b.getFullYear();
-      var m = now.getMonth() - b.getMonth();
-      var d = now.getDate() - b.getDate();
+      '<input type="date" class="simple-tool-input" id="agd" autocomplete="bday"/></label>' +
+      '<label class="simple-tool-field"><span class="simple-tool-label">基準日</span>' +
+      '<input type="date" class="simple-tool-input" id="agr" aria-describedby="agrhint"/>' +
+      '<span class="simple-tool-note" id="agrhint">空欄のときは今日（端末の日付）</span></label></div>' +
+      '<div class="counter-report" id="agReport" aria-live="polite">' +
+      '<section class="counter-report-section">' +
+      '<h2 class="counter-report-heading">年齢</h2>' +
+      '<dl class="counter-report-dl">' +
+      '<div class="counter-report-row"><dt>満年齢</dt><dd class="counter-report-dd--age">' +
+      '<span class="counter-report-num" id="agAgeY">—</span><span class="counter-report-unit"> 歳 </span>' +
+      '<span class="counter-report-num" id="agAgeM">—</span><span class="counter-report-unit"> ヶ月</span></dd></div>' +
+      '</dl></section>' +
+      '<section class="counter-report-section">' +
+      '<h2 class="counter-report-heading">日数・次の誕生日</h2>' +
+      '<dl class="counter-report-dl">' +
+      '<div class="counter-report-row"><dt>生まれてからの日数</dt><dd><span class="counter-report-num" id="agLived">—</span><span class="counter-report-unit"> 日</span></dd></div>' +
+      '<div class="counter-report-row"><dt>次の誕生日まで</dt><dd><span class="counter-report-num" id="agUntil">—</span><span class="counter-report-unit"> 日</span></dd></div>' +
+      '<div class="counter-report-row"><dt>次の誕生日</dt><dd><span class="simple-tool-live" id="agNextDate">—</span></dd></div>' +
+      '</dl></section>' +
+      '<section class="counter-report-section">' +
+      '<h2 class="counter-report-heading">日付から分かること（目安）</h2>' +
+      '<dl class="counter-report-dl">' +
+      '<div class="counter-report-row"><dt>誕生日の曜日</dt><dd><span id="agBirthDow">—</span></dd></div>' +
+      '<div class="counter-report-row"><dt>黄道上の星座（日付区分）</dt><dd><span id="agZodiac">—</span></dd></div>' +
+      '<div class="counter-report-row"><dt>生まれた年の六十干支（年柱・簡易）</dt><dd><span id="agKanshi">—</span></dd></div>' +
+      '</dl>' +
+      '<p class="counter-report-note">六十干支の年柱は西暦の元旦基準の簡易表現です（立春を境とする場合や日柱・時柱とは異なります）。星座も日付のみの区分で、境界の時刻は考慮しません。2/29 生まれは環境によって日付解釈がずれることがあります。</p>' +
+      '</section></div></div>';
+
+    function refresh() {
+      var birthStr = root.querySelector("#agd").value;
+      var refStr = root.querySelector("#agr").value;
+      var $ageY = root.querySelector("#agAgeY");
+      var $ageM = root.querySelector("#agAgeM");
+      var $lived = root.querySelector("#agLived");
+      var $until = root.querySelector("#agUntil");
+      var $nextDate = root.querySelector("#agNextDate");
+      var $birthDow = root.querySelector("#agBirthDow");
+      var $zodiac = root.querySelector("#agZodiac");
+      var $kanshi = root.querySelector("#agKanshi");
+
+      if (!birthStr) {
+        $ageY.textContent = "—";
+        $ageM.textContent = "—";
+        $lived.textContent = "—";
+        $until.textContent = "—";
+        $nextDate.textContent = "—";
+        $birthDow.textContent = "—";
+        $zodiac.textContent = "—";
+        $kanshi.textContent = "—";
+        return;
+      }
+
+      var b = parseYmd(birthStr);
+      if (!b || isNaN(b.getTime())) {
+        $ageY.textContent = "—";
+        $ageM.textContent = "—";
+        $lived.textContent = "—";
+        $until.textContent = "—";
+        $nextDate.textContent = "—";
+        $birthDow.textContent = "—";
+        $zodiac.textContent = "—";
+        $kanshi.textContent = "—";
+        return;
+      }
+
+      var ref;
+      if (!refStr) {
+        var tn = new Date();
+        ref = new Date(tn.getFullYear(), tn.getMonth(), tn.getDate());
+      } else {
+        ref = parseYmd(refStr);
+        if (!ref || isNaN(ref.getTime())) {
+          var tf = new Date();
+          ref = new Date(tf.getFullYear(), tf.getMonth(), tf.getDate());
+        } else {
+          ref = new Date(ref.getFullYear(), ref.getMonth(), ref.getDate());
+        }
+      }
+
+      var refMs = dateOnlyMs(ref);
+      var birthMs = dateOnlyMs(b);
+      $birthDow.textContent = wk[b.getDay()] + "曜日";
+      $zodiac.textContent = westernZodiac(b.getMonth(), b.getDate());
+      $kanshi.textContent = yearKanshi(b.getFullYear());
+
+      if (refMs < birthMs) {
+        $ageY.textContent = "—";
+        $ageM.textContent = "—";
+        $lived.textContent = "—";
+        $until.textContent = "—";
+        $nextDate.textContent = "基準日が誕生日より前です";
+        return;
+      }
+
+      var y = ref.getFullYear() - b.getFullYear();
+      var m = ref.getMonth() - b.getMonth();
+      var d = ref.getDate() - b.getDate();
       if (m < 0 || (m === 0 && d < 0)) y--;
-      var next = new Date(now.getFullYear(), b.getMonth(), b.getDate());
-      if (next < now) next.setFullYear(next.getFullYear() + 1);
-      var days = Math.ceil((next - now) / 86400000);
-      root.querySelector("#agout").textContent =
-        "満 " + y + " 歳\n次の誕生日まで: 約 " + days + " 日";
-    });
+
+      var lastBd = new Date(ref.getFullYear(), b.getMonth(), b.getDate());
+      if (lastBd.getTime() > refMs) lastBd.setFullYear(lastBd.getFullYear() - 1);
+      var ageMo = monthsSinceDateOnly(lastBd, ref);
+
+      var livedDays = Math.round((refMs - birthMs) / 86400000);
+
+      var next = new Date(ref.getFullYear(), b.getMonth(), b.getDate());
+      if (next.getTime() < refMs) next.setFullYear(next.getFullYear() + 1);
+      var untilDays = Math.round((next.getTime() - refMs) / 86400000);
+
+      $ageY.textContent = String(y);
+      $ageM.textContent = String(ageMo);
+      $lived.textContent = livedDays.toLocaleString("ja-JP");
+      $until.textContent = untilDays.toLocaleString("ja-JP");
+      $nextDate.textContent =
+        next.getFullYear() +
+        "年" +
+        (next.getMonth() + 1) +
+        "月" +
+        next.getDate() +
+        "日（" +
+        wk[next.getDay()] +
+        "）";
+    }
+
+    root.querySelector("#agd").addEventListener("input", refresh);
+    root.querySelector("#agd").addEventListener("change", refresh);
+    root.querySelector("#agr").addEventListener("input", refresh);
+    root.querySelector("#agr").addEventListener("change", refresh);
+    refresh();
   };
 
   T.bmi = function (root) {
@@ -865,22 +1000,6 @@
     });
   };
 
-  T.zipJp = function (root) {
-    root.innerHTML =
-      '<p class="convert-hint">7 桁の郵便番号を 123-4567 形式に整形します。</p>' +
-      '<input type="text" class="simple-tool-input" id="zp" inputmode="numeric" placeholder="1234567 または 123-4567"/>' +
-      '<div class="simple-tool-actions"><button type="button" class="convert-submit-btn" id="zpgo">整形</button></div>' +
-      '<pre class="simple-tool-output" id="zpout"></pre>';
-    root.querySelector("#zpgo").addEventListener("click", function () {
-      var d = root.querySelector("#zp").value.replace(/\D/g, "");
-      if (d.length !== 7) {
-        root.querySelector("#zpout").textContent = "7 桁の数字を入力してください";
-        return;
-      }
-      root.querySelector("#zpout").textContent = d.slice(0, 3) + "-" + d.slice(3);
-    });
-  };
-
   T.zenkaku = function (root) {
     root.innerHTML =
       '<p class="convert-hint">半角英数字・記号を全角に、全角英数字を半角に変換できます。</p>' +
@@ -947,16 +1066,22 @@
 
   T.stopwatch = function (root) {
     root.innerHTML =
-      '<p class="convert-hint">シンプルなストップウォッチです。</p>' +
-      '<p class="simple-tool-pill simple-tool-live" id="swd" style="font-size:1.5rem;padding:12px">00:00:00.000</p>' +
-      '<div class="simple-tool-actions">' +
-      '<button type="button" class="convert-submit-btn" id="sws">開始 / 停止</button>' +
+      '<div class="stopwatch-tool simple-tool-stack">' +
+      '<p class="stopwatch-display simple-tool-live" id="swd">00:00:00.000</p>' +
+      '<div class="simple-tool-actions stopwatch-actions-primary">' +
+      '<button type="button" class="convert-submit-btn" id="sws" aria-pressed="false">開始</button></div>' +
+      '<div class="simple-tool-actions stopwatch-actions-secondary">' +
+      '<button type="button" class="convert-submit-btn" id="swlap" disabled>ラップ</button>' +
       '<button type="button" class="convert-submit-btn convert-submit-btn--secondary" id="swr">リセット</button></div>' +
-      '<pre class="simple-tool-output" id="swl" style="max-height:10rem;overflow:auto"></pre>';
+      '<pre class="simple-tool-output stopwatch-laps" id="swl"></pre></div>';
     var t0 = 0;
     var acc = 0;
     var id = null;
     var running = false;
+    var laps = [];
+    var lapBtn = root.querySelector("#swlap");
+    var lapsEl = root.querySelector("#swl");
+    var swsBtn = root.querySelector("#sws");
     function fmt(ms) {
       if (ms < 0) ms = 0;
       var h = Math.floor(ms / 3600000);
@@ -968,16 +1093,36 @@
       }
       return z(h, 2) + ":" + z(m, 2) + ":" + z(s, 2) + "." + z(x, 3);
     }
+    function elapsedMs() {
+      return acc + (running ? Date.now() - t0 : 0);
+    }
+    function renderLaps() {
+      if (!laps.length) {
+        lapsEl.textContent = "";
+        return;
+      }
+      var lines = [];
+      var prev = 0;
+      for (var i = 0; i < laps.length; i++) {
+        var t = laps[i];
+        var split = t - prev;
+        prev = t;
+        lines.push("#" + (i + 1) + "  " + fmt(t) + "  (+" + fmt(split) + ")");
+      }
+      lapsEl.textContent = lines.join("\n");
+    }
     function tick() {
-      var now = Date.now();
-      var ms = acc + (running ? now - t0 : 0);
+      var ms = elapsedMs();
       root.querySelector("#swd").textContent = fmt(ms);
       if (running) id = requestAnimationFrame(tick);
     }
-    root.querySelector("#sws").addEventListener("click", function () {
+    function toggleStartStop() {
       if (!running) {
         running = true;
         t0 = Date.now();
+        lapBtn.disabled = false;
+        swsBtn.textContent = "停止";
+        swsBtn.setAttribute("aria-pressed", "true");
         tick();
       } else {
         running = false;
@@ -985,88 +1130,342 @@
         if (id) cancelAnimationFrame(id);
         id = null;
         root.querySelector("#swd").textContent = fmt(acc);
+        lapBtn.disabled = true;
+        swsBtn.textContent = "開始";
+        swsBtn.setAttribute("aria-pressed", "false");
       }
+    }
+    root.querySelector("#sws").addEventListener("click", toggleStartStop);
+    function onStopwatchSpaceKey(e) {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (!window.matchMedia("(pointer: fine)").matches) return;
+      if (e.repeat) return;
+      var target = e.target;
+      if (target && target.closest) {
+        if (target.closest("input, textarea, select, [contenteditable=\"true\"]")) return;
+        if (target.closest("a[href]")) return;
+        var b = target.closest("button");
+        if (b && b.id !== "sws") return;
+      }
+      e.preventDefault();
+      toggleStartStop();
+    }
+    document.addEventListener("keydown", onStopwatchSpaceKey);
+    root.querySelector("#swlap").addEventListener("click", function () {
+      if (!running) return;
+      laps.push(elapsedMs());
+      renderLaps();
     });
     root.querySelector("#swr").addEventListener("click", function () {
       running = false;
       acc = 0;
+      laps = [];
       if (id) cancelAnimationFrame(id);
       id = null;
       root.querySelector("#swd").textContent = fmt(0);
+      lapBtn.disabled = true;
+      swsBtn.textContent = "開始";
+      swsBtn.setAttribute("aria-pressed", "false");
+      renderLaps();
     });
   };
 
   T.pomodoro = function (root) {
     root.innerHTML =
-      '<p class="convert-hint">25 分の集中タイマー（開始でカウントダウン）。</p>' +
-      '<label class="simple-tool-field"><span class="simple-tool-label">分</span>' +
-      '<input type="number" class="simple-tool-input" id="pm" min="1" max="120" value="25"/></label>' +
-      '<p class="simple-tool-pill simple-tool-live" id="pomd" style="font-size:1.75rem;padding:14px">25:00</p>' +
-      '<div class="simple-tool-actions">' +
-      '<button type="button" class="convert-submit-btn" id="pstart">開始</button>' +
-      '<button type="button" class="convert-submit-btn convert-submit-btn--secondary" id="pstop">停止</button></div>';
-    var left = 0;
+      '<div class="stopwatch-tool simple-tool-stack">' +
+      '<div class="stopwatch-display simple-tool-live countdown-timer-display countdown-timer-display--stopped" id="pomdWrap">' +
+      '<div id="pomdEdit" class="countdown-timer-edit">' +
+      '<input type="text" class="countdown-timer-digit-input countdown-timer-digit-input--mm" id="pomMm" maxlength="3" value="25" inputmode="numeric" autocomplete="off" spellcheck="false" aria-label="分"/>' +
+      '<span class="countdown-timer-sep" aria-hidden="true">:</span>' +
+      '<input type="text" class="countdown-timer-digit-input countdown-timer-digit-input--ss" id="pomSs" maxlength="2" value="00" inputmode="numeric" autocomplete="off" spellcheck="false" aria-label="秒"/>' +
+      "</div>" +
+      '<div id="pomdRun" class="countdown-timer-run countdown-timer-edit" hidden>' +
+      '<span id="pomRmMm" class="countdown-timer-run-digits countdown-timer-run-digits--mm">25</span>' +
+      '<span class="countdown-timer-sep" aria-hidden="true">:</span>' +
+      '<span id="pomRmSs" class="countdown-timer-run-digits countdown-timer-run-digits--ss">00</span></div></div>' +
+      '<div class="simple-tool-actions stopwatch-actions-primary">' +
+      '<button type="button" class="convert-submit-btn" id="pws" aria-pressed="false" title="スペースキーでも開始・停止できます">開始</button></div>' +
+      '<div class="simple-tool-actions countdown-timer-actions-reset">' +
+      '<button type="button" class="convert-submit-btn convert-submit-btn--secondary" id="pwr">リセット</button></div></div>';
+    var POM_PRESET_KEY = "snap-tools:countdown-timer:preset-sec";
+    var left = 25 * 60;
     var timer = null;
-    function show() {
+    var running = false;
+    var mmEl = root.querySelector("#pomMm");
+    var ssEl = root.querySelector("#pomSs");
+    var editEl = root.querySelector("#pomdEdit");
+    var runEl = root.querySelector("#pomdRun");
+    var wrapEl = root.querySelector("#pomdWrap");
+    var btnEl = root.querySelector("#pws");
+    var mmRun = root.querySelector("#pomRmMm");
+    var ssRun = root.querySelector("#pomRmSs");
+    function loadPresetSec() {
+      try {
+        var raw = localStorage.getItem(POM_PRESET_KEY);
+        if (raw == null) return null;
+        var sec = parseInt(raw, 10);
+        if (isNaN(sec) || sec < 1 || sec > 120 * 60) return null;
+        return sec;
+      } catch (e) {
+        return null;
+      }
+    }
+    function persistPresetSec(sec) {
+      try {
+        if (sec >= 1 && sec <= 120 * 60) {
+          localStorage.setItem(POM_PRESET_KEY, String(sec));
+        }
+      } catch (e) {}
+    }
+    function pad2(n) {
+      return ("0" + n).slice(-2);
+    }
+    function padMm(m) {
+      if (m >= 100) return String(m);
+      return pad2(m);
+    }
+    function readSecondsFromInputs() {
+      var mm = parseInt(String(mmEl.value).replace(/\D/g, ""), 10);
+      var ss = parseInt(String(ssEl.value).replace(/\D/g, ""), 10);
+      if (isNaN(mm) || mm < 0) mm = 0;
+      if (isNaN(ss) || ss < 0) ss = 0;
+      if (mm > 120) mm = 120;
+      if (ss > 59) ss = 59;
+      mmEl.value = padMm(mm);
+      ssEl.value = pad2(ss);
+      return mm * 60 + ss;
+    }
+    function syncInputsFromLeft() {
       var m = Math.floor(left / 60);
       var s = left % 60;
-      root.querySelector("#pomd").textContent =
-        ("0" + m).slice(-2) + ":" + ("0" + s).slice(-2);
+      mmEl.value = padMm(m);
+      ssEl.value = pad2(s);
     }
-    root.querySelector("#pstart").addEventListener("click", function () {
-      var min = parseInt(root.querySelector("#pm").value, 10) || 25;
-      left = min * 60;
-      show();
-      if (timer) clearInterval(timer);
-      timer = setInterval(function () {
-        left--;
-        show();
-        if (left <= 0) {
-          clearInterval(timer);
-          timer = null;
-          root.querySelector("#pomd").textContent = "終了";
-        }
-      }, 1000);
-    });
-    root.querySelector("#pstop").addEventListener("click", function () {
+    function formatInputsOnBlur() {
+      var sec = readSecondsFromInputs();
+      if (!running && sec >= 1) persistPresetSec(sec);
+    }
+    function setMode(isRunning) {
+      running = isRunning;
+      if (isRunning) {
+        editEl.hidden = true;
+        runEl.hidden = false;
+        wrapEl.classList.remove("countdown-timer-display--stopped");
+        wrapEl.classList.add("countdown-timer-display--running");
+        btnEl.textContent = "停止";
+        btnEl.setAttribute("aria-pressed", "true");
+      } else {
+        editEl.hidden = false;
+        runEl.hidden = true;
+        wrapEl.classList.remove("countdown-timer-display--running");
+        wrapEl.classList.add("countdown-timer-display--stopped");
+        btnEl.textContent = "開始";
+        btnEl.setAttribute("aria-pressed", "false");
+      }
+    }
+    function showRunText() {
+      var m = Math.floor(left / 60);
+      var s = left % 60;
+      mmRun.textContent = padMm(m);
+      ssRun.textContent = pad2(s);
+    }
+    function stopInterval() {
       if (timer) clearInterval(timer);
       timer = null;
+    }
+    function toggle() {
+      if (running) {
+        stopInterval();
+        setMode(false);
+        syncInputsFromLeft();
+        return;
+      }
+      left = readSecondsFromInputs();
+      if (left <= 0) {
+        if (typeof window.showCopyToast === "function") {
+          window.showCopyToast("1 秒以上に設定してください");
+        }
+        return;
+      }
+      persistPresetSec(left);
+      setMode(true);
+      showRunText();
+      stopInterval();
+      timer = setInterval(function () {
+        left--;
+        if (left <= 0) {
+          stopInterval();
+          left = 0;
+          showRunText();
+          setMode(false);
+          syncInputsFromLeft();
+          if (typeof window.showCopyToast === "function") {
+            window.showCopyToast("時間になりました");
+          }
+          return;
+        }
+        showRunText();
+      }, 1000);
+    }
+    mmEl.addEventListener("blur", formatInputsOnBlur);
+    ssEl.addEventListener("blur", formatInputsOnBlur);
+    btnEl.addEventListener("click", toggle);
+    root.querySelector("#pwr").addEventListener("click", function () {
+      stopInterval();
+      setMode(false);
+      var sec = loadPresetSec();
+      if (sec == null || sec < 1) sec = 25 * 60;
+      left = sec;
+      syncInputsFromLeft();
+      showRunText();
     });
+    (function initPreset() {
+      var sec = loadPresetSec();
+      if (sec != null && sec >= 1) {
+        left = sec;
+        syncInputsFromLeft();
+        showRunText();
+      }
+    })();
+    function onPomodoroSpaceKey(e) {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (!window.matchMedia("(pointer: fine)").matches) return;
+      if (e.repeat) return;
+      var target = e.target;
+      if (target && target.closest) {
+        if (target.closest("input, textarea, select, [contenteditable=\"true\"]")) return;
+        if (target.closest("a[href]")) return;
+        var b = target.closest("button");
+        if (b && b.id !== "pws") return;
+      }
+      e.preventDefault();
+      toggle();
+    }
+    document.addEventListener("keydown", onPomodoroSpaceKey);
   };
 
   T.countdown = function (root) {
+    var CD_STORAGE_KEY = "snap-tools:countdown:datetime-local";
     root.innerHTML =
-      '<p class="convert-hint">指定日時までの残り時間を表示します。</p>' +
+      '<div class="stopwatch-tool simple-tool-stack">' +
+      '<div class="stopwatch-display simple-tool-live countdown-date-remaining" id="cdRemaining" aria-live="polite">' +
+      '<table class="countdown-date-remaining__table" role="presentation">' +
+      "<tbody>" +
+      "<tr>" +
+      '<td class="countdown-date-remaining__td countdown-date-remaining__td--day" id="cdTdD" hidden><span id="cdVd">0</span></td>' +
+      '<td class="countdown-date-remaining__td countdown-date-remaining__td--sep" id="cdTdDSep" hidden aria-hidden="true">:</td>' +
+      '<td class="countdown-date-remaining__td"><span id="cdVh">--</span></td>' +
+      '<td class="countdown-date-remaining__td countdown-date-remaining__td--sep" aria-hidden="true">:</td>' +
+      '<td class="countdown-date-remaining__td"><span id="cdVm">--</span></td>' +
+      '<td class="countdown-date-remaining__td countdown-date-remaining__td--sep" aria-hidden="true">:</td>' +
+      '<td class="countdown-date-remaining__td"><span id="cdVs">--</span></td>' +
+      "</tr>" +
+      "<tr>" +
+      '<td class="countdown-date-remaining__td countdown-date-remaining__td--unit countdown-date-remaining__td--day" id="cdTdDU" hidden>日</td>' +
+      '<td class="countdown-date-remaining__td countdown-date-remaining__td--sep" id="cdTdDSepU" hidden aria-hidden="true"></td>' +
+      '<td class="countdown-date-remaining__td countdown-date-remaining__td--unit">時</td>' +
+      '<td class="countdown-date-remaining__td countdown-date-remaining__td--sep"></td>' +
+      '<td class="countdown-date-remaining__td countdown-date-remaining__td--unit">分</td>' +
+      '<td class="countdown-date-remaining__td countdown-date-remaining__td--sep"></td>' +
+      '<td class="countdown-date-remaining__td countdown-date-remaining__td--unit">秒</td>' +
+      "</tr>" +
+      "</tbody></table></div>" +
       '<label class="simple-tool-field"><span class="simple-tool-label">目標日時（ローカル）</span>' +
-      '<input type="datetime-local" class="simple-tool-input" id="cdt"/></label>' +
-      '<div class="simple-tool-actions">' +
-      '<button type="button" class="convert-submit-btn" id="cdgo">表示</button></div>' +
-      '<pre class="simple-tool-output" id="cdout"></pre>';
-    var iv = null;
-    root.querySelector("#cdgo").addEventListener("click", function () {
-      if (iv) clearInterval(iv);
-      function upd() {
-        var t = new Date(root.querySelector("#cdt").value).getTime();
-        var now = Date.now();
-        var d = t - now;
-        if (isNaN(d)) {
-          root.querySelector("#cdout").textContent = "日時を設定してください";
-          return;
-        }
-        if (d <= 0) {
-          root.querySelector("#cdout").textContent = "その日時は過去です";
-          return;
-        }
-        var day = Math.floor(d / 86400000);
-        var h = Math.floor((d % 86400000) / 3600000);
-        var m = Math.floor((d % 3600000) / 60000);
-        var s = Math.floor((d % 60000) / 1000);
-        root.querySelector("#cdout").textContent =
-          "残り: " + day + " 日 " + h + " 時間 " + m + " 分 " + s + " 秒";
+      '<input type="datetime-local" class="simple-tool-input" id="cdt"/></label></div>';
+    var timer = null;
+    var inputEl = root.querySelector("#cdt");
+    var elD = root.querySelector("#cdVd");
+    var elH = root.querySelector("#cdVh");
+    var elM = root.querySelector("#cdVm");
+    var elS = root.querySelector("#cdVs");
+    var tdD = root.querySelector("#cdTdD");
+    var tdDSep = root.querySelector("#cdTdDSep");
+    var tdDU = root.querySelector("#cdTdDU");
+    var tdDSepU = root.querySelector("#cdTdDSepU");
+    function z(n, l) {
+      return ("000" + n).slice(-l);
+    }
+    function setDayVisible(show) {
+      tdD.hidden = !show;
+      tdDSep.hidden = !show;
+      tdDU.hidden = !show;
+      tdDSepU.hidden = !show;
+    }
+    function setPlaceholder() {
+      setDayVisible(false);
+      elH.textContent = "--";
+      elM.textContent = "--";
+      elS.textContent = "--";
+    }
+    function applyDisplay(totalSec) {
+      if (totalSec < 0) totalSec = 0;
+      var day = Math.floor(totalSec / 86400);
+      var rest = totalSec % 86400;
+      var h = Math.floor(rest / 3600);
+      var m = Math.floor((rest % 3600) / 60);
+      var s = rest % 60;
+      setDayVisible(day > 0);
+      if (day > 0) elD.textContent = String(day);
+      elH.textContent = z(h, 2);
+      elM.textContent = z(m, 2);
+      elS.textContent = z(s, 2);
+    }
+    function applyFromState() {
+      var raw = inputEl.value;
+      if (!raw) {
+        setPlaceholder();
+        return false;
       }
-      upd();
-      iv = setInterval(upd, 1000);
+      var target = new Date(raw).getTime();
+      if (isNaN(target)) {
+        setPlaceholder();
+        return false;
+      }
+      var secLeft = Math.floor((target - Date.now()) / 1000);
+      if (secLeft <= 0) {
+        applyDisplay(0);
+        return false;
+      }
+      applyDisplay(secLeft);
+      return true;
+    }
+    function stopTick() {
+      if (timer) clearInterval(timer);
+      timer = null;
+    }
+    function schedule() {
+      stopTick();
+      if (!applyFromState()) return;
+      timer = setInterval(function () {
+        if (!applyFromState()) stopTick();
+      }, 1000);
+    }
+    function loadSavedTarget() {
+      try {
+        var raw = localStorage.getItem(CD_STORAGE_KEY);
+        if (raw == null || raw === "") return;
+        inputEl.value = raw;
+      } catch (e) {}
+    }
+    function persistTarget(val) {
+      try {
+        if (val) localStorage.setItem(CD_STORAGE_KEY, val);
+        else localStorage.removeItem(CD_STORAGE_KEY);
+      } catch (e) {}
+    }
+    loadSavedTarget();
+    inputEl.addEventListener("input", function () {
+      persistTarget(inputEl.value);
+      schedule();
     });
+    inputEl.addEventListener("change", function () {
+      persistTarget(inputEl.value);
+      schedule();
+    });
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) schedule();
+    });
+    schedule();
   };
 
   T.textSplit = function (root) {
@@ -1236,32 +1635,6 @@
         (Math.ceil(min * 10) / 10) +
         " 分";
     });
-  };
-
-  T.worldClock = function (root) {
-    root.innerHTML =
-      '<p class="convert-hint">主要都市の現在時刻を表示します（ブラウザの Intl を利用）。</p>' +
-      '<pre class="simple-tool-output" id="wcout" style="min-height:8rem"></pre>';
-    var zones = [
-      ["東京", "Asia/Tokyo"],
-      ["ニューヨーク", "America/New_York"],
-      ["ロンドン", "Europe/London"],
-      ["UTC", "UTC"],
-    ];
-    function upd() {
-      var now = new Date();
-      var lines = zones.map(function (z) {
-        var s = new Intl.DateTimeFormat("ja-JP", {
-          timeZone: z[1],
-          dateStyle: "medium",
-          timeStyle: "medium",
-        }).format(now);
-        return z[0] + ": " + s;
-      });
-      root.querySelector("#wcout").textContent = lines.join("\n");
-    }
-    upd();
-    setInterval(upd, 1000);
   };
 
   T.randomPick = function (root) {

@@ -1,6 +1,8 @@
 (function () {
   /** 旧ファイル名・旧 data-tool-id からの移行（お気に入りの localStorage） */
   var LEGACY_TOOL_IDS = { date: "wareki", generator: "password" };
+  /** 削除済みツールの id（お気に入りから取り除く） */
+  var REMOVED_TOOL_IDS = { slugify: true };
 
   function migrateFavoriteIds() {
     try {
@@ -9,17 +11,14 @@
       if (!raw) return;
       var a = JSON.parse(raw);
       if (!Array.isArray(a)) return;
-      var next = a.map(function (id) {
+      var mapped = a.map(function (id) {
         return LEGACY_TOOL_IDS[id] || id;
       });
-      var changed = false;
-      for (var i = 0; i < a.length; i++) {
-        if (a[i] !== next[i]) {
-          changed = true;
-          break;
-        }
-      }
-      if (changed) localStorage.setItem(key, JSON.stringify(next));
+      var next = mapped.filter(function (id) {
+        return !REMOVED_TOOL_IDS[id];
+      });
+      if (JSON.stringify(a) === JSON.stringify(next)) return;
+      localStorage.setItem(key, JSON.stringify(next));
     } catch (e) {}
   }
 
@@ -132,7 +131,13 @@
         a.setAttribute(
           "data-search",
           normalizeSearch(
-            meta.title + " " + meta.short + " " + (meta.medium || "")
+            meta.title +
+              " " +
+              meta.short +
+              " " +
+              (meta.medium || "") +
+              " " +
+              (meta.searchExtra || "")
           )
         );
         appendToolCardBody(a, meta);
@@ -153,7 +158,13 @@
       a.setAttribute(
         "data-search",
         normalizeSearch(
-          meta.title + " " + meta.short + " " + (meta.medium || "")
+          meta.title +
+            " " +
+            meta.short +
+            " " +
+            (meta.medium || "") +
+            " " +
+            (meta.searchExtra || "")
         )
       );
       appendToolCardBody(a, meta);
