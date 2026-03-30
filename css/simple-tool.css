@@ -174,9 +174,16 @@
 
 .simple-tool-actions .convert-submit-btn {
   width: auto;
-  flex: 1 1 8rem;
+  /* 既定は grow なし。狭い画面で column になったとき flex-grow が縦に効いて巨大化するのを防ぐ */
+  flex: 0 1 8rem;
   min-width: min(100%, 7rem);
   margin-bottom: 0;
+}
+
+@media (min-width: 481px) {
+  .simple-tool-actions .convert-submit-btn {
+    flex: 1 1 8rem;
+  }
 }
 
 .simple-tool-actions .convert-submit-btn--secondary {
@@ -459,7 +466,7 @@ label.simple-tool-icon-btn {
   line-height: 1.2;
 }
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   .simple-tool-actions {
     flex-direction: column;
   }

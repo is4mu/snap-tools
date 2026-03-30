@@ -48,8 +48,8 @@
       backgroundImage: layers.join(", "),
       backgroundBlendMode: "normal, normal, normal, normal, normal, normal, normal",
       themeHue: hueRound,
-      accent: "hsl(" + hueRound + ", 68%, 48%)",
-      accentBright: "hsl(" + hueRound + ", 72%, 63%)",
+      accent: "hsl(" + hueRound + ", 60%, 58%)",
+      accentBright: "hsl(" + hueRound + ", 65%, 72%)",
     };
   }
 

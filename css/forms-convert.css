@@ -84,6 +84,23 @@
   .convert-row--g {
     flex-wrap: nowrap;
   }
+
+  /* 日付 input の内在最小幅がボタン領域を侵さないよう残り幅を明示 */
+  .convert-row--g .convert-g-date-field {
+    max-width: calc(100% - var(--convert-today-w) - 8px);
+  }
+}
+
+/* 狭い画面: 日付を全幅・今日は次行で右寄せ（ネイティブ日付 UI の最小幅と競合しない） */
+@media (max-width: 419px) {
+  .convert-row--g .convert-g-date-field {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .convert-row--g .btn-today {
+    margin-left: auto;
+  }
 }
 
 .convert-g-date-field {
@@ -99,14 +116,16 @@
   text-align: left;
 }
 
-.convert-date-input {
+/* WebKit / iOS: ネイティブ date の高さを今日ボタンと揃える（元号 select と同趣旨） */
+.convert-tool .convert-date-input {
   width: 100%;
   min-width: 0;
   max-width: 100%;
+  height: var(--convert-h);
   min-height: var(--convert-h);
   padding: 0 12px;
   font-size: var(--convert-fs);
-  line-height: 1.3;
+  line-height: 1.2;
   border: 1px solid var(--tp-border);
   border-radius: 8px;
   background: var(--tp-input-bg);
@@ -119,6 +138,7 @@
   width: var(--convert-today-w);
   min-width: var(--convert-today-w);
   max-width: var(--convert-today-w);
+  height: var(--convert-h);
   min-height: var(--convert-h);
   padding: 0;
   font-size: var(--convert-fs);
