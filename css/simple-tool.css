@@ -141,6 +141,225 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* --- サイコロ --- */
+.dice-roll-board {
+  margin-bottom: 14px;
+  padding: 16px;
+  min-height: 5.5rem;
+  border: 1px solid var(--tp-border);
+  border-radius: 12px;
+  background: var(--tp-muted-bg);
+  box-sizing: border-box;
+}
+
+.dice-roll-dice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+.dice-face {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  place-items: center;
+  width: 4.6rem;
+  height: 4.6rem;
+  flex: 0 0 auto;
+  padding: 5px;
+  border: 1px solid var(--tp-border);
+  border-radius: 14px;
+  background: var(--tp-input-bg);
+  box-sizing: border-box;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.dice-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.dice-pip {
+  display: block;
+  width: 0.78rem;
+  height: 0.78rem;
+  border-radius: 50%;
+  background: var(--tp-text);
+}
+
+.dice-pip--one {
+  background: #c62828;
+}
+
+.dice-face.dice-face--sm {
+  width: 2rem;
+  height: 2rem;
+  padding: 2px;
+  border-radius: 8px;
+}
+
+.dice-face.dice-face--sm .dice-pip {
+  width: 0.32rem;
+  height: 0.32rem;
+}
+
+.dice-roll-sum {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--tp-text);
+}
+
+.dice-roll-sum--pending {
+  color: var(--tp-text-muted);
+  font-weight: 500;
+}
+
+.dice-roll-board--spinning .dice-face {
+  opacity: 0.92;
+}
+
+.dice-roll-options {
+  margin-top: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: stretch;
+}
+
+.dice-roll-count.simple-tool-field {
+  max-width: none;
+  width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.dice-roll-count-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dice-roll-count-row .dice-roll-range {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.dice-roll-count-input {
+  flex: 0 0 4rem;
+  width: 4rem;
+  min-height: 2.5rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.dice-roll-range {
+  width: 100%;
+  height: 1.5rem;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  accent-color: var(--tp-accent);
+  box-sizing: border-box;
+}
+
+.dice-roll-history {
+  margin-top: 20px;
+  width: 100%;
+  align-self: stretch;
+  box-sizing: border-box;
+}
+
+.dice-roll-history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.dice-roll-history-reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: unset;
+  margin-bottom: 0;
+  padding: 0;
+  font-size: 0;
+  line-height: 0;
+}
+
+.dice-roll-history-reset-icon {
+  display: block;
+  flex-shrink: 0;
+}
+
+.dice-roll-history-empty {
+  margin: 0;
+  padding: 12px 14px;
+  font-size: 0.88rem;
+  color: var(--tp-text-muted);
+  border: 1px solid var(--tp-border);
+  border-radius: 8px;
+  background: var(--tp-muted-bg);
+}
+
+.dice-roll-history-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: min(14rem, 40vh);
+  overflow-y: auto;
+  border: 1px solid var(--tp-border);
+  border-radius: 8px;
+  background: var(--tp-muted-bg);
+}
+
+.dice-roll-history-item {
+  margin: 0;
+  padding: 10px 12px;
+  color: var(--tp-text);
+  border-bottom: 1px solid var(--tp-border);
+}
+
+.dice-roll-history-item:last-child {
+  border-bottom: none;
+}
+
+.dice-roll-history-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.dice-roll-history-dice {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.dice-roll-history-sum {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--tp-text);
+  line-height: 1.2;
+}
+
 @media (max-width: 420px) {
   .simple-tool-actions {
     flex-direction: column;

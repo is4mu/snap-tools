@@ -1288,24 +1288,246 @@
   };
 
   T.diceRoll = function (root) {
-    root.innerHTML =
-      '<p class="convert-hint">サイコロ（6 面）または任意の面数・個数を振ります。</p>' +
-      '<div class="simple-tool-grid2">' +
-      '<label class="simple-tool-field"><span class="simple-tool-label">面数</span>' +
-      '<input type="number" class="simple-tool-input" id="ds" min="2" value="6"/></label>' +
-      '<label class="simple-tool-field"><span class="simple-tool-label">個数</span>' +
-      '<input type="number" class="simple-tool-input" id="dn" min="1" max="50" value="1"/></label></div>' +
-      '<div class="simple-tool-actions"><button type="button" class="convert-submit-btn" id="dgo">振る</button></div>' +
-      '<pre class="simple-tool-output" id="dout"></pre>';
-    root.querySelector("#dgo").addEventListener("click", function () {
-      var sides = parseInt(root.querySelector("#ds").value, 10) || 6;
-      var n = parseInt(root.querySelector("#dn").value, 10) || 1;
+    var SIDES = 6;
+    var SPIN_MS = 600;
+    var pipMasks = {
+      1: [4],
+      2: [0, 8],
+      3: [0, 4, 8],
+      4: [0, 2, 6, 8],
+      5: [0, 2, 4, 6, 8],
+      6: [0, 2, 3, 5, 6, 8],
+    };
+    function clampCount(v) {
+      var n = parseInt(String(v), 10);
+      if (isNaN(n)) return 3;
+      return Math.min(50, Math.max(1, n));
+    }
+    function faceHtml(v, faceClassExtra) {
+      var m = pipMasks[v] || [];
+      var parts = [];
+      for (var i = 0; i < 9; i++) {
+        var pip =
+          m.indexOf(i) >= 0
+            ? '<span class="dice-pip' +
+              (v === 1 ? " dice-pip--one" : "") +
+              '"></span>'
+            : "";
+        parts.push('<div class="dice-cell">' + pip + "</div>");
+      }
+      var cls = "dice-face" + (faceClassExtra ? " " + faceClassExtra : "");
+      return (
+        '<div class="' +
+        cls +
+        '" role="img" aria-label="出目 ' +
+        v +
+        '">' +
+        parts.join("") +
+        "</div>"
+      );
+    }
+    function render(rolls, hideSum) {
+      var html = rolls.map(faceHtml).join("");
+      var sumLine;
+      if (hideSum) {
+        sumLine = '<p class="dice-roll-sum dice-roll-sum--pending">合計: —</p>';
+      } else {
+        var sum = rolls.reduce(function (a, b) {
+          return a + b;
+        }, 0);
+        sumLine = '<p class="dice-roll-sum">合計: ' + sum + "</p>";
+      }
+      root.querySelector("#dout").innerHTML =
+        '<div class="dice-roll-dice">' +
+        html +
+        "</div>" +
+        sumLine;
+    }
+    function randomRolls(n) {
       var rolls = [];
       for (var i = 0; i < n; i++) {
-        rolls.push(Math.floor(Math.random() * sides) + 1);
+        rolls.push(Math.floor(Math.random() * SIDES) + 1);
       }
-      root.querySelector("#dout").textContent = rolls.join(", ") + "（合計 " + rolls.reduce(function (a, b) { return a + b; }, 0) + "）";
+      return rolls;
+    }
+    var spinIntervalId = null;
+    var spinTimeoutId = null;
+    var isRolling = false;
+    var rollHistory = [];
+    var MAX_ROLL_HISTORY = 50;
+    function stopSpin() {
+      if (spinIntervalId !== null) {
+        clearInterval(spinIntervalId);
+        spinIntervalId = null;
+      }
+      if (spinTimeoutId !== null) {
+        clearTimeout(spinTimeoutId);
+        spinTimeoutId = null;
+      }
+    }
+    function setRollingUi(rolling) {
+      isRolling = rolling;
+      var btn = root.querySelector("#dgo");
+      var rng = root.querySelector("#dn");
+      var num = root.querySelector("#dnn");
+      var rst = root.querySelector("#diceHistReset");
+      btn.disabled = rolling;
+      rng.disabled = rolling;
+      num.disabled = rolling;
+      if (rst) rst.disabled = rolling;
+      root.querySelector("#dout").classList.toggle("dice-roll-board--spinning", rolling);
+    }
+    function renderHistory() {
+      var listEl = root.querySelector("#diceHistList");
+      var emptyEl = root.querySelector("#diceHistEmpty");
+      if (!listEl || !emptyEl) return;
+      if (!rollHistory.length) {
+        listEl.innerHTML = "";
+        listEl.hidden = true;
+        emptyEl.hidden = false;
+        return;
+      }
+      emptyEl.hidden = true;
+      listEl.hidden = false;
+      listEl.innerHTML = rollHistory
+        .map(function (entry) {
+          var s = entry.rolls.reduce(function (a, b) {
+            return a + b;
+          }, 0);
+          var dice = entry.rolls
+            .map(function (r) {
+              return faceHtml(r, "dice-face--sm");
+            })
+            .join("");
+          return (
+            "<li class=\"dice-roll-history-item\">" +
+            '<div class="dice-roll-history-row">' +
+            '<div class="dice-roll-history-dice">' +
+            dice +
+            "</div>" +
+            '<span class="dice-roll-history-sum">（' +
+            s +
+            "）</span>" +
+            "</div></li>"
+          );
+        })
+        .join("");
+    }
+    function pushHistory(rolls) {
+      rollHistory.unshift({ rolls: rolls.slice() });
+      if (rollHistory.length > MAX_ROLL_HISTORY) {
+        rollHistory.length = MAX_ROLL_HISTORY;
+      }
+      renderHistory();
+    }
+    function syncCountFromSlider() {
+      var v = clampCount(root.querySelector("#dn").value);
+      root.querySelector("#dn").value = v;
+      root.querySelector("#dnn").value = v;
+    }
+    function syncCountFromInput() {
+      var dnn = root.querySelector("#dnn");
+      var raw = dnn.value.trim();
+      var v =
+        raw === "" || raw === "-"
+          ? clampCount(root.querySelector("#dn").value)
+          : clampCount(raw);
+      root.querySelector("#dn").value = v;
+      dnn.value = v;
+      return v;
+    }
+    function roll(animated) {
+      var n = syncCountFromInput();
+      var finalRolls = randomRolls(n);
+      if (!animated) {
+        stopSpin();
+        render(finalRolls, false);
+        return;
+      }
+      stopSpin();
+      setRollingUi(true);
+      spinIntervalId = setInterval(function () {
+        render(randomRolls(n), true);
+      }, 48);
+      spinTimeoutId = setTimeout(function () {
+        stopSpin();
+        render(finalRolls, false);
+        pushHistory(finalRolls);
+        setRollingUi(false);
+      }, SPIN_MS);
+    }
+    root.innerHTML =
+      '<div class="dice-roll-board" id="dout"></div>' +
+      '<div class="simple-tool-actions"><button type="button" class="convert-submit-btn" id="dgo">振る</button></div>' +
+      '<div class="dice-roll-options">' +
+      '<label class="simple-tool-field dice-roll-count">' +
+      '<span class="simple-tool-label">個数</span>' +
+      '<div class="dice-roll-count-row">' +
+      '<input type="range" class="dice-roll-range" id="dn" min="1" max="50" value="3"/>' +
+      '<input type="number" class="simple-tool-input dice-roll-count-input" id="dnn" min="1" max="50" value="3" inputmode="numeric"/>' +
+      "</div></label></div>" +
+      '<div class="dice-roll-history">' +
+      '<div class="dice-roll-history-head">' +
+      '<span class="simple-tool-label">履歴</span>' +
+      '<button type="button" class="convert-submit-btn convert-submit-btn--secondary dice-roll-history-reset" id="diceHistReset" aria-label="履歴をリセット" title="履歴をリセット">' +
+      '<svg class="dice-roll-history-reset-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      "<path d=\"M3 6h18\"/><path d=\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"/><path d=\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"/><line x1=\"10\" y1=\"11\" x2=\"10\" y2=\"17\"/><line x1=\"14\" y1=\"11\" x2=\"14\" y2=\"17\"/></svg>" +
+      "</button>" +
+      "</div>" +
+      '<p class="dice-roll-history-empty" id="diceHistEmpty">まだありません</p>' +
+      '<ul class="dice-roll-history-list" id="diceHistList" hidden></ul>' +
+      "</div>";
+    root.querySelector("#dn").addEventListener("input", syncCountFromSlider);
+    root.querySelector("#dnn").addEventListener("input", function () {
+      var raw = root.querySelector("#dnn").value;
+      if (raw === "" || raw === "-") return;
+      syncCountFromInput();
     });
+    root.querySelector("#dnn").addEventListener("blur", syncCountFromInput);
+    root.querySelector("#dgo").addEventListener("click", function () {
+      roll(true);
+    });
+    root.querySelector("#diceHistReset").addEventListener("click", function () {
+      if (isRolling) return;
+      rollHistory.length = 0;
+      renderHistory();
+    });
+    roll(false);
+    renderHistory();
+
+    var useSpaceToRoll =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(pointer: fine)").matches;
+    function diceRollSpaceFocusOk(el) {
+      if (!el) return false;
+      if (el === document.body || el === document.documentElement) return true;
+      return root.contains(el);
+    }
+    function diceRollSpaceInputOk(el) {
+      if (!el || el.isContentEditable) return false;
+      var tag = el.tagName;
+      if (tag === "TEXTAREA" || tag === "SELECT") return false;
+      if (tag === "INPUT") {
+        var t = el.type;
+        return t === "range";
+      }
+      return true;
+    }
+    function onDiceRollKeydown(e) {
+      if (e.code !== "Space" && e.key !== " ") return;
+      if (!useSpaceToRoll) return;
+      if (!diceRollSpaceFocusOk(e.target)) return;
+      if (!diceRollSpaceInputOk(e.target)) return;
+      if (isRolling) {
+        e.preventDefault();
+        return;
+      }
+      e.preventDefault();
+      roll(true);
+    }
+    if (useSpaceToRoll) {
+      window.addEventListener("keydown", onDiceRollKeydown, { passive: false });
+    }
   };
 
   T.nanoid = function (root) {
