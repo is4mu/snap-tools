@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdSlot from '../../components/layout/AdSlot.astro';
+import WorkdaysBuffer from '../../components/tools/WorkdaysBuffer.astro';
+import { getCollection } from 'astro:content';
+
+const guides = await getCollection('guides');
+const related = ['workdays-buffer', 'hourly-rate-rough']
+  .map((slug) => guides.find((g) => g.id === slug))
+  .filter(Boolean);
+---
+
+<BaseLayout
+  title="作業日数・バッファ計算機｜納期案"
+  description="実働日数・バッファ％・休日を入れて、提案納期の日数と内訳説明の下書きを作成。ブラウザ完結。"
+  canonicalPath="/tools/workdays-buffer/"
+>
+  <div class="wrap">
+    <h1 class="page-title">作業日数／バッファ計算</h1>
+    <p class="lede">実働に余裕と休みを足して、クライアントに伝えやすい納期日数の目安を出します。正式な工程表の代替ではありません。</p>
+    <AdSlot placement="tool-above-ui" />
+    <WorkdaysBuffer />
+    <section class="related">
+      <h2>使い方の詳細</h2>
+      <ul>
+        {related.map((g) => (
+          <li>
+            <a href={`/guides/${g!.id}/`}>{g!.data.title}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

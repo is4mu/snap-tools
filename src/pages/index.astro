@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AdSlot from '../components/layout/AdSlot.astro';
+import { featuredGuides, site, tools, topics } from '../data/site';
+import { getCollection } from 'astro:content';
+
+const guides = await getCollection('guides');
+const featured = featuredGuides
+  .map((slug) => guides.find((g) => g.id === slug))
+  .filter(Boolean);
+---
+
+<BaseLayout title={site.name + '｜制作・事務を速く片づけるショートカット'} description={site.description} canonicalPath="/">
+  <section class="hero">
+    <div class="hero__inner">
+      <p class="brand-mark">{site.name}</p>
+      <h1>{site.tagline}</h1>
+      <p>ツール一覧サイトではありません。用事から選んで、読んで、すぐ使うためのショートカット集です。</p>
+      <div class="hero__cta">
+        <a class="btn" href="/topics/estimate/">用事から選ぶ</a>
+        <a class="btn btn--ghost" href="/tools/estimate-letter/">見積もり文を作る</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="section">
+      <h2>用事から選ぶ</h2>
+      <p class="lede">見積もり・納品・整理・連絡・計算。まずカテゴリから入れます。</p>
+      <div class="topic-grid">
+        {
+          topics.map((topic) => (
+            <a class="topic-link" href={`/topics/${topic.slug}/`}>
+              <strong>{topic.name}</strong>
+              <span>{topic.blurb}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>まず読む</h2>
+      <p class="lede">迷ったらこの3本から。手順→道具の順で片付きます。</p>
+      <div class="feature-list">
+        {
+          featured.map((guide) => (
+            <a class="feature-link" href={`/guides/${guide!.id}/`}>
+              <strong>{guide!.data.title.split('｜')[0]}</strong>
+              <span>{guide!.data.description}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>すぐ使う</h2>
+      <p class="lede">ブラウザで完結するミニ道具。入力はサーバーに送りません。</p>
+      <div class="tool-list">
+        {
+          tools.map((tool) => (
+            <a class="tool-link" href={`/tools/${tool.slug}/`}>
+              <strong>{tool.name}</strong>
+              <span>{tool.cta}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <AdSlot placement="home-bottom" />
+
+    <section class="section" style="padding-bottom:2rem">
+      <h2>このサイトについて</h2>
+      <p class="lede">
+        誰向けか、やらないこと、Snap の意味は <a href="/about/">About</a> にまとめています。
+      </p>
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,81 @@
+---
+---
+
+<div class="tool-shell" data-tool="workdays-buffer">
+  <form class="panel" id="buffer-form">
+    <div class="field">
+      <label for="workdays">実働日数</label>
+      <input id="workdays" name="workdays" type="number" min="1" step="1" required placeholder="例: 8" />
+    </div>
+    <div class="field">
+      <label for="buffer">バッファ（％）</label>
+      <input id="buffer" name="buffer" type="number" min="0" max="100" step="1" required placeholder="例: 20" />
+    </div>
+    <div class="field">
+      <label for="offdays">休日・待ち（日）</label>
+      <input id="offdays" name="offdays" type="number" min="0" step="1" required placeholder="例: 2" />
+    </div>
+    <div class="tool-actions">
+      <button class="btn" type="submit">納期案を計算する</button>
+      <button class="btn btn--ghost" type="button" id="buffer-copy" disabled>説明文の下書きをコピー</button>
+    </div>
+    <p class="note">入力内容はブラウザ内で処理します（サーバーに送りません）。</p>
+  </form>
+  <div class="panel">
+    <p class="note" id="buffer-empty">数値を入れると、日数と説明文の下書きが表示されます</p>
+    <h2 class="page-title" style="font-size:1.25rem;margin-top:0" id="buffer-heading" hidden>提案納期の目安</h2>
+    <p id="buffer-result" class="progress" hidden></p>
+    <p id="buffer-breakdown" class="note" hidden></p>
+    <pre class="output" id="buffer-output" aria-live="polite"></pre>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('buffer-form') as HTMLFormElement | null;
+  const empty = document.getElementById('buffer-empty');
+  const heading = document.getElementById('buffer-heading');
+  const result = document.getElementById('buffer-result');
+  const breakdown = document.getElementById('buffer-breakdown');
+  const output = document.getElementById('buffer-output');
+  const copyBtn = document.getElementById('buffer-copy') as HTMLButtonElement | null;
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const fd = new FormData(form);
+    const workdays = Number(fd.get('workdays'));
+    const bufferPct = Number(fd.get('buffer'));
+    const offdays = Number(fd.get('offdays'));
+    if (![workdays, bufferPct, offdays].every((n) => Number.isFinite(n))) return;
+
+    const bufferDays = Math.ceil((workdays * bufferPct) / 100);
+    const total = workdays + bufferDays + offdays;
+    const text = `実働${workdays}日＋バッファ${bufferDays}日（${bufferPct}%）＋休日等${offdays}日で、合計${total}日程度を見込んでいます。状況により前後する可能性があるため、目安としてご確認ください。`;
+
+    if (empty) empty.hidden = true;
+    if (heading) heading.hidden = false;
+    if (result) {
+      result.hidden = false;
+      result.textContent = `合計 ${total} 日程度`;
+    }
+    if (breakdown) {
+      breakdown.hidden = false;
+      breakdown.textContent = `内訳: 実働 ${workdays} 日 / バッファ ${bufferDays} 日 / 休日・待ち ${offdays} 日`;
+    }
+    if (output) output.textContent = text;
+    if (copyBtn) copyBtn.disabled = false;
+  });
+
+  copyBtn?.addEventListener('click', async () => {
+    const text = output?.textContent ?? '';
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      copyBtn.textContent = 'コピーしました';
+      setTimeout(() => {
+        copyBtn.textContent = '説明文の下書きをコピー';
+      }, 1600);
+    } catch {
+      /* ignore */
+    }
+  });
+</script>

@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdSlot from '../../components/layout/AdSlot.astro';
+import { getCollection, render } from 'astro:content';
+import { topics as topicMeta } from '../../data/site';
+
+export async function getStaticPaths() {
+  const topics = await getCollection('topics');
+  return topics.map((topic) => ({
+    params: { slug: topic.id },
+    props: { topic },
+  }));
+}
+
+const { topic } = Astro.props;
+const { Content } = await render(topic);
+const guides = (await getCollection('guides'))
+  .filter((g) => g.data.category === topic.data.category)
+  .sort((a, b) => Number(b.data.pillar) - Number(a.data.pillar) || a.data.title.localeCompare(b.data.title, 'ja'));
+const meta = topicMeta.find((t) => t.slug === topic.id);
+---
+
+<BaseLayout title={topic.data.title} description={topic.data.description} canonicalPath={`/topics/${topic.id}/`}>
+  <div class="wrap">
+    <h1 class="page-title">{meta?.name ?? topic.id}</h1>
+    <div class="prose">
+      <Content />
+    </div>
+
+    {
+      topic.data.toolSlug && (
+        <div class="cta-box">
+          <p>代表ツール</p>
+          <a class="btn" href={`/tools/${topic.data.toolSlug}/`}>
+            {topic.data.toolCta ?? 'ツールを開く'}
+          </a>
+        </div>
+      )
+    }
+
+    <section class="section">
+      <h2>記事一覧</h2>
+      <div class="feature-list">
+        {
+          guides.map((guide) => (
+            <a class="feature-link" href={`/guides/${guide.id}/`}>
+              <strong>
+                {guide.data.pillar ? '柱 · ' : ''}
+                {guide.data.title.split('｜')[0]}
+              </strong>
+              <span>{guide.data.description}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <AdSlot placement="topic-list-bottom" />
+  </div>
+</BaseLayout>

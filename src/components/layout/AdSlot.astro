@@ -1,0 +1,19 @@
+---
+interface Props {
+  placement: string;
+}
+const { placement } = Astro.props;
+---
+
+<aside
+  class="ad-slot"
+  data-ad-placement={placement}
+  aria-label="広告"
+></aside>
+
+<style>
+  .ad-slot {
+    min-height: 5.5rem;
+    margin: 1.5rem 0;
+  }
+</style>
