@@ -5,6 +5,9 @@ export const site = {
   tagline: '個人・少人数の制作／事務を速く片づけるショートカット集',
   description:
     '見積もり・納品・整理・連絡・日数計算。個人・少人数向けの手順ガイドと、すぐ使えるミニ道具。ブラウザで完結します。',
+  /** Public client IDs (safe in frontend). From prior production site. */
+  gaMeasurementId: 'G-CZZQCPMX5Z',
+  adsenseClient: 'ca-pub-4645103012651649',
 };
 
 export type TopicId = 'estimate' | 'delivery' | 'organize' | 'comms' | 'calc';

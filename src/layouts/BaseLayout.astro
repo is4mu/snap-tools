@@ -45,6 +45,35 @@ const fullTitle = title.includes(site.name) ? title : `${title}｜${site.name}`;
       href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
+    {
+      site.gaMeasurementId ? (
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${site.gaMeasurementId}`}
+        />
+      ) : null
+    }
+    {
+      site.gaMeasurementId ? (
+        <script is:inline define:vars={{ gaId: site.gaMeasurementId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      ) : null
+    }
+    {
+      site.adsenseClient ? (
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${site.adsenseClient}`}
+          crossorigin="anonymous"
+        />
+      ) : null
+    }
     <slot name="head" />
   </head>
   <body>
