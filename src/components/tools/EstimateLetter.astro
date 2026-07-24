@@ -1,0 +1,112 @@
+---
+---
+
+<div class="tool-shell" data-tool="estimate-letter">
+  <form class="panel" id="estimate-form">
+    <div class="field">
+      <label for="project-name">案件名</label>
+      <input id="project-name" name="projectName" type="text" autocomplete="off" required placeholder="例: LPデザイン改修" />
+    </div>
+    <div class="field">
+      <label for="scope">作業範囲（やる／やらない）</label>
+      <textarea id="scope" name="scope" required placeholder="例: やる: トップ〜下層3ページのデザイン / やらない: コーディング・撮影"></textarea>
+    </div>
+    <div class="field">
+      <label for="price">金額（または金額帯）</label>
+      <input id="price" name="price" type="text" required placeholder="例: 120,000円（税別）" />
+    </div>
+    <div class="field">
+      <label for="deadline">納期</label>
+      <input id="deadline" name="deadline" type="text" required placeholder="例: ご発注から10営業日" />
+    </div>
+    <div class="field">
+      <label for="revisions">修正回数の前提</label>
+      <input id="revisions" name="revisions" type="text" required placeholder="例: 各ページ2回まで" />
+    </div>
+    <div class="tool-actions">
+      <button class="btn" type="submit">文面を生成する</button>
+      <button class="btn btn--ghost" type="button" id="estimate-copy" disabled>文面をコピー</button>
+    </div>
+    <p class="note">入力内容はブラウザ内で処理します（サーバーに送りません）。</p>
+  </form>
+  <div class="panel">
+    <p class="note" id="estimate-hint">項目を入力すると、ここに文面が入ります</p>
+    <pre class="output" id="estimate-output" aria-live="polite"></pre>
+    <p class="note" id="estimate-after" hidden>送る前に金額・範囲・宛名を必ず確認してください</p>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('estimate-form') as HTMLFormElement | null;
+  const output = document.getElementById('estimate-output');
+  const hint = document.getElementById('estimate-hint');
+  const after = document.getElementById('estimate-after');
+  const copyBtn = document.getElementById('estimate-copy') as HTMLButtonElement | null;
+  const draftKey = 'snap-tools:estimate-letter-draft';
+
+  function buildText(data: Record<string, string>) {
+    const subject = `【見積もり】${data.projectName}`;
+    return `件名: ${subject}
+
+お世話になっております。
+「${data.projectName}」の見積もりをお送りします。
+
+■ 作業範囲
+${data.scope}
+
+■ 金額
+${data.price}
+
+■ 納期
+${data.deadline}
+
+■ 修正回数の前提
+${data.revisions}
+
+上記は現時点の前提に基づくお見積りです。範囲が変わる場合は金額・納期を見直します。
+ご確認のうえ、ご質問があればお知らせください。`;
+  }
+
+  try {
+    const raw = localStorage.getItem(draftKey);
+    if (raw && form) {
+      const draft = JSON.parse(raw) as Record<string, string>;
+      for (const [key, value] of Object.entries(draft)) {
+        const el = form.elements.namedItem(key) as HTMLInputElement | HTMLTextAreaElement | null;
+        if (el) el.value = value;
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const fd = new FormData(form);
+    const data = Object.fromEntries(fd.entries()) as Record<string, string>;
+    const text = buildText(data);
+    if (output) output.textContent = text;
+    if (hint) hint.hidden = true;
+    if (after) after.hidden = false;
+    if (copyBtn) copyBtn.disabled = false;
+    try {
+      localStorage.setItem(draftKey, JSON.stringify(data));
+    } catch {
+      /* ignore */
+    }
+  });
+
+  copyBtn?.addEventListener('click', async () => {
+    const text = output?.textContent ?? '';
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      copyBtn.textContent = 'コピーしました';
+      setTimeout(() => {
+        copyBtn.textContent = '文面をコピー';
+      }, 1600);
+    } catch {
+      copyBtn.textContent = 'コピーに失敗';
+    }
+  });
+</script>

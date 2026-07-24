@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="お問い合わせ"
+  description="内容の誤り指摘、使い方の質問、掲載に関する連絡窓口です。営業の大量送信はご遠慮ください。"
+  canonicalPath="/contact/"
+>
+  <div class="wrap prose">
+    <h1 class="page-title">お問い合わせ</h1>
+    <p>記事の誤り、ツールの不具合、プライバシーに関する問い合わせを受け付けます。</p>
+
+    <h2>送る前に</h2>
+    <ul>
+      <li>使い方の一般質問は、まず各ガイドの FAQ を確認してください</li>
+      <li>個人の契約・税務・法律の個別相談には答えられません</li>
+    </ul>
+
+    <h2>問い合わせ方法</h2>
+    <p>
+      本番公開前のため、公開用メールアドレスは未設定です。プレビュー期間の連絡は GitHub（
+      <a href="https://github.com/is4mu/snap-tools/issues" rel="noopener noreferrer">is4mu/snap-tools Issues</a>
+      ）へ。件名例: 「記事の誤り: （タイトル）」「ツール不具合: （名前）」
+    </p>
+    <p class="note">公開時は mailto 窓口に切り替える想定です（アドレスは owner-actions で設定）。</p>
+
+    <h2>返信について</h2>
+    <p>内容により返信できない場合があります。営業目的の売り込みはお断りします。</p>
+  </div>
+</BaseLayout>

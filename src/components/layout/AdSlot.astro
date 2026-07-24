@@ -1,0 +1,10 @@
+---
+interface Props {
+  placement: string;
+}
+const { placement } = Astro.props;
+---
+
+<aside class="ad-slot" data-ad-slot="" data-ad-placement={placement} aria-label="広告枠（プレースホルダ）">
+  広告（プレースホルダ）
+</aside>

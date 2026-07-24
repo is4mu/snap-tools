@@ -1,0 +1,166 @@
+---
+const defaults = [
+  '成果物の内容が依頼範囲と一致している',
+  'ファイル名・形式が指定どおり',
+  '誤字・リンク切れ・表示崩れの最終確認',
+  '添付／共有リンクの宛先が正しい',
+  '納品メール（またはチャット）文面を用意した',
+  '請求が必要な場合、請求タイミングを確認した',
+];
+---
+
+<div class="tool-shell" data-tool="delivery-checklist">
+  <div class="panel">
+    <p class="progress" id="check-progress">完了 0 / {defaults.length}</p>
+    <div class="check-list" id="check-list">
+      {
+        defaults.map((label, i) => (
+          <label class="check-item">
+            <input type="checkbox" data-default="true" data-id={`d${i}`} />
+            <span>{label}</span>
+          </label>
+        ))
+      }
+    </div>
+    <div class="field" style="margin-top:1rem">
+      <label for="custom-item">項目を追加</label>
+      <div class="tool-actions">
+        <input id="custom-item" type="text" placeholder="自分用の確認項目" />
+        <button class="btn btn--ghost" type="button" id="add-item">追加</button>
+      </div>
+    </div>
+    <div class="tool-actions">
+      <button class="btn" type="button" id="copy-list">リストをテキストでコピー</button>
+      <button class="btn btn--ghost" type="button" id="print-list">印刷用に表示</button>
+      <button class="btn btn--ghost" type="button" id="reset-list">チェックをクリア</button>
+    </div>
+    <p class="note">進捗はこのブラウザ内に保存されます（端末を変えると引き継がれません）。</p>
+  </div>
+  <div class="panel">
+    <p class="note" id="check-empty">項目にチェックを入れるか、自分用の項目を追加してください</p>
+    <pre class="output" id="check-output" aria-live="polite"></pre>
+  </div>
+</div>
+
+<script>
+  const storageKey = 'snap-tools:delivery-checklist';
+  const list = document.getElementById('check-list');
+  const progress = document.getElementById('check-progress');
+  const output = document.getElementById('check-output');
+  const empty = document.getElementById('check-empty');
+  const addBtn = document.getElementById('add-item');
+  const customInput = document.getElementById('custom-item') as HTMLInputElement | null;
+  const copyBtn = document.getElementById('copy-list');
+  const printBtn = document.getElementById('print-list');
+  const resetBtn = document.getElementById('reset-list');
+
+  type Item = { id: string; label: string; checked: boolean; custom?: boolean };
+
+  function readDefaults(): Item[] {
+    return Array.from(list?.querySelectorAll('input[data-default="true"]') ?? []).map((input) => {
+      const el = input as HTMLInputElement;
+      return {
+        id: el.dataset.id ?? el.id,
+        label: el.parentElement?.querySelector('span')?.textContent?.trim() ?? '',
+        checked: el.checked,
+      };
+    });
+  }
+
+  function save(items: Item[]) {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(items));
+    } catch {
+      /* ignore */
+    }
+  }
+
+  function renderCustom(items: Item[]) {
+    list?.querySelectorAll('[data-custom="true"]').forEach((n) => n.remove());
+    for (const item of items.filter((i) => i.custom)) {
+      const label = document.createElement('label');
+      label.className = 'check-item';
+      label.dataset.custom = 'true';
+      label.innerHTML = `<input type="checkbox" data-id="${item.id}" ${item.checked ? 'checked' : ''} /><span></span>`;
+      label.querySelector('span')!.textContent = item.label;
+      list?.appendChild(label);
+    }
+  }
+
+  function currentItems(): Item[] {
+    const defaults = readDefaults();
+    const customs = Array.from(list?.querySelectorAll('label[data-custom="true"]') ?? []).map((label, idx) => {
+      const input = label.querySelector('input') as HTMLInputElement;
+      return {
+        id: input.dataset.id ?? `c${idx}`,
+        label: label.querySelector('span')?.textContent?.trim() ?? '',
+        checked: input.checked,
+        custom: true,
+      };
+    });
+    return [...defaults, ...customs];
+  }
+
+  function refresh() {
+    const items = currentItems();
+    const done = items.filter((i) => i.checked).length;
+    if (progress) progress.textContent = `完了 ${done} / ${items.length}`;
+    const lines = items.map((i) => `${i.checked ? '[x]' : '[ ]'} ${i.label}`);
+    if (output) output.textContent = lines.join('\n');
+    if (empty) empty.hidden = done > 0 || items.some((i) => i.custom);
+    save(items);
+  }
+
+  try {
+    const raw = localStorage.getItem(storageKey);
+    if (raw) {
+      const saved = JSON.parse(raw) as Item[];
+      for (const item of saved.filter((i) => !i.custom)) {
+        const input = list?.querySelector(`input[data-id="${item.id}"]`) as HTMLInputElement | null;
+        if (input) input.checked = item.checked;
+      }
+      renderCustom(saved);
+    }
+  } catch {
+    /* ignore */
+  }
+
+  list?.addEventListener('change', refresh);
+
+  addBtn?.addEventListener('click', () => {
+    const value = customInput?.value.trim();
+    if (!value) return;
+    const items = currentItems();
+    items.push({ id: `c${Date.now()}`, label: value, checked: false, custom: true });
+    renderCustom(items);
+    if (customInput) customInput.value = '';
+    refresh();
+  });
+
+  copyBtn?.addEventListener('click', async () => {
+    const text = output?.textContent ?? '';
+    try {
+      await navigator.clipboard.writeText(text);
+      copyBtn.textContent = 'コピーしました';
+      setTimeout(() => {
+        copyBtn.textContent = 'リストをテキストでコピー';
+      }, 1600);
+    } catch {
+      /* ignore */
+    }
+  });
+
+  printBtn?.addEventListener('click', () => {
+    window.print();
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    if (!confirm('チェックをすべてクリアしますか？')) return;
+    list?.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+      (input as HTMLInputElement).checked = false;
+    });
+    refresh();
+  });
+
+  refresh();
+</script>

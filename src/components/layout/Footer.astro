@@ -1,0 +1,18 @@
+---
+import { site } from '../../data/site';
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <strong>{site.name}</strong>
+    <p class="note">{site.tagline}</p>
+    <nav aria-label="フッター">
+      <a href="/about/">このサイトについて</a>
+      <a href="/contact/">お問い合わせ</a>
+      <a href="/legal/privacy/">プライバシー</a>
+      <a href="/topics/estimate/">見積もり</a>
+      <a href="/tools/estimate-letter/">ツール</a>
+    </nav>
+    <small>© {new Date().getFullYear()} {site.name} · {site.domain}</small>
+  </div>
+</footer>

@@ -1,0 +1,15 @@
+# dependencies
+node_modules/
+
+# build
+dist/
+.astro/
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# logs / OS
+npm-debug.log*
+.DS_Store

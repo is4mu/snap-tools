@@ -1,9 +1,20 @@
 {
   "name": "snap-tools",
+  "type": "module",
+  "version": "0.1.0",
   "private": true,
-  "description": "Static web utilities (GitHub Pages)",
+  "description": "Snap Tools rebuild (Astro). Preview branch only until production approval.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
-    "seo:apply": "node scripts/apply-seo.mjs",
-    "og:image": "python3 scripts/generate-og-image.py"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.1.3"
   }
 }

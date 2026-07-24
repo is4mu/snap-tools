@@ -1,0 +1,19 @@
+---
+import { nav, site } from '../../data/site';
+const path = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="brand" href="/">{site.name.split(' ')[0]} <span>Tools</span></a>
+    <nav class="nav" aria-label="メイン">
+      {
+        nav.map((item) => (
+          <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>

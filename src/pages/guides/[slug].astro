@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdSlot from '../../components/layout/AdSlot.astro';
+import { getCollection, render } from 'astro:content';
+import { topics, tools } from '../../data/site';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides');
+  return guides.map((guide) => ({
+    params: { slug: guide.id },
+    props: { guide },
+  }));
+}
+
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+const allGuides = await getCollection('guides');
+const topic = topics.find((t) => t.id === guide.data.category);
+const related = guide.data.relatedGuides
+  .map((slug) => allGuides.find((g) => g.id === slug))
+  .filter(Boolean);
+const relatedTool = tools.filter((t) => guide.data.relatedTools.includes(t.slug));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: guide.data.title,
+  description: guide.data.description,
+  url: `https://www.snap-tools.jp/guides/${guide.id}/`,
+  isPartOf: { '@type': 'WebSite', name: 'Snap Tools', url: 'https://www.snap-tools.jp/' },
+};
+---
+
+<BaseLayout
+  title={guide.data.title}
+  description={guide.data.description}
+  canonicalPath={`/guides/${guide.id}/`}
+  ogType="article"
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <article class="wrap prose">
+    <p class="meta-line">
+      {topic && <a href={`/topics/${topic.slug}/`}>{topic.name}</a>}
+      {guide.data.pillar ? ' · 柱記事' : ' · 周辺記事'}
+    </p>
+    <h1 class="page-title">{guide.data.title}</h1>
+    <Content />
+
+    <AdSlot placement="guide-after-steps" />
+
+    {
+      relatedTool.length > 0 && (
+        <div class="cta-box">
+          <p>関連ツール</p>
+          <div class="tool-actions">
+            {relatedTool.map((tool) => (
+              <a class="btn" href={`/tools/${tool.slug}/`}>
+                {tool.cta}
+              </a>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    {
+      related.length > 0 && (
+        <section class="related">
+          <h2>関連</h2>
+          <ul>
+            {related.map((item) => (
+              <li>
+                <a href={`/guides/${item!.id}/`}>{item!.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <AdSlot placement="guide-end" />
+  </article>
+</BaseLayout>
