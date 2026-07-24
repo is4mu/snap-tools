@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>見積もり文ジェネレータ｜コピペ用｜Snap Tools</title><meta name="description" content="案件名・範囲・金額帯・納期・修正回数から、送れる見積もり文をブラウザで生成。入力はサーバーに送りません。"><link rel="canonical" href="https://www.snap-tools.jp/tools/estimate-letter/"><meta property="og:type" content="website"><meta property="og:site_name" content="Snap Tools"><meta property="og:title" content="見積もり文ジェネレータ｜コピペ用｜Snap Tools"><meta property="og:description" content="案件名・範囲・金額帯・納期・修正回数から、送れる見積もり文をブラウザで生成。入力はサーバーに送りません。"><meta property="og:url" content="https://www.snap-tools.jp/tools/estimate-letter/"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="見積もり文ジェネレータ｜コピペ用｜Snap Tools"><meta name="twitter:description" content="案件名・範囲・金額帯・納期・修正回数から、送れる見積もり文をブラウザで生成。入力はサーバーに送りません。"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet"><script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZQCPMX5Z"></script><script>(function(){const gaId = "G-CZZQCPMX5Z";
+
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', gaId);
+        })();</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4645103012651649" crossorigin="anonymous"></script><link rel="stylesheet" href="/_astro/BaseLayout.CMhqeyMo.css"><style>.ad-slot[data-astro-cid-hledcgqw]{min-height:5.5rem;margin:1.5rem 0}
+</style></head><body><a class="skip-link" href="#main">本文へスキップ</a><header class="site-header"><div class="site-header__inner"><a class="brand" href="/">Snap <span>Tools</span></a><nav class="nav" aria-label="メイン"><a href="/topics/estimate/">見積もり</a><a href="/topics/delivery/">納品</a><a href="/topics/organize/">整理</a><a href="/topics/comms/">連絡</a><a href="/topics/calc/">計算</a><a href="/about/">About</a></nav></div></header><main id="main"><div class="wrap"><h1 class="page-title">見積もり文ジェネレータ</h1><p class="lede">必要項目を埋めると、メールやチャットに貼れる見積もり文の下書きができます。契約書の代替ではありません。</p><aside class="ad-slot" data-ad-placement="tool-above-ui" aria-label="広告" data-astro-cid-hledcgqw></aside><div class="tool-shell" data-tool="estimate-letter"><form class="panel" id="estimate-form"><div class="field"><label for="project-name">案件名</label><input id="project-name" name="projectName" type="text" autocomplete="off" required placeholder="例: LPデザイン改修"></div><div class="field"><label for="scope">作業範囲（やる／やらない）</label><textarea id="scope" name="scope" required placeholder="例: やる: トップ〜下層3ページのデザイン / やらない: コーディング・撮影"></textarea></div><div class="field"><label for="price">金額（または金額帯）</label><input id="price" name="price" type="text" required placeholder="例: 120,000円（税別）"></div><div class="field"><label for="deadline">納期</label><input id="deadline" name="deadline" type="text" required placeholder="例: ご発注から10営業日"></div><div class="field"><label for="revisions">修正回数の前提</label><input id="revisions" name="revisions" type="text" required placeholder="例: 各ページ2回まで"></div><div class="tool-actions"><button class="btn" type="submit">文面を生成する</button><button class="btn btn--ghost" type="button" id="estimate-copy" disabled>文面をコピー</button></div><p class="note">入力内容はブラウザ内で処理します（サーバーに送りません）。</p></form><div class="panel"><p class="note" id="estimate-hint">項目を入力すると、ここに文面が入ります</p><pre class="output" id="estimate-output" aria-live="polite"></pre><p class="note" id="estimate-after" hidden>送る前に金額・範囲・宛名を必ず確認してください</p></div></div><script type="module">var e=document.getElementById(`estimate-form`),t=document.getElementById(`estimate-output`),n=document.getElementById(`estimate-hint`),r=document.getElementById(`estimate-after`),i=document.getElementById(`estimate-copy`),a=`snap-tools:estimate-letter-draft`;function o(e){return`件名: ${`【見積もり】${e.projectName}`}
+
+お世話になっております。
+「${e.projectName}」の見積もりをお送りします。
+
+■ 作業範囲
+${e.scope}
+
+■ 金額
+${e.price}
+
+■ 納期
+${e.deadline}
+
+■ 修正回数の前提
+${e.revisions}
+
+上記は現時点の前提に基づくお見積りです。範囲が変わる場合は金額・納期を見直します。
+ご確認のうえ、ご質問があればお知らせください。`}try{let t=localStorage.getItem(a);if(t&&e){let n=JSON.parse(t);for(let[t,r]of Object.entries(n)){let n=e.elements.namedItem(t);n&&(n.value=r)}}}catch{}e?.addEventListener(`submit`,s=>{s.preventDefault();let c=new FormData(e),l=Object.fromEntries(c.entries()),u=o(l);t&&(t.textContent=u),n&&(n.hidden=!0),r&&(r.hidden=!1),i&&(i.disabled=!1);try{localStorage.setItem(a,JSON.stringify(l))}catch{}}),i?.addEventListener(`click`,async()=>{let e=t?.textContent??``;if(e)try{await navigator.clipboard.writeText(e),i.textContent=`コピーしました`,setTimeout(()=>{i.textContent=`文面をコピー`},1600)}catch{i.textContent=`コピーに失敗`}});</script><section class="related"><h2>使い方の詳細</h2><ul><li><a href="/guides/estimate-letter/">フリーランスの見積もり文の書き方｜すぐ送れる型</a></li><li><a href="/guides/estimate-breakdown/">見積もりの内訳の見せ方（項目の分け方）</a></li><li><a href="/guides/revision-limits/">修正回数の上限をどう伝えるか</a></li></ul></section></div></main><footer class="site-footer"><div class="site-footer__inner"><strong>Snap Tools</strong><p class="note">個人・少人数の制作／事務を速く片づけるショートカット集</p><nav aria-label="フッター"><a href="/about/">このサイトについて</a><a href="/contact/">お問い合わせ</a><a href="/legal/privacy/">プライバシー</a><a href="/topics/estimate/">見積もり</a><a href="/tools/estimate-letter/">ツール</a></nav><small>© 2026 Snap Tools · snap-tools.jp</small></div></footer></body></html>
