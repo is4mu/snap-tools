@@ -20,6 +20,30 @@ const related = ['estimate-letter', 'estimate-breakdown', 'revision-limits']
     <p class="lede">必要項目を埋めると、メールやチャットに貼れる見積もり文の下書きができます。契約書の代替ではありません。</p>
     <AdSlot placement="tool-above-ui" />
     <EstimateLetter />
+    <section class="prose">
+      <h2>使い方・注意</h2>
+      <ol>
+        <li>案件名・範囲（やる／やらない）・金額・納期・修正回数を入力し、「文面を生成する」を押します。</li>
+        <li>出力された下書きをコピーし、宛名・挨拶・税込／税別表記を自分の取引慣行に合わせて直します。</li>
+        <li>
+          範囲が曖昧なときは、ジェネレータに入れる前に
+          <a href="/guides/kickoff-hearing/">初回ヒアリングで聞くことリスト</a>
+          で前提を固めると、生成文の精度が上がります。
+        </li>
+        <li>
+          内訳の分け方は
+          <a href="/guides/estimate-breakdown/">見積もりの内訳の見せ方</a>
+          を、修正の言い回しは
+          <a href="/guides/revision-limits/">修正回数の上限の伝え方</a>
+          を参照してください。全体の型は
+          <a href="/guides/estimate-letter/">見積もり文の書き方</a>
+          が正本です。
+        </li>
+        <li>入力内容はブラウザ内で処理し、サーバーには送信しません。公共の端末では生成後に画面を閉じ、コピーした文面の保管先に注意してください。</li>
+        <li>本ツールの出力は契約書・法的拘束力を持つ書類の代替ではありません。相手がPDF見積書を求める場合は、社内フォーマットで別途作成してください。</li>
+        <li>誇大表現や相場断定は入りません。金額の妥当性は自分の前提で判断し、税務・源泉など個別の制度判断は専門家または取引先経理に確認してください。</li>
+      </ol>
+    </section>
     <section class="related">
       <h2>使い方の詳細</h2>
       <ul>
