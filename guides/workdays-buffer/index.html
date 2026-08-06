@@ -8,33 +8,70 @@
           gtag('config', gaId);
         })();</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4645103012651649" crossorigin="anonymous"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"作業日数とバッファの見積もり方","description":"実働・バッファ・休日を分けて納期目安を出す考え方。計算機への案内付き。","url":"https://www.snap-tools.jp/guides/workdays-buffer/","isPartOf":{"@type":"WebSite","name":"Snap Tools","url":"https://www.snap-tools.jp/"}}</script><link rel="stylesheet" href="/_astro/BaseLayout.CMhqeyMo.css"><style>.ad-slot[data-astro-cid-hledcgqw]{min-height:5.5rem;margin:1.5rem 0}
 </style></head><body><a class="skip-link" href="#main">本文へスキップ</a><header class="site-header"><div class="site-header__inner"><a class="brand" href="/">Snap <span>Tools</span></a><nav class="nav" aria-label="メイン"><a href="/topics/estimate/">見積もり</a><a href="/topics/delivery/">納品</a><a href="/topics/organize/">整理</a><a href="/topics/comms/">連絡</a><a href="/topics/calc/">計算</a><a href="/about/">About</a></nav></div></header><main id="main"><article class="wrap prose"><p class="meta-line"><a href="/topics/calc/">計算</a> · 柱記事</p><h1 class="page-title">作業日数とバッファの見積もり方</h1><h2 id="結論">結論</h2>
-<p>誰向けか: 納期を感覚で置いてしまいがちな個人・少人数制作。</p>
-<p>片付くこと: 実働・バッファ・休日を分けた納期の目安。保証ではなく、<strong>説明できる数字</strong>を持つことが目的です。</p>
-<h2 id="分けて考える">分けて考える</h2>
+<p>納期は「作業にかかる日数」だけでは足りません。実働日数に、想定外の手戻り用の余白（バッファ）と、休日・相手の確認待ちを足して、初めて提案できる日付になります。感覚で「来週中」と答える前に、3つの数字を分けて書き出す習慣をつけましょう。</p>
+<h2 id="実働日数の洗い出し">実働日数の洗い出し</h2>
+<p>まず、自分が机に向かう日数を見積もります。工程ごとに分けるとブレが減ります。</p>
 <ol>
-<li>実働日数: 手を動かす日</li>
-<li>バッファ: 想定外（レビュー遅延、手戻り）</li>
-<li>休日・待ち: 自分の休み、相手確認待ち</li>
+<li>ヒアリング・整理（半日〜1日）</li>
+<li>制作・実装の本体（案件の中心）</li>
+<li>自分側の確認・書き出し（忘れがちなので明示）</li>
+<li>修正対応（見積もりで想定した回数分）</li>
 </ol>
-<h2 id="ざっくり手順">ざっくり手順</h2>
+<p>「1日＝何時間か」も自分の中で揃えておきます。副業で平日2時間なら、実働1日はカレンダー1日とは一致しません。</p>
+<h2 id="バッファの置き方">バッファの置き方</h2>
+<p>バッファは「事故りそうなところ」に置きます。正解の％はありません。次の要素があるほど余白を多めに見ます。</p>
+<ul>
+<li>初めての相手・初めての業種</li>
+<li>素材や原稿が相手支給</li>
+<li>社内確認が複数段ある</li>
+<li>並行案件が多い</li>
+</ul>
+<p>同型案件を繰り返すなら余白は小さくても回ることがあります。見積もりメモに理由を一言残し、<a href="/guides/estimate-letter/">見積もり文</a> の納期と一致させます。</p>
+<h2 id="休日待ち時間の入れ方">休日・待ち時間の入れ方</h2>
+<p>カレンダー上の日数と実働日数は別物です。</p>
+<ul>
+<li><strong>休日</strong>: 自分の休み、祝日、長期休暇</li>
+<li><strong>待ち</strong>: 素材提供、確認返信、決裁</li>
+</ul>
+<p>待ちは実働に含めず、別枠で足すのがおすすめです。「確認に2営業日」と見積もって、返信が遅いときに実働が食い潰されるのを防げます。時給単価の考え方は <a href="/guides/hourly-rate-rough/">ざっくり時給の出し方</a> を参照してください。</p>
+<h2 id="提案納期を出す手順">提案納期を出す手順</h2>
 <ol>
-<li>作業を大項目に分解する</li>
-<li>各項目の実働を足す</li>
-<li>バッファを割合（例: 15–30%）で足す</li>
-<li>休日・待ちを足して提案日数にする</li>
+<li>工程ごとに実働日数を書き出す</li>
+<li>リスクに応じてバッファを足す（理由をメモする）</li>
+<li>休日と確認待ちの日数を足す</li>
+<li>着手日（発注・素材受領日）から逆算して日付にする</li>
+<li>見積もり文の納期欄に「〇営業日＋確認待ち想定」と書く</li>
 </ol>
-<p>計算機で内訳と説明文の下書きを作れます。</p>
-<p><a href="/tools/workdays-buffer/">作業日数を計算する</a></p>
-<p>単価感覚は <a href="/guides/hourly-rate-rough/">時給換算の簡単な考え方</a> へ。</p>
+<h2 id="実例コピペ用メモ">実例（コピペ用・メモ）</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>【実働】</span></span>
+<span class="line"><span>・ヒアリング整理: 0.5日</span></span>
+<span class="line"><span>・デザイン本体: 4日</span></span>
+<span class="line"><span>・書き出し・最終確認: 0.5日</span></span>
+<span class="line"><span>・修正2回想定: 1日</span></span>
+<span class="line"><span>小計: 6日</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>【バッファ】初回クライアントのため +1日</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>【待ち】原稿確認 2営業日、社内決裁 2営業日</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>【提案】素材受領後、カレンダー上 12営業日前後</span></span></code></pre>
+<h2 id="失敗例">失敗例</h2>
+<p>実働6日だけ見て「来週金曜」と答え、素材が届かず、確認が2往復増え、結局2週間遅れたパターンです。待ちとバッファを入れずに日付を言うと、ほぼ必ず信頼を損ないます。短く見せたい気持ちは分かりますが、あとから伸ばすより、最初に幅を持たせた方が関係は楽です。</p>
+<h2 id="計算機で提案日数を出す">計算機で提案日数を出す</h2>
+<p>数字の足し算は <a href="/tools/workdays-buffer/">作業日数・バッファ計算ツール</a> でたたきを出せます。出力は案件の前提と照らして調整してください。</p>
 <h2 id="faq">FAQ</h2>
-<h3 id="バッファは何がよい">バッファは何％がよい？</h3>
-<p>案件の不確実性次第です。初回取引や要件が曖昧なほど厚めにします。断定値はありません。</p>
-<h3 id="クライアントにバッファと伝える">クライアントにバッファと伝える？</h3>
-<p>「確認待ちや手戻りを含む目安」と説明する程度で十分なことが多いです。</p>
+<h3 id="バッファはクライアントにどう説明する">バッファはクライアントにどう説明する？</h3>
+<p>「確認待ちや手戻りを見込んだ余白」と伝えます。％で説明する必要はありません。見積もり文では「ご発注・素材受領後、10営業日前後（確認状況により変動）」のように書けば十分です。</p>
+<h3 id="待ち確認待ちは実働に含める">待ち（確認待ち）は実働に含める？</h3>
+<p>含めない方が安全です。待ちは相手側の事情で伸びやすく、実働に混ぜると納期の責任の境界が曖昧になります。</p>
+<h3 id="複数案件並行のときは">複数案件並行のときは？</h3>
+<p>実働日数を「1日あたり何案件に割くか」で割り算します。同じ週にフルで2本は回らない、と分かっているなら、納期を重ねないか、バッファを厚くします。</p>
+<h3 id="短納期を求められたときは">短納期を求められたときは？</h3>
+<p>削れるのは範囲か日数かを切り分け、段階納品など代替案を1つ添えます。</p>
 <h2 id="関連">関連</h2>
 <ul>
-<li><a href="/guides/hourly-rate-rough/">時給換算の簡単な考え方</a></li>
-<li><a href="/guides/estimate-letter/">見積もり文の書き方</a></li>
-<li><a href="/tools/workdays-buffer/">作業日数／バッファ計算</a></li>
+<li><a href="/tools/workdays-buffer/">作業日数・バッファ計算ツール</a></li>
+<li><a href="/guides/hourly-rate-rough/">ざっくり時給の出し方</a></li>
+<li><a href="/guides/estimate-letter/">フリーランスの見積もり文の書き方</a></li>
 </ul>
 <aside class="ad-slot" data-ad-placement="guide-after-steps" aria-label="広告" data-astro-cid-hledcgqw></aside><div class="cta-box"><p>関連ツール</p><div class="tool-actions"><a class="btn" href="/tools/workdays-buffer/">作業日数を計算する</a></div></div><section class="related"><h2>関連</h2><ul><li><a href="/guides/hourly-rate-rough/">時給換算の簡単な考え方（目安の出し方）</a></li><li><a href="/guides/estimate-letter/">フリーランスの見積もり文の書き方｜すぐ送れる型</a></li></ul></section><aside class="ad-slot" data-ad-placement="guide-end" aria-label="広告" data-astro-cid-hledcgqw></aside></article></main><footer class="site-footer"><div class="site-footer__inner"><strong>Snap Tools</strong><p class="note">個人・少人数の制作／事務を速く片づけるショートカット集</p><nav aria-label="フッター"><a href="/about/">このサイトについて</a><a href="/contact/">お問い合わせ</a><a href="/legal/privacy/">プライバシー</a><a href="/topics/estimate/">見積もり</a><a href="/tools/estimate-letter/">ツール</a></nav><small>© 2026 Snap Tools · snap-tools.jp</small></div></footer></body></html>

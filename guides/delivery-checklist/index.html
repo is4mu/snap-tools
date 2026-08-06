@@ -8,43 +8,81 @@
           gtag('config', gaId);
         })();</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4645103012651649" crossorigin="anonymous"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"納品前チェックリストの作り方｜漏れを防ぐ手順","description":"ファイル名・形式・動作確認・連絡文まで、納品前に見る項目の決め方。そのまま使えるチェックツールへの案内付き。","url":"https://www.snap-tools.jp/guides/delivery-checklist/","isPartOf":{"@type":"WebSite","name":"Snap Tools","url":"https://www.snap-tools.jp/"}}</script><link rel="stylesheet" href="/_astro/BaseLayout.CMhqeyMo.css"><style>.ad-slot[data-astro-cid-hledcgqw]{min-height:5.5rem;margin:1.5rem 0}
 </style></head><body><a class="skip-link" href="#main">本文へスキップ</a><header class="site-header"><div class="site-header__inner"><a class="brand" href="/">Snap <span>Tools</span></a><nav class="nav" aria-label="メイン"><a href="/topics/estimate/">見積もり</a><a href="/topics/delivery/">納品</a><a href="/topics/organize/">整理</a><a href="/topics/comms/">連絡</a><a href="/topics/calc/">計算</a><a href="/about/">About</a></nav></div></header><main id="main"><article class="wrap prose"><p class="meta-line"><a href="/topics/delivery/">納品</a> · 柱記事</p><h1 class="page-title">納品前チェックリストの作り方｜漏れを防ぐ手順</h1><h2 id="結論">結論</h2>
-<p>誰向けか: 納品のたびに「何か抜けた」と感じる個人・少人数チーム。</p>
-<p>片付くこと: 再利用できる納品前チェックの型。初版は15分で作れます。業種別の網羅リストを量産するのではなく、<strong>共通核＋自分用の追加</strong>で運用します。</p>
+<p>納品前チェックは「きれいな完成品か」だけでなく、「相手が受け取れる状態か」を見る作業です。個人・少人数なら、業種別の巨大リストより、共通核＋案件ごとの追加項目、の方が続きます。初版は15分で作れます。</p>
 <h2 id="チェックを制作物と手続きに分ける">チェックを「制作物」と「手続き」に分ける</h2>
-<ul>
-<li>制作物: 内容一致、ファイル名、形式、表示・誤字</li>
-<li>手続き: 共有先、納品文面、請求タイミング</li>
-</ul>
-<p>この2列に分けると、チェック漏れの原因（作り込み不足か、送り忘れか）が切り分けやすくなります。</p>
-<h2 id="基本項目の例">基本項目の例</h2>
-<ul>
-<li>成果物が依頼範囲と一致している</li>
-<li>ファイル名・形式が指定どおり</li>
-<li>誤字・リンク切れ・表示崩れの最終確認</li>
-<li>添付／共有リンクの宛先が正しい</li>
-<li>納品メール（またはチャット）文面を用意した</li>
-<li>請求が必要な場合、請求タイミングを確認した</li>
-</ul>
-<h2 id="チームで共有するときのルール">チームで共有するときのルール</h2>
+<p>混ざると抜けます。次の2列で考えます。</p>
+<table>
+<thead>
+<tr>
+<th>種類</th>
+<th>見るもの</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>制作物</td>
+<td>内容の一致、誤字、表示、リンク、書き出し形式</td>
+</tr>
+<tr>
+<td>手続き</td>
+<td>宛先、共有権限、件名、請求タイミング、保管場所</td>
+</tr>
+</tbody>
+</table>
+<p>制作物だけ完璧でも、リンクの権限が「自分のみ」だと納品失敗です。</p>
+<h2 id="基本項目の例共通核">基本項目の例（共通核）</h2>
+<p>業種を問わず、次を核にします。</p>
 <ol>
-<li>共通核は増やしすぎない（6〜10項目）</li>
-<li>案件固有は「追加項目」に逃がす</li>
-<li>誰が最終チェックするかを1名決める</li>
+<li>成果物が依頼範囲と一致している（やる／やらないの境界）</li>
+<li>ファイル名・拡張子・解像度が指定どおり</li>
+<li>誤字・リンク切れ・表示崩れの最終確認</li>
+<li>共有リンクまたは添付の宛先が正しい</li>
+<li>納品連絡の文面がある（メールまたはチャット）</li>
+<li>請求が必要な場合、送るタイミングを確認した</li>
+<li>作業用ファイルと納品用ファイルが分かれている</li>
 </ol>
+<p>デザイン案件なら「書き出しサイズ」、文章案件なら「表記ゆれ」、開発なら「動作環境」を1〜2個足す程度で十分です。網羅リストを量産しない方が運用できます。</p>
+<h2 id="自分用リストの作り方手順">自分用リストの作り方（手順）</h2>
+<ol>
+<li>直近の納品で「危なかったこと」を3つ書き出す</li>
+<li>上の共通核に、その3つだけを追加する</li>
+<li>「完了」の定義を一文で書く（例: 先方がファイルを開ける状態）</li>
+<li>案件フォルダの <code>delivery/</code> にチェック結果を残す場所を決める</li>
+<li>2回使って不要な項目を削る</li>
+</ol>
+<h2 id="実例コピペ用最小">実例（コピペ用・最小）</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>[制作物]</span></span>
+<span class="line"><span>□ 範囲どおり（対象外が混ざっていない）</span></span>
+<span class="line"><span>□ ファイル名: YYYYMMDD_案件_内容_v最終</span></span>
+<span class="line"><span>□ 誤字・リンク・表示の最終確認</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>[手続き]</span></span>
+<span class="line"><span>□ 共有権限が先方閲覧可</span></span>
+<span class="line"><span>□ 納品文面を用意</span></span>
+<span class="line"><span>□ 請求タイミングを確認</span></span>
+<span class="line"><span>□ 作業用と納品用を分離</span></span></code></pre>
+<h2 id="失敗例">失敗例</h2>
+<p>チェック項目を20個以上にして、納品当日に「全部見れない」と飛ばすパターンです。使われないリストは無いのと同じです。まずは8項目以内で回し、痛い目を見た項目だけ足してください。</p>
+<h2 id="チームで共有するときのルール短く">チームで共有するときのルール（短く）</h2>
+<ul>
+<li>誰がチェックしたかを名前か日付で残す</li>
+<li>「完了」の定義を案件キックオフで一度言う</li>
+<li>クライアント共有用と内部用を混ぜない（命名は <a href="/guides/folder-naming/">フォルダ命名</a>）</li>
+</ul>
 <h2 id="チェックリストツールで使う">チェックリストツールで使う</h2>
-<p>固定項目にチェックを入れ、自分用の項目も追加できます。進捗はブラウザ内に保存でき、テキストコピー／印刷にも対応します。</p>
-<p><a href="/tools/delivery-checklist/">納品前にチェックする</a></p>
-<p>納品メールの書き方は <a href="/guides/invoice-delivery-mail/">請求・納品メールの書き分け</a> へ。</p>
+<p>画面で進めるなら <a href="/tools/delivery-checklist/">納品チェックリスト</a> があります。項目の追加、テキストコピー、印刷用表示に対応しています。進捗はブラウザ内保存です。</p>
 <h2 id="faq">FAQ</h2>
-<h3 id="毎回全部チェックする必要がある">毎回全部チェックする必要がある？</h3>
-<p>共通核は毎回、追加項目は案件の性質に応じてで十分です。</p>
-<h3 id="クライアント指定のチェック表がある場合は">クライアント指定のチェック表がある場合は？</h3>
-<p>指定表を優先し、自分の共通核は「内部用」として残します。</p>
-<h3 id="チェック後に修正が入ったら">チェック後に修正が入ったら？</h3>
-<p>差分だけ再チェックし、共有リンクと宛先は必ず再確認します。</p>
+<h3 id="チェックリストは案件ごとに作り直す">チェックリストは案件ごとに作り直す？</h3>
+<p>核は使い回し、案件固有だけ差し替えます。毎回ゼロから作ると続きません。</p>
+<h3 id="クライアントにチェック項目を共有してよい">クライアントにチェック項目を共有してよい？</h3>
+<p>「受け入れ確認」として共有すると認識が揃います。内部用の粗いメモはそのまま見せず、相手向けに言い換えてください。</p>
+<h3 id="完了の定義はどう決める">「完了」の定義はどう決める？</h3>
+<p>「先方が成果物を開ける／使える状態」を基本にします。修正対応の区切りは別途、回数前提で決めます。</p>
+<h3 id="修正戻しのあとも同じリストでよい">修正戻しのあとも同じリストでよい？</h3>
+<p>はい。ただし「差分だけ見て全体を見ない」失敗が起きやすいので、最終回は共通核を最初から通します。</p>
 <h2 id="関連">関連</h2>
 <ul>
-<li><a href="/guides/invoice-delivery-mail/">請求・納品メールの書き分け</a></li>
+<li><a href="/guides/invoice-delivery-mail/">請求メールと納品メールの書き分け</a></li>
 <li><a href="/guides/folder-naming/">案件フォルダとファイル命名ルール</a></li>
 <li><a href="/tools/delivery-checklist/">納品チェックリスト</a></li>
 </ul>

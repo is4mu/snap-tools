@@ -8,35 +8,59 @@
           gtag('config', gaId);
         })();</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4645103012651649" crossorigin="anonymous"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"案件フォルダとファイル命名ルールの決め方","description":"探す時間を減らすフォルダ構成とファイル命名の型。個人・少人数の制作／事務向け。","url":"https://www.snap-tools.jp/guides/folder-naming/","isPartOf":{"@type":"WebSite","name":"Snap Tools","url":"https://www.snap-tools.jp/"}}</script><link rel="stylesheet" href="/_astro/BaseLayout.CMhqeyMo.css"><style>.ad-slot[data-astro-cid-hledcgqw]{min-height:5.5rem;margin:1.5rem 0}
 </style></head><body><a class="skip-link" href="#main">本文へスキップ</a><header class="site-header"><div class="site-header__inner"><a class="brand" href="/">Snap <span>Tools</span></a><nav class="nav" aria-label="メイン"><a href="/topics/estimate/">見積もり</a><a href="/topics/delivery/">納品</a><a href="/topics/organize/">整理</a><a href="/topics/comms/">連絡</a><a href="/topics/calc/">計算</a><a href="/about/">About</a></nav></div></header><main id="main"><article class="wrap prose"><p class="meta-line"><a href="/topics/organize/">整理</a> · 柱記事</p><h1 class="page-title">案件フォルダとファイル命名ルールの決め方</h1><h2 id="結論">結論</h2>
-<p>誰向けか: ファイルが散らばり、探す時間が積み上がっている個人・少人数チーム。</p>
-<p>片付くこと: 案件ごとの置き場所と名前の型が決まる。完璧な分類より、<strong>迷わず置ける規則</strong>を優先します。</p>
-<h2 id="フォルダの基本形">フォルダの基本形</h2>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>YYYY-案件名/</span></span>
+<p>探す時間が長い人ほど、フォルダ階層とファイル名の「型」がありません。個人または少人数なら、深い階層より浅い共通型の方が守れます。20分で初版を決め、あとは案件名だけ差し替えます。特定のクラウド製品の操作には依存しません。</p>
+<h2 id="フォルダ階層の最小セット">フォルダ階層の最小セット</h2>
+<p>案件ごとに次だけで始めます。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>YYYY_案件名/</span></span>
+<span class="line"><span>  00_admin/      … 見積もり、契約メモ、請求</span></span>
+<span class="line"><span>  10_input/      … 支給素材、参考</span></span>
+<span class="line"><span>  20_work/       … 作業中</span></span>
+<span class="line"><span>  30_share/      … 先方に出すもの</span></span>
+<span class="line"><span>  40_delivery/   … 最終納品の控え</span></span></code></pre>
+<p>「share」と「delivery」を分けるのが要点です。共有中の草案と、最終版の控えが混ざると、どれが正本か分からなくなります。</p>
+<h2 id="ファイル名に入れる要素">ファイル名に入れる要素</h2>
+<p>優先順は次です。</p>
+<ol>
+<li>日付（<code>YYYYMMDD</code>）</li>
+<li>内容（何のファイルか）</li>
+<li>版（<code>v01</code> / <code>v02</code> / <code>final</code>）</li>
+</ol>
+<p>例: <code>20260806_採用LP_トップ_v03.fig</code><br>
+スペースや「最終の最終」は避け、版番号か日付のどちらかで新旧を判断できるようにします。</p>
+<h2 id="やってはいけない命名失敗例">やってはいけない命名（失敗例）</h2>
+<ul>
+<li><code>新しいフォルダ</code>、<code>untitled</code>、<code>コピー</code></li>
+<li><code>最終</code>、<code>本当の最終</code>、<code>最終2</code> の連鎖</li>
+<li>先方共有用と作業用を同じ名前で上書き</li>
+</ul>
+<p>「最終」という言葉は感情であって版情報ではありません。<code>v最終</code>と書くなら、それ以上の更新が無い日付をフォルダの <code>40_delivery/</code> に残します。</p>
+<h2 id="決め方の手順">決め方の手順</h2>
+<ol>
+<li>上の最小セットを1案件に適用する</li>
+<li>ファイル名の要素順（日付→内容→版）をメモする</li>
+<li>先方共有は必ず <code>30_share/</code> 経由にする</li>
+<li>2週間運用し、使っていないフォルダを削る</li>
+<li>チームに広げるなら <a href="/guides/team-folder-template/">少人数チーム向けテンプレ</a> へ</li>
+</ol>
+<h2 id="コピー用テンプレ">コピー用テンプレ</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>YYYY_案件名/</span></span>
 <span class="line"><span>  00_admin/</span></span>
 <span class="line"><span>  10_input/</span></span>
 <span class="line"><span>  20_work/</span></span>
-<span class="line"><span>  30_review/</span></span>
-<span class="line"><span>  40_delivery/</span></span></code></pre>
-<p>番号付きにすると並びが安定します。<code>admin</code> に見積もり・契約メモ、<code>delivery</code> に最終提出物だけを置くと納品時に迷いません。</p>
-<h2 id="ファイル命名の型">ファイル命名の型</h2>
-<p><code>日付_内容_版</code>（例: <code>2026-07-24_top_design_v03.fig</code>）</p>
-<ul>
-<li>日付は ISO（YYYY-MM-DD）</li>
-<li>版は <code>v01</code> から通し</li>
-<li>最終提出は <code>final</code> を末尾に付けるか、<code>40_delivery</code> にコピー</li>
-</ul>
-<h2 id="運用ルール短く">運用ルール（短く）</h2>
-<ol>
-<li>作業中は <code>20_work</code> 以外に増やさない</li>
-<li>レビュー返却は <code>30_review</code> に日付付きで残す</li>
-<li>納品後に作業ファイルを delivery へ混ぜない</li>
-</ol>
-<p>少人数チーム向けの拡張例は <a href="/guides/team-folder-template/">チーム向けフォルダ構成テンプレ</a> へ。</p>
+<span class="line"><span>  30_share/</span></span>
+<span class="line"><span>  40_delivery/</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>命名: YYYYMMDD_内容_v01</span></span>
+<span class="line"><span>共有は 30_share のみ。最終控えは 40_delivery。</span></span></code></pre>
 <h2 id="faq">FAQ</h2>
-<h3 id="クラウドとローカルでルールを分けるべき">クラウドとローカルでルールを分けるべき？</h3>
-<p>原則同じ名前にします。置き場所だけツールの都合で変えます。</p>
-<h3 id="古い版は消す">古い版は消す？</h3>
-<p>納品前は残し、納品後に <code>archive</code> へ移す運用が安全です。</p>
+<h3 id="日付はフォルダとファイルどちらに入れる">日付はフォルダとファイルどちらに入れる？</h3>
+<p>案件フォルダは開始月（<code>YYYY_案件名</code>）、ファイルは更新日を推奨します。両方に長い日付を重ねると読みにくくなります。</p>
+<h3 id="版番号と日付どちらを優先">版番号と日付、どちらを優先？</h3>
+<p>同じ日に何度も出すなら版番号、日をまたぐなら日付が分かりやすいです。混在させるなら「日付＋版」の順で固定してください。</p>
+<h3 id="クライアント共有用と作業用は分ける">クライアント共有用と作業用は分ける？</h3>
+<p>分けてください。権限と誤送付のリスクが違います。</p>
+<h3 id="過去案件の移行はどう進める">過去案件の移行はどう進める？</h3>
+<p>一気に整理しないでください。新規案件から新ルールを適用し、過去分は触ったときだけ移す方が続きます。</p>
 <h2 id="関連">関連</h2>
 <ul>
 <li><a href="/guides/team-folder-template/">少人数チーム向けフォルダ構成テンプレ</a></li>

@@ -8,17 +8,49 @@
           gtag('config', gaId);
         })();</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4645103012651649" crossorigin="anonymous"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"少人数チーム向けフォルダ構成テンプレ","description":"2〜5人規模で共有しやすいフォルダ構成例。命名ルールへの導線付き。","url":"https://www.snap-tools.jp/guides/team-folder-template/","isPartOf":{"@type":"WebSite","name":"Snap Tools","url":"https://www.snap-tools.jp/"}}</script><link rel="stylesheet" href="/_astro/BaseLayout.CMhqeyMo.css"><style>.ad-slot[data-astro-cid-hledcgqw]{min-height:5.5rem;margin:1.5rem 0}
 </style></head><body><a class="skip-link" href="#main">本文へスキップ</a><header class="site-header"><div class="site-header__inner"><a class="brand" href="/">Snap <span>Tools</span></a><nav class="nav" aria-label="メイン"><a href="/topics/estimate/">見積もり</a><a href="/topics/delivery/">納品</a><a href="/topics/organize/">整理</a><a href="/topics/comms/">連絡</a><a href="/topics/calc/">計算</a><a href="/about/">About</a></nav></div></header><main id="main"><article class="wrap prose"><p class="meta-line"><a href="/topics/organize/">整理</a> · 周辺記事</p><h1 class="page-title">少人数チーム向けフォルダ構成テンプレ</h1><h2 id="結論">結論</h2>
-<p>少人数では役割が増えすぎない構成が勝ちます。共通は薄く、案件フォルダを厚くします。</p>
-<h2 id="テンプレ">テンプレ</h2>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>_team/</span></span>
-<span class="line"><span>  templates/</span></span>
-<span class="line"><span>  brand/</span></span>
-<span class="line"><span>projects/</span></span>
-<span class="line"><span>  YYYY-案件名/</span></span>
-<span class="line"><span>    00_admin/</span></span>
-<span class="line"><span>    10_input/</span></span>
-<span class="line"><span>    20_work/</span></span>
-<span class="line"><span>    30_review/</span></span>
-<span class="line"><span>    40_delivery/</span></span></code></pre>
-<p>命名の細部は <a href="/guides/folder-naming/">フォルダと命名ルール</a> へ。</p>
+<p>2〜5人の少人数チームで共有ドライブが散らかる原因は、ほぼ「個人の好みでフォルダを増やす」ことです。個人用の深い階層をそのまま共有すると、誰も正本を更新しなくなります。命名ルールは <a href="/guides/folder-naming/">案件フォルダとファイル命名ルール</a> を前提に、チーム全員が同じ浅い型だけ使う運用に寄せます。初回セットアップは10分程度です。</p>
+<h2 id="個人用との違い共有前提">個人用との違い（共有前提）</h2>
+<p>個人では <code>作業中</code> <code>検討</code> <code>バックアップ</code> を自由に切っても自分で追えます。共有では「誰がどこに置いたか」を全員が覚える必要が出るため、フォルダ数を抑げ、役割で名前を固定します。個人の作業コピーはローカルか自分専用の下位フォルダに置き、共有ルートには「チームが見る版」だけを残します。</p>
+<h2 id="テンプレ構成コピー枠">テンプレ構成（コピー枠）</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>YYYY_案件名/</span></span>
+<span class="line"><span>  00_admin/       … 見積もり、契約メモ、請求</span></span>
+<span class="line"><span>  10_input/       … 先方支給素材、参考資料</span></span>
+<span class="line"><span>  20_work/        … チーム作業中（共有版）</span></span>
+<span class="line"><span>  30_share/       … 先方に出す草案・確認用</span></span>
+<span class="line"><span>  40_delivery/    … 最終納品の控え</span></span>
+<span class="line"><span>  _team/          … 社内メモ、議事、TODO（任意）</span></span></code></pre>
+<p><code>_team/</code> は社外に見せない内部用です。先方共有は必ず <code>30_share/</code> 経由にし、最終版は <code>40_delivery/</code> に日付付きで控えを残します。</p>
+<h2 id="運用ルール3つだけ">運用ルール3つだけ</h2>
+<ol>
+<li><strong>新規案件は必ずこの型で作る</strong>（例外を増やさない）</li>
+<li><strong>共有ルートに「最終」「新しいフォルダ」を置かない</strong>（版はファイル名の <code>v01</code> 等で管理）</li>
+<li><strong>週1回、使っていない空フォルダを削る</strong>（担当をローテーションで固定）</li>
+</ol>
+<h2 id="決め方の手順">決め方の手順</h2>
+<ol>
+<li><a href="/guides/folder-naming/">命名ルール</a> の日付・版番号の型をチームで1行メモにまとめる</li>
+<li>上のテンプレを共有ドライブの「テンプレ」フォルダに置き、案件開始時にコピーする</li>
+<li><code>_team/</code> の中身（議事・TODO）を誰が更新するか決める</li>
+<li>先方共有リンクは <code>30_share/</code> 配下のみに発行する</li>
+<li>2週間運用し、触れていないフォルダ名を削る</li>
+<li>権限は「編集できる人」と「閲覧のみ」を案件単位で分ける（一般論として、誤削除防止のため）</li>
+</ol>
+<h2 id="実例">実例</h2>
+<p>採用LP案件を3人で進める場合。デザイナーは <code>20_work/</code> に作業ファイル、ディレクターは <code>30_share/</code> に確認用PDFを置き、先方へのリンクは <code>30_share/20260806_トップ_v02.pdf</code> だけを共有します。納品後、<code>40_delivery/</code> に同ファイルの控えと納品メールのコピーを残します。個人の試作は各自ローカルに置き、共有には「レビュー依頼が出た版」だけ上げます。</p>
+<h2 id="失敗例">失敗例</h2>
+<p>メンバー全員が <code>20_work/</code> 直下に <code>最終</code> <code>最終2</code> <code>田中作業</code> を並べ、先方に誤って <code>20_work/</code> 全体をリンク共有したケースです。フォルダ名が人名や感情語になると、新メンバーが正本を判別できません。また、クライアント公開用と社内用を同じ階層に混ぜると、誤送付のリスクが一気に上がります。</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="クライアント公開フォルダは別に作る">クライアント公開フォルダは別に作る？</h3>
+<p>社内の <code>30_share/</code> と、先方専用の共有リンク先は分けることを推奨します。中身は同じでも、リンクの範囲と権限を分けた方が誤操作を防げます。</p>
+<h3 id="権限管理はどう考える一般論">権限管理はどう考える？（一般論）</h3>
+<p>案件フォルダ単位で「編集者」と「閲覧者」を分け、削除権限は限定的にします。全員フル権限にすると、誤削除の復旧コストが大きくなります。</p>
+<h3 id="リモートのみのチームでも同じ型でよい">リモートのみのチームでも同じ型でよい？</h3>
+<p>同じ型で問題ありません。チャットにファイルを直送する習慣がある場合も、正本は共有ドライブの型に寄せ、チャットは通知用にします。</p>
+<h3 id="メンバーが6人に増えたらどうする">メンバーが6人に増えたらどうする？</h3>
+<p>フォルダを増やすより、<code>_team/</code> 内で担当別サブフォルダを足す程度に留めます。案件ルートの型は変えない方が移行が楽です。</p>
+<h2 id="関連">関連</h2>
+<ul>
+<li><a href="/guides/folder-naming/">案件フォルダとファイル命名ルール</a></li>
+<li><a href="/guides/delivery-checklist/">納品前チェックリストの作り方</a></li>
+</ul>
 <aside class="ad-slot" data-ad-placement="guide-after-steps" aria-label="広告" data-astro-cid-hledcgqw></aside><section class="related"><h2>関連</h2><ul><li><a href="/guides/folder-naming/">案件フォルダとファイル命名ルールの決め方</a></li><li><a href="/guides/delivery-checklist/">納品前チェックリストの作り方｜漏れを防ぐ手順</a></li></ul></section><aside class="ad-slot" data-ad-placement="guide-end" aria-label="広告" data-astro-cid-hledcgqw></aside></article></main><footer class="site-footer"><div class="site-footer__inner"><strong>Snap Tools</strong><p class="note">個人・少人数の制作／事務を速く片づけるショートカット集</p><nav aria-label="フッター"><a href="/about/">このサイトについて</a><a href="/contact/">お問い合わせ</a><a href="/legal/privacy/">プライバシー</a><a href="/topics/estimate/">見積もり</a><a href="/tools/estimate-letter/">ツール</a></nav><small>© 2026 Snap Tools · snap-tools.jp</small></div></footer></body></html>
