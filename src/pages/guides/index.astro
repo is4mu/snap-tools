@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { topics } from '../../data/site';
+
+const guides = (await getCollection('guides'))
+  .filter((g) => !g.data.draft)
+  .sort(
+    (a, b) =>
+      Number(b.data.pillar) - Number(a.data.pillar) ||
+      a.data.title.localeCompare(b.data.title, 'ja'),
+  );
+---
+
+<BaseLayout
+  title="ガイド一覧"
+  description="見積もり・納品・整理・連絡・計算の手順ガイド一覧。用事から読んですぐ片づけるためのショートカットです。"
+  canonicalPath="/guides/"
+>
+  <div class="wrap">
+    <h1 class="page-title">ガイド一覧</h1>
+    <p class="lede">用事の手順を短くまとめた記事一覧です。迷ったらカテゴリから選んでください。</p>
+    <section class="section">
+      <div class="feature-list">
+        {
+          guides.map((guide) => {
+            const topic = topics.find((t) => t.id === guide.data.category);
+            return (
+              <a class="feature-link" href={`/guides/${guide.id}/`}>
+                <strong>
+                  {guide.data.pillar ? '柱 · ' : ''}
+                  {guide.data.title.split('｜')[0]}
+                </strong>
+                <span>
+                  {topic ? `${topic.name} · ` : ''}
+                  {guide.data.description}
+                </span>
+              </a>
+            );
+          })
+        }
+      </div>
+    </section>
+  </div>
+</BaseLayout>

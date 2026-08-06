@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { tools } from '../../data/site';
+
+const toolMeta: Record<string, { description: string }> = {
+  'estimate-letter': {
+    description: '案件名・範囲・金額帯・納期・修正回数から、送れる見積もり文をブラウザで生成。',
+  },
+  'delivery-checklist': {
+    description: '納品前の確認項目をチェック。任意追加と、印刷／コピー用テキスト出力に対応。',
+  },
+  'workdays-buffer': {
+    description: '実働日数・バッファ％・休日を入れて、提案納期の日数と内訳説明の下書きを作成。',
+  },
+};
+---
+
+<BaseLayout
+  title="ツール一覧"
+  description="見積もり文・納品チェック・作業日数計算など、ブラウザで完結するミニ道具の一覧です。"
+  canonicalPath="/tools/"
+>
+  <div class="wrap">
+    <h1 class="page-title">ツール一覧</h1>
+    <p class="lede">ブラウザで完結するミニ道具です。入力はサーバーに送りません。</p>
+    <section class="section">
+      <div class="tool-list">
+        {
+          tools.map((tool) => (
+            <a class="tool-link" href={`/tools/${tool.slug}/`}>
+              <strong>{tool.name}</strong>
+              <span>{toolMeta[tool.slug]?.description ?? tool.cta}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</BaseLayout>

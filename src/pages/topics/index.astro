@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { topics } from '../../data/site';
+---
+
+<BaseLayout
+  title="トピック一覧"
+  description="見積もり・納品・整理・連絡・計算。用事から選んでガイドとツールへ進むトピック一覧です。"
+  canonicalPath="/topics/"
+>
+  <div class="wrap">
+    <h1 class="page-title">トピック一覧</h1>
+    <p class="lede">見積もり・納品・整理・連絡・計算。まずカテゴリから入れます。</p>
+    <section class="section">
+      <div class="topic-grid">
+        {
+          topics.map((topic) => (
+            <a class="topic-link" href={`/topics/${topic.slug}/`}>
+              <strong>{topic.name}</strong>
+              <span>{topic.blurb}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</BaseLayout>
